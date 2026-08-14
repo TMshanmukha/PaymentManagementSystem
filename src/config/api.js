@@ -20,6 +20,10 @@ api.interceptors.request.use((config) => {
   if (accessToken) {
     config.headers.Authorization = `Bearer ${accessToken}`;
   }
+  const yearId = localStorage.getItem('selected_academic_year_id');
+  if (yearId) {
+    config.headers['X-Academic-Year-Id'] = yearId;
+  }
   return config;
 });
 

@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import {
   LayoutDashboard, Users, Receipt, FileText, AlertCircle, Wallet,
-  BarChart3, ClipboardCheck, UserCog, ScrollText, Settings, GraduationCap, X,
+  BarChart3, ClipboardCheck, UserCog, ScrollText, Settings, GraduationCap, X, Calendar,
 } from 'lucide-react';
 import { useSettings } from '../context/SettingsContext.jsx';
 import { ROLES } from '../config/constants.js';
@@ -31,6 +31,7 @@ function itemsForRole(role) {
     items.push(
       { to: `${base}/users`, label: 'Users', icon: UserCog },
       { to: `${base}/audit-logs`, label: 'Audit Logs', icon: ScrollText },
+      { to: `${base}/academic-years`, label: 'Academic Years', icon: Calendar },
       { to: `${base}/settings`, label: 'Settings', icon: Settings }
     );
   }

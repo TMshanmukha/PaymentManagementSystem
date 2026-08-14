@@ -114,8 +114,7 @@ export default function ExpensesPage() {
         </>}>
         {serverError && <div className="mb-4 rounded-lg bg-red-50 border border-red-100 px-3 py-2.5 text-sm text-red-700">{serverError}</div>}
         <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 sm:grid-cols-2 gap-4" noValidate>
-          <Select label="Category" placeholder="Select category" error={errors.categoryId?.message}
-            options={categories.map((c) => ({ value: c.id, label: c.name }))} {...register('categoryId')} />
+          <Input label="Category" placeholder="e.g. Rent, Stationery" error={errors.categoryName?.message} {...register('categoryName')} />
           <Input label="Amount (₹)" type="number" step="0.01" min="0" error={errors.amount?.message} {...register('amount')} />
           <Select label="Expense Type" disabled={Boolean(lockedType)} error={errors.expenseType?.message}
             options={[{ value: 'SCHOOL', label: 'School' }, { value: 'TUITION', label: 'Tuition' }]} {...register('expenseType')} />

@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext.jsx';
 import { ToastProvider } from './context/ToastContext.jsx';
 import { SettingsProvider } from './context/SettingsContext.jsx';
+import { AcademicYearProvider } from './context/AcademicYearContext.jsx';
 import { ProtectedRoute } from './routes/ProtectedRoute.jsx';
 import { RoleRoute } from './routes/RoleRoute.jsx';
 import { DashboardLayout } from './layouts/DashboardLayout.jsx';
@@ -21,6 +22,7 @@ import DayClosingPage from './pages/dayclosing/DayClosingPage.jsx';
 import UsersPage from './pages/users/UsersPage.jsx';
 import AuditLogsPage from './pages/auditlogs/AuditLogsPage.jsx';
 import SettingsPage from './pages/settings/SettingsPage.jsx';
+import AcademicYearsPage from './pages/academicYears/AcademicYearsPage.jsx';
 
 /**
  * One shared set of page routes reused for all three role sections
@@ -49,39 +51,42 @@ export default function App() {
     <BrowserRouter>
       <SettingsProvider>
         <AuthProvider>
-          <ToastProvider>
-            <Routes>
-              <Route path="/login" element={<LoginPage />} />
+          <AcademicYearProvider>
+            <ToastProvider>
+              <Routes>
+                <Route path="/login" element={<LoginPage />} />
 
-              <Route element={<ProtectedRoute />}>
-                {/* Admin-only subtree */}
-                <Route element={<RoleRoute allow={[ROLES.ADMIN]} />}>
-                  {roleSection('/admin', 'Admin', (
-                    <>
-                      <Route path="expenses" element={<ExpensesPage />} />
-                      <Route path="reports" element={<ReportsPage />} />
-                      <Route path="users" element={<UsersPage />} />
-                      <Route path="audit-logs" element={<AuditLogsPage />} />
-                      <Route path="settings" element={<SettingsPage />} />
-                    </>
-                  ))}
+                <Route element={<ProtectedRoute />}>
+                  {/* Admin-only subtree */}
+                  <Route element={<RoleRoute allow={[ROLES.ADMIN]} />}>
+                    {roleSection('/admin', 'Admin', (
+                      <>
+                        <Route path="expenses" element={<ExpensesPage />} />
+                        <Route path="reports" element={<ReportsPage />} />
+                        <Route path="users" element={<UsersPage />} />
+                        <Route path="audit-logs" element={<AuditLogsPage />} />
+                        <Route path="settings" element={<SettingsPage />} />
+                        <Route path="academic-years" element={<AcademicYearsPage />} />
+                      </>
+                    ))}
+                  </Route>
+
+                  {/* School accountant subtree */}
+                  <Route element={<RoleRoute allow={[ROLES.SCHOOL_ACCOUNTANT]} />}>
+                    {roleSection('/school', 'School Accountant')}
+                  </Route>
+
+                  {/* Tuition accountant subtree */}
+                  <Route element={<RoleRoute allow={[ROLES.TUITION_ACCOUNTANT]} />}>
+                    {roleSection('/tuition', 'Tuition Accountant')}
+                  </Route>
                 </Route>
 
-                {/* School accountant subtree */}
-                <Route element={<RoleRoute allow={[ROLES.SCHOOL_ACCOUNTANT]} />}>
-                  {roleSection('/school', 'School Accountant')}
-                </Route>
-
-                {/* Tuition accountant subtree */}
-                <Route element={<RoleRoute allow={[ROLES.TUITION_ACCOUNTANT]} />}>
-                  {roleSection('/tuition', 'Tuition Accountant')}
-                </Route>
-              </Route>
-
-              <Route path="/" element={<Navigate to="/login" replace />} />
-              <Route path="*" element={<Navigate to="/login" replace />} />
-            </Routes>
-          </ToastProvider>
+                <Route path="/" element={<Navigate to="/login" replace />} />
+                <Route path="*" element={<Navigate to="/login" replace />} />
+              </Routes>
+            </ToastProvider>
+          </AcademicYearProvider>
         </AuthProvider>
       </SettingsProvider>
     </BrowserRouter>

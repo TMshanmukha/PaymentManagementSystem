@@ -1,10 +1,12 @@
 import { useState } from 'react';
-import { Menu, ChevronDown, LogOut, User } from 'lucide-react';
+import { Menu, ChevronDown, LogOut, Calendar } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth.js';
+import { useAcademicYear } from '../context/AcademicYearContext.jsx';
 import { ROLE_LABELS } from '../config/constants.js';
 
 export function Navbar({ title, onMenuClick }) {
   const { user, logout } = useAuth();
+  const { academicYears, selectedYearId, changeSelectedYear } = useAcademicYear();
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -16,20 +18,39 @@ export function Navbar({ title, onMenuClick }) {
         <h1 className="text-base sm:text-lg font-semibold text-navy-900">{title}</h1>
       </div>
 
-      <div className="relative">
-        <button
-          onClick={() => setMenuOpen((o) => !o)}
-          className="flex items-center gap-2 pl-2 pr-1 py-1.5 rounded-lg hover:bg-slate-50"
-        >
-          <div className="w-8 h-8 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center font-semibold text-sm">
-            {user?.fullName?.charAt(0) || 'U'}
+      <div className="flex items-center gap-4">
+        {/* Academic Year Dropdown Selector */}
+        {academicYears && academicYears.length > 0 && (
+          <div className="flex items-center gap-2">
+            <Calendar className="w-4 h-4 text-slate-400 hidden sm:inline" />
+            <select
+              value={selectedYearId}
+              onChange={(e) => changeSelectedYear(e.target.value)}
+              className="text-sm font-medium text-slate-700 bg-slate-50 border border-slate-200 rounded-md px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-brand-500 focus:border-brand-500 cursor-pointer"
+            >
+              {academicYears.map((y) => (
+                <option key={y.id} value={y.id}>
+                  {y.year_name} {y.is_active ? '(Active)' : ''}
+                </option>
+              ))}
+            </select>
           </div>
-          <div className="text-left hidden sm:block">
-            <p className="text-sm font-medium text-slate-800 leading-tight">{user?.fullName}</p>
-            <p className="text-xs text-slate-400 leading-tight">{ROLE_LABELS[user?.role]}</p>
-          </div>
-          <ChevronDown className="w-4 h-4 text-slate-400" />
-        </button>
+        )}
+
+        <div className="relative">
+          <button
+            onClick={() => setMenuOpen((o) => !o)}
+            className="flex items-center gap-2 pl-2 pr-1 py-1.5 rounded-lg hover:bg-slate-50"
+          >
+            <div className="w-8 h-8 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center font-semibold text-sm">
+              {user?.fullName?.charAt(0) || 'U'}
+            </div>
+            <div className="text-left hidden sm:block">
+              <p className="text-sm font-medium text-slate-800 leading-tight">{user?.fullName}</p>
+              <p className="text-xs text-slate-400 leading-tight">{ROLE_LABELS[user?.role]}</p>
+            </div>
+            <ChevronDown className="w-4 h-4 text-slate-400" />
+          </button>
 
         {menuOpen && (
           <>
@@ -48,6 +69,7 @@ export function Navbar({ title, onMenuClick }) {
             </div>
           </>
         )}
+        </div>
       </div>
     </header>
   );
