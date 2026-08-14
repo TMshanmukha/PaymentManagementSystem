@@ -12,7 +12,7 @@ import { Button } from '../../components/Button.jsx';
 import { Input } from '../../components/Input.jsx';
 import { Select } from '../../components/Select.jsx';
 import { SearchableSelect } from '../../components/SearchableSelect.jsx';
-import { getErrorMessage } from '../../services/api.js';
+import { getErrorMessage } from '../../config/api.js';
 import { useToast } from '../../hooks/useToast.js';
 import { useAuth } from '../../hooks/useAuth.js';
 import { ROLES, ROLE_SCOPE } from '../../config/constants.js';

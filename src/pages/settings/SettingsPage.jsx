@@ -8,7 +8,7 @@ import { Button } from '../../components/Button.jsx';
 import { Badge } from '../../components/Badge.jsx';
 import { useToast } from '../../hooks/useToast.js';
 import { useSettings } from '../../context/SettingsContext.jsx';
-import { getErrorMessage } from '../../services/api.js';
+import { getErrorMessage } from '../../config/api.js';
 import { formatDate } from '../../utils/format.js';
 
 const EDITABLE_KEYS = [

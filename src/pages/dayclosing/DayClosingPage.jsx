@@ -12,7 +12,7 @@ import { LoadingState } from '../../components/LoadingState.jsx';
 import { formatCurrency, formatDate, formatDateTime, todayISO } from '../../utils/format.js';
 import { useAuth } from '../../hooks/useAuth.js';
 import { useToast } from '../../hooks/useToast.js';
-import { getErrorMessage } from '../../services/api.js';
+import { getErrorMessage } from '../../config/api.js';
 import { ROLES } from '../../config/constants.js';
 import { IndianRupee, Banknote, Smartphone } from 'lucide-react';
 

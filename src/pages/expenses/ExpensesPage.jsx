@@ -17,7 +17,7 @@ import { Badge } from '../../components/Badge.jsx';
 import { formatCurrency, formatDate, todayISO } from '../../utils/format.js';
 import { useAuth } from '../../hooks/useAuth.js';
 import { useToast } from '../../hooks/useToast.js';
-import { getErrorMessage } from '../../services/api.js';
+import { getErrorMessage } from '../../config/api.js';
 import { ROLES, ROLE_SCOPE } from '../../config/constants.js';
 import { Wallet } from 'lucide-react';
 

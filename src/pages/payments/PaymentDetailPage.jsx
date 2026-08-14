@@ -13,7 +13,7 @@ import { ConfirmationModal } from '../../components/ConfirmationModal.jsx';
 import { ReceiptPreview } from '../../components/ReceiptPreview.jsx';
 import { useAuth } from '../../hooks/useAuth.js';
 import { useToast } from '../../hooks/useToast.js';
-import { getErrorMessage } from '../../services/api.js';
+import { getErrorMessage } from '../../config/api.js';
 import { ROLES } from '../../config/constants.js';
 
 export default function PaymentDetailPage() {

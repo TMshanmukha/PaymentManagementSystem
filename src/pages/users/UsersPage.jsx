@@ -15,7 +15,7 @@ import { DataTable } from '../../components/DataTable.jsx';
 import { Badge } from '../../components/Badge.jsx';
 import { formatDate } from '../../utils/format.js';
 import { useToast } from '../../hooks/useToast.js';
-import { getErrorMessage } from '../../services/api.js';
+import { getErrorMessage } from '../../config/api.js';
 import { ROLE_LABELS } from '../../config/constants.js';
 
 export default function UsersPage() {

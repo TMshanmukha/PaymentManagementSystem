@@ -8,7 +8,7 @@ import { useAuth } from '../../hooks/useAuth.js';
 import { useSettings } from '../../context/SettingsContext.jsx';
 import { Button } from '../../components/Button.jsx';
 import { Input } from '../../components/Input.jsx';
-import { getErrorMessage } from '../../services/api.js';
+import { getErrorMessage } from '../../config/api.js';
 import { ROLE_HOME } from '../../config/constants.js';
 
 export default function LoginPage() {
