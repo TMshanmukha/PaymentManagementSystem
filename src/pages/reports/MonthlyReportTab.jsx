@@ -10,6 +10,7 @@ import { LoadingState } from '../../components/LoadingState.jsx';
 import { ErrorState } from '../../components/ErrorState.jsx';
 import { formatCurrency } from '../../utils/format.js';
 import { IndianRupee, TrendingDown, Wallet, Users } from 'lucide-react';
+import { getErrorMessage } from '../../config/api.js';
 
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
@@ -27,8 +28,8 @@ export function MonthlyReportTab() {
     try {
       const { data: res } = await reportApi.monthly(year, month);
       setData(res.data);
-    } catch {
-      setError('Could not load monthly report.');
+    } catch (err) {
+      setError(getErrorMessage(err, 'Could not load monthly report.'));
     } finally {
       setLoading(false);
     }

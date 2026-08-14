@@ -10,6 +10,7 @@ import { ErrorState } from '../../components/ErrorState.jsx';
 import { Badge } from '../../components/Badge.jsx';
 import { formatCurrency, formatDateTime, todayISO } from '../../utils/format.js';
 import { IndianRupee, Banknote, Smartphone, School, BookOpen, Wallet } from 'lucide-react';
+import { getErrorMessage } from '../../config/api.js';
 
 export function DailyReportTab() {
   const [date, setDate] = useState(todayISO());
@@ -23,8 +24,8 @@ export function DailyReportTab() {
     try {
       const { data: res } = await reportApi.daily(date);
       setData(res.data);
-    } catch {
-      setError('Could not load daily report.');
+    } catch (err) {
+      setError(getErrorMessage(err, 'Could not load daily report.'));
     } finally {
       setLoading(false);
     }

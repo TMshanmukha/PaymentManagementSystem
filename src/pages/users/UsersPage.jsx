@@ -36,8 +36,8 @@ export default function UsersPage() {
     try {
       const { data } = await userApi.list();
       setRows(data.data);
-    } catch {
-      toast.error('Could not load users.');
+    } catch (err) {
+      toast.error(getErrorMessage(err, 'Could not load users.'));
     } finally {
       setLoading(false);
     }

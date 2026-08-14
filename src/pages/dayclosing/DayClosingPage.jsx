@@ -39,8 +39,8 @@ export default function DayClosingPage() {
       ]);
       setExpected(exp.data.data);
       setHistory(hist.data.data);
-    } catch {
-      toast.error('Could not load day closing data.');
+    } catch (err) {
+      toast.error(getErrorMessage(err, 'Could not load day closing data.'));
     } finally {
       setLoading(false);
     }

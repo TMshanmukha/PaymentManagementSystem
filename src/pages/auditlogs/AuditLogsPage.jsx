@@ -6,6 +6,7 @@ import { Select } from '../../components/Select.jsx';
 import { DataTable } from '../../components/DataTable.jsx';
 import { Pagination } from '../../components/Pagination.jsx';
 import { formatDateTime, firstDayOfMonthISO, todayISO } from '../../utils/format.js';
+import { getErrorMessage } from '../../config/api.js';
 
 const ACTIONS = [
   'LOGIN', 'LOGOUT', 'STUDENT_CREATED', 'STUDENT_UPDATED', 'STUDENT_DEACTIVATED', 'STUDENT_ACTIVATED',
@@ -32,8 +33,8 @@ export default function AuditLogsPage() {
       const { data } = await auditLogApi.list({ page, pageSize, action: action || undefined, fromDate, toDate });
       setRows(data.data.items);
       setTotal(data.data.total);
-    } catch {
-      setError('Could not load audit logs.');
+    } catch (err) {
+      setError(getErrorMessage(err, 'Could not load audit logs.'));
     } finally {
       setLoading(false);
     }

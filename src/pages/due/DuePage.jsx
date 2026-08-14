@@ -11,6 +11,7 @@ import { Button } from '../../components/Button.jsx';
 import { formatCurrency, formatDate } from '../../utils/format.js';
 import { useAuth } from '../../hooks/useAuth.js';
 import { ROLES } from '../../config/constants.js';
+import { getErrorMessage } from '../../config/api.js';
 
 export default function DuePage() {
   const { user } = useAuth();
@@ -35,8 +36,8 @@ export default function DuePage() {
       });
       setRows(data.data.items);
       setTotal(data.data.total);
-    } catch {
-      setError('Could not load due report.');
+    } catch (err) {
+      setError(getErrorMessage(err, 'Could not load due report.'));
     } finally {
       setLoading(false);
     }

@@ -52,8 +52,8 @@ export default function ExpensesPage() {
       setRows(data.data.items);
       setTotal(data.data.total);
       setTotalAmount(data.data.totalAmount);
-    } catch {
-      setError('Could not load expenses.');
+    } catch (err) {
+      setError(getErrorMessage(err, 'Could not load expenses.'));
     } finally {
       setLoading(false);
     }

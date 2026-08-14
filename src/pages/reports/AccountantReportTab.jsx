@@ -12,6 +12,7 @@ import { formatCurrency, formatDate, firstDayOfMonthISO, todayISO } from '../../
 import { useAuth } from '../../hooks/useAuth.js';
 import { ROLES } from '../../config/constants.js';
 import { IndianRupee, Banknote, Smartphone } from 'lucide-react';
+import { getErrorMessage } from '../../config/api.js';
 
 export function AccountantReportTab() {
   const { user } = useAuth();
@@ -33,8 +34,8 @@ export function AccountantReportTab() {
     try {
       const { data: res } = await reportApi.accountant({ accountantId: accountantId || undefined, fromDate, toDate });
       setData(res.data);
-    } catch {
-      setError('Could not load accountant report.');
+    } catch (err) {
+      setError(getErrorMessage(err, 'Could not load accountant report.'));
     } finally {
       setLoading(false);
     }

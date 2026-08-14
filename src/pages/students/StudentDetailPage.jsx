@@ -13,6 +13,7 @@ import { StatCard } from '../../components/StatCard.jsx';
 import { formatCurrency, formatDate, formatDateTime } from '../../utils/format.js';
 import { StudentFormModal } from './StudentFormModal.jsx';
 import { IndianRupee, CheckCircle2, AlertCircle, Receipt } from 'lucide-react';
+import { getErrorMessage } from '../../config/api.js';
 
 export default function StudentDetailPage() {
   const { id } = useParams();
@@ -30,8 +31,8 @@ export default function StudentDetailPage() {
       const [s, h] = await Promise.all([studentApi.getOne(id), studentApi.paymentHistory(id)]);
       setStudent(s.data.data);
       setHistory(h.data.data);
-    } catch {
-      setError('Could not load student details.');
+    } catch (err) {
+      setError(getErrorMessage(err, 'Could not load student details.'));
     } finally {
       setLoading(false);
     }

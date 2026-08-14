@@ -9,6 +9,7 @@ import { LoadingState } from '../../components/LoadingState.jsx';
 import { ErrorState } from '../../components/ErrorState.jsx';
 import { formatCurrency, formatDate, firstDayOfMonthISO, todayISO } from '../../utils/format.js';
 import { IndianRupee, TrendingDown, Wallet } from 'lucide-react';
+import { getErrorMessage } from '../../config/api.js';
 
 export function DateRangeReportTab() {
   const [fromDate, setFromDate] = useState(firstDayOfMonthISO());
@@ -23,8 +24,8 @@ export function DateRangeReportTab() {
     try {
       const { data: res } = await reportApi.dateRange(fromDate, toDate);
       setData(res.data);
-    } catch {
-      setError('Could not load report.');
+    } catch (err) {
+      setError(getErrorMessage(err, 'Could not load report.'));
     } finally {
       setLoading(false);
     }

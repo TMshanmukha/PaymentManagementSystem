@@ -37,8 +37,8 @@ export default function PaymentDetailPage() {
       const [p, s] = await Promise.all([paymentApi.getOne(id), settingsApi.getAll()]);
       setPayment(p.data.data);
       setInstitution(s.data.data);
-    } catch {
-      setError('Could not load payment.');
+    } catch (err) {
+      setError(getErrorMessage(err, 'Could not load payment.'));
     } finally {
       setLoading(false);
     }

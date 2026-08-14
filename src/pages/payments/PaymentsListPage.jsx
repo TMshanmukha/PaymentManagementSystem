@@ -47,8 +47,8 @@ export default function PaymentsListPage() {
       });
       setRows(data.data.items);
       setTotal(data.data.total);
-    } catch {
-      setError('Could not load payments.');
+    } catch (err) {
+      setError(getErrorMessage(err, 'Could not load payments.'));
     } finally {
       setLoading(false);
     }

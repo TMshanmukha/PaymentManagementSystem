@@ -18,6 +18,7 @@ import { Badge } from '../../components/Badge.jsx';
 import { formatCurrency, formatDateTime } from '../../utils/format.js';
 import { useAuth } from '../../hooks/useAuth.js';
 import { ROLES } from '../../config/constants.js';
+import { getErrorMessage } from '../../config/api.js';
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -36,7 +37,7 @@ export default function DashboardPage() {
       const { data: res } = await reportApi.dashboard();
       setData(res.data);
     } catch (err) {
-      setError('Could not load dashboard data.');
+      setError(getErrorMessage(err, 'Could not load dashboard data.'));
     } finally {
       setLoading(false);
     }
@@ -56,7 +57,7 @@ export default function DashboardPage() {
         actions={
           <>
             <Button onClick={() => navigate(`${base}/payments/new`)}><Plus className="w-4 h-4" /> New Payment</Button>
-            <Button variant="secondary" onClick={() => navigate(`${base}/students/new`)}><Users className="w-4 h-4" /> Add Student</Button>
+            <Button variant="secondary" onClick={() => navigate(`${base}/students`, { state: { openAddModal: true } })}><Users className="w-4 h-4" /> Add Student</Button>
           </>
         }
       />
