@@ -103,10 +103,10 @@ export default function SettingsPage() {
             {academicYears.map((y) => (
               <div key={y.id} className="flex items-center justify-between py-2 border-b border-slate-50 last:border-0">
                 <div>
-                  <p className="text-sm font-medium text-slate-800">{y.year_label}</p>
+                  <p className="text-sm font-medium text-slate-800">{y.year_name}</p>
                   <p className="text-xs text-slate-400">{formatDate(y.start_date)} – {formatDate(y.end_date)}</p>
                 </div>
-                {y.is_current ? <Badge color="green">Current</Badge> : <Badge color="gray">Inactive</Badge>}
+                {y.is_active ? <Badge color="green">Current</Badge> : <Badge color="gray">Inactive</Badge>}
               </div>
             ))}
           </div>

@@ -26,10 +26,10 @@ export function Navbar({ title, onMenuClick }) {
             <select
               value={selectedYearId}
               onChange={(e) => changeSelectedYear(e.target.value)}
-              className="text-sm font-medium text-slate-700 bg-slate-50 border border-slate-200 rounded-md px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-brand-500 focus:border-brand-500 cursor-pointer"
+              className="text-sm font-medium text-slate-700 bg-slate-50 border border-slate-200 rounded-md px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-brand-500 focus:border-brand-500 cursor-pointer w-28 sm:w-auto truncate"
             >
               {academicYears.map((y) => (
-                <option key={y.id} value={y.id}>
+                <option key={y.id} value={String(y.id)}>
                   {y.year_name} {y.is_active ? '(Active)' : ''}
                 </option>
               ))}

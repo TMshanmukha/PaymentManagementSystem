@@ -29,15 +29,21 @@ export function StudentFormModal({ open, onClose, onSuccess, student }) {
 
   useEffect(() => {
     if (open) {
-      academicYearApi.list().then(({ data }) => setAcademicYears(data.data));
-      const current = academicYears.find((y) => y.is_current);
-      reset(student ? {
-        name: student.student_name, parentName: student.parent_name, parentPhone: student.parent_phone,
-        studentPhone: '', class: student.class || '', section: student.section || '',
-        studentType: student.student_type, academicYearId: student.academic_year_id,
-        totalFee: student.total_fee, joiningDate: todayISO(), address: '', status: student.status,
-      } : {
-        studentType: lockedType || 'SCHOOL', joiningDate: todayISO(), status: 'ACTIVE',
+      academicYearApi.list().then(({ data }) => {
+        const years = data.data;
+        setAcademicYears(years);
+        const activeYear = years.find((y) => y.is_active);
+        reset(student ? {
+          name: student.student_name, parentName: student.parent_name, parentPhone: student.parent_phone,
+          studentPhone: '', class: student.class || '', section: student.section || '',
+          studentType: student.student_type, academicYearId: String(student.academic_year_id),
+          totalFee: student.total_fee, joiningDate: todayISO(), address: '', status: student.status,
+        } : {
+          studentType: lockedType || 'SCHOOL',
+          academicYearId: activeYear ? String(activeYear.id) : '',
+          joiningDate: todayISO(),
+          status: 'ACTIVE',
+        });
       });
       setServerError('');
     }
@@ -79,7 +85,7 @@ export function StudentFormModal({ open, onClose, onSuccess, student }) {
           options={[{ value: 'SCHOOL', label: 'School' }, { value: 'TUITION', label: 'Tuition' }]}
           {...register('studentType')} />
         <Select label="Academic Year" placeholder="Select year" error={errors.academicYearId?.message}
-          options={academicYears.map((y) => ({ value: y.id, label: y.year_label }))}
+          options={academicYears.map((y) => ({ value: String(y.id), label: y.year_name }))}
           {...register('academicYearId')} />
         <Input label="Total Fee (₹)" type="number" step="0.01" min="0" error={errors.totalFee?.message} {...register('totalFee')} />
         <Input label="Joining Date" type="date" error={errors.joiningDate?.message} {...register('joiningDate')} />
