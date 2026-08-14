@@ -9,24 +9,32 @@ import { ROLES } from '../config/constants.js';
 function itemsForRole(role) {
   const base = role === ROLES.ADMIN ? '/admin' : role === ROLES.SCHOOL_ACCOUNTANT ? '/school' : '/tuition';
 
-  const common = [
+  const items = [
     { to: `${base}/dashboard`, label: 'Dashboard', icon: LayoutDashboard },
     { to: `${base}/students`, label: 'Students', icon: Users },
     { to: `${base}/payments`, label: 'Payments', icon: Receipt },
     { to: `${base}/due`, label: 'Due', icon: AlertCircle },
-    { to: `${base}/expenses`, label: 'Expenses', icon: Wallet },
-    { to: `${base}/reports`, label: 'Reports', icon: BarChart3 },
-    { to: `${base}/day-closing`, label: 'Day Closing', icon: ClipboardCheck },
   ];
 
   if (role === ROLES.ADMIN) {
-    common.push(
-      { to: `${base}/users`, label: 'Users', icon: UserCog },
-      { to: `${base}/audit-logs`, label: 'Audit Logs', icon: ScrollText },
-      { to: `${base}/settings`, label: 'Settings', icon: Settings },
+    items.push(
+      { to: `${base}/expenses`, label: 'Expenses', icon: Wallet },
+      { to: `${base}/reports`, label: 'Reports', icon: BarChart3 }
     );
   }
-  return common;
+
+  items.push(
+    { to: `${base}/day-closing`, label: 'Day Closing', icon: ClipboardCheck }
+  );
+
+  if (role === ROLES.ADMIN) {
+    items.push(
+      { to: `${base}/users`, label: 'Users', icon: UserCog },
+      { to: `${base}/audit-logs`, label: 'Audit Logs', icon: ScrollText },
+      { to: `${base}/settings`, label: 'Settings', icon: Settings }
+    );
+  }
+  return items;
 }
 
 export function Sidebar({ role, mobileOpen, onCloseMobile }) {

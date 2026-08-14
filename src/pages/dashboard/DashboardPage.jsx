@@ -62,18 +62,22 @@ export default function DashboardPage() {
       />
 
       {/* Row 1 */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+      <div className={`grid grid-cols-1 sm:grid-cols-2 ${isAdmin ? 'lg:grid-cols-4' : 'lg:grid-cols-2'} gap-4 mb-4`}>
         <StatCard label="Today's Collection" value={formatCurrency(data.todayCollection)} icon={IndianRupee} tone="success"
           sub={`${data.todayTransactionCount} transactions`} />
-        <StatCard label="Today's Expenses" value={formatCurrency(data.todayExpenses)} icon={TrendingDown} tone="warning" />
-        <StatCard label="Today's Net Collection" value={formatCurrency(data.todayNetCollection)} icon={Wallet} tone="default" />
+        {isAdmin && <StatCard label="Today's Expenses" value={formatCurrency(data.todayExpenses)} icon={TrendingDown} tone="warning" />}
+        {isAdmin && <StatCard label="Today's Net Collection" value={formatCurrency(data.todayNetCollection)} icon={Wallet} tone="default" />}
         <StatCard label="Total Outstanding Due" value={formatCurrency(data.totalOutstandingDue)} icon={AlertCircle} tone="danger" />
       </div>
 
       {/* Row 2 */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <StatCard label="School Collection" value={formatCurrency(data.schoolCollection)} icon={School} />
-        <StatCard label="Tuition Collection" value={formatCurrency(data.tuitionCollection)} icon={BookOpen} />
+      <div className={`grid grid-cols-1 sm:grid-cols-2 ${isAdmin ? 'lg:grid-cols-4' : 'lg:grid-cols-3'} gap-4 mb-6`}>
+        {(isAdmin || user.role === ROLES.SCHOOL_ACCOUNTANT) && (
+          <StatCard label="School Collection" value={formatCurrency(data.schoolCollection)} icon={School} />
+        )}
+        {(isAdmin || user.role === ROLES.TUITION_ACCOUNTANT) && (
+          <StatCard label="Tuition Collection" value={formatCurrency(data.tuitionCollection)} icon={BookOpen} />
+        )}
         <StatCard label="Cash Collection" value={formatCurrency(data.cashCollection)} icon={Banknote} />
         <StatCard label="UPI Collection" value={formatCurrency(data.upiCollection)} icon={Smartphone} />
       </div>
@@ -112,7 +116,7 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
+      <div className={`grid grid-cols-1 ${isAdmin ? 'lg:grid-cols-2' : ''} gap-4 mt-4`}>
         {/* Recent payments */}
         <Card>
           <div className="flex items-center justify-between mb-4">
@@ -140,24 +144,26 @@ export default function DashboardPage() {
         </Card>
 
         {/* Recent expenses */}
-        <Card>
-          <p className="font-semibold text-navy-900 mb-4">Recent Expenses</p>
-          {data.recentExpenses.length === 0 ? (
-            <p className="text-sm text-slate-400 py-6 text-center">No expenses recorded yet.</p>
-          ) : (
-            <div className="space-y-3">
-              {data.recentExpenses.map((e, i) => (
-                <div key={i} className="flex items-center justify-between text-sm gap-2">
-                  <div className="min-w-0 flex-1">
-                    <p className="font-medium text-slate-800 truncate">{e.category_name}</p>
-                    <p className="text-xs text-slate-400 truncate">{e.expense_type} · {e.created_by_name}</p>
+        {isAdmin && (
+          <Card>
+            <p className="font-semibold text-navy-900 mb-4">Recent Expenses</p>
+            {data.recentExpenses.length === 0 ? (
+              <p className="text-sm text-slate-400 py-6 text-center">No expenses recorded yet.</p>
+            ) : (
+              <div className="space-y-3">
+                {data.recentExpenses.map((e, i) => (
+                  <div key={i} className="flex items-center justify-between text-sm gap-2">
+                    <div className="min-w-0 flex-1">
+                      <p className="font-medium text-slate-800 truncate">{e.category_name}</p>
+                      <p className="text-xs text-slate-400 truncate">{e.expense_type} · {e.created_by_name}</p>
+                    </div>
+                    <p className="font-semibold text-red-500 shrink-0">-{formatCurrency(e.amount)}</p>
                   </div>
-                  <p className="font-semibold text-red-500 shrink-0">-{formatCurrency(e.amount)}</p>
-                </div>
-              ))}
-            </div>
-          )}
-        </Card>
+                ))}
+              </div>
+            )}
+          </Card>
+        )}
       </div>
     </div>
   );

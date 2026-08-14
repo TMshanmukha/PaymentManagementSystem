@@ -36,9 +36,7 @@ function roleSection(basePath, title, extraChildren = null) {
       <Route path="payments" element={<PaymentsListPage />} />
       <Route path="payments/new" element={<NewPaymentPage />} />
       <Route path="payments/:id" element={<PaymentDetailPage />} />
-      <Route path="expenses" element={<ExpensesPage />} />
       <Route path="due" element={<DuePage />} />
-      <Route path="reports" element={<ReportsPage />} />
       <Route path="day-closing" element={<DayClosingPage />} />
       {extraChildren}
       <Route index element={<Navigate to="dashboard" replace />} />
@@ -60,6 +58,8 @@ export default function App() {
                 <Route element={<RoleRoute allow={[ROLES.ADMIN]} />}>
                   {roleSection('/admin', 'Admin', (
                     <>
+                      <Route path="expenses" element={<ExpensesPage />} />
+                      <Route path="reports" element={<ReportsPage />} />
                       <Route path="users" element={<UsersPage />} />
                       <Route path="audit-logs" element={<AuditLogsPage />} />
                       <Route path="settings" element={<SettingsPage />} />
