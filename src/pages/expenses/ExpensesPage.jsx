@@ -20,6 +20,7 @@ import { useToast } from '../../hooks/useToast.js';
 import { getErrorMessage } from '../../config/api.js';
 import { ROLES, ROLE_SCOPE } from '../../config/constants.js';
 import { Wallet } from 'lucide-react';
+import { exportToExcel } from '../../utils/export.js';
 
 export default function ExpensesPage() {
   const { user } = useAuth();
@@ -40,6 +41,19 @@ export default function ExpensesPage() {
   const [serverError, setServerError] = useState('');
  
   const activeExpenseType = lockedType || tab;
+
+  const handleExport = () => {
+    const headers = [
+      { key: 'expense_date', label: 'Expense Date' },
+      { key: 'category_name', label: 'Category' },
+      { key: 'amount', label: 'Amount' },
+      { key: 'expense_type', label: 'Expense Type' },
+      { key: 'payment_method', label: 'Payment Method' },
+      { key: 'description', label: 'Description' },
+      { key: 'created_by_name', label: 'Created By' }
+    ];
+    exportToExcel(rows, `expenses_${activeExpenseType.toLowerCase()}_list`, headers);
+  };
 
   const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm({
     resolver: zodResolver(expenseSchema),
@@ -100,6 +114,11 @@ export default function ExpensesPage() {
         description="Track operational spending"
         actions={
           <div className="flex gap-2 no-print">
+            {rows.length > 0 && (
+              <Button variant="secondary" onClick={handleExport}>
+                Export to Excel
+              </Button>
+            )}
             <Button variant="secondary" onClick={() => window.print()}><Printer className="w-4 h-4" /> Print</Button>
             <Button onClick={handleOpenAdd}><Plus className="w-4 h-4" /> Add Expense</Button>
           </div>

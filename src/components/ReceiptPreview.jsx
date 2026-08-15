@@ -24,56 +24,57 @@ export function ReceiptPreview({ receipt, institution: propInstitution }) {
   } = receipt;
 
   return (
-    <div className="bg-white text-navy-900 max-w-sm mx-auto p-6 text-sm" style={{ fontFamily: 'ui-monospace, monospace' }}>
-      <div className="text-center mb-4">
-        <p className="font-bold text-base">{name}</p>
-        <p className="text-xs font-bold tracking-wider uppercase text-slate-500 mt-0.5">FEE RECEIPT</p>
-        {address && <p className="text-xs text-slate-500 mt-1">{address}</p>}
-        {phone && <p className="text-xs text-slate-500">Ph: {phone}</p>}
+    <div className="bg-white text-navy-900 max-w-sm mx-auto p-6 text-sm print:max-w-none print:w-full print:p-0" style={{ fontFamily: 'ui-monospace, monospace' }}>
+      <div className="text-center mb-6 border-b print:border-b-2 pb-4">
+        <p className="font-bold text-lg print:text-2xl text-navy-950">{name}</p>
+        <p className="text-xs font-bold tracking-wider uppercase text-slate-500 mt-0.5 print:text-sm">FEE RECEIPT VOUCHER</p>
+        {address && <p className="text-xs text-slate-500 mt-1 print:text-sm">{address}</p>}
+        {phone && <p className="text-xs text-slate-500 print:text-sm">Ph: {phone}</p>}
       </div>
-      <div className="border-t border-b border-dashed border-slate-300 py-2 mb-2 flex justify-between text-xs">
-        <span>Receipt: <b>{receipt_number}</b></span>
-        <span>{formatDate(payment_date)}</span>
+      
+      <div className="border-b border-dashed border-slate-300 pb-3 mb-4 flex justify-between text-xs print:text-sm">
+        <span>Receipt No: <b className="text-sm print:text-base">{receipt_number}</b></span>
+        <span>Date: <b>{formatDate(payment_date)}</b></span>
       </div>
-      <p className="text-xs text-slate-500 mb-2">Time: {formatDateTime(payment_time)}</p>
+      <p className="text-xs text-slate-500 mb-4 print:text-sm">Time: {formatDateTime(payment_time)}</p>
 
-      <div className="space-y-1 mb-3">
-        <Row label="Student" value={`${student_name} (${student_code})`} />
-        <Row label="Parent" value={parent_name} />
-        {className && <Row label="Class" value={`${className}${section ? ' - ' + section : ''}`} />}
-        <Row label="Type" value={student_type} />
+      <div className="space-y-0.5 mb-6">
+        <Row label="Student Name" value={`${student_name} (${student_code})`} />
+        <Row label="Parent Name" value={parent_name} />
+        {className && <Row label="Class / Section" value={`${className}${section ? ' - ' + section : ''}`} />}
+        <Row label="Student Segment Type" value={student_type} />
       </div>
 
-      <div className="border-t border-dashed border-slate-300 pt-2 space-y-1 mb-3">
-        <Row label="Total Fee" value={formatCurrency(total_fee)} />
+      <div className="border-t border-dashed border-slate-300 pt-3 space-y-0.5 mb-6">
+        <Row label="Total Academic Fee" value={formatCurrency(total_fee)} />
         {previous_paid != null && <Row label="Previously Paid" value={formatCurrency(previous_paid)} />}
-        <Row label="This Payment" value={formatCurrency(amount)} bold />
-        {total_paid_to_date != null && <Row label="Total Paid" value={formatCurrency(total_paid_to_date)} />}
-        {remaining_due != null && <Row label="Remaining Due" value={formatCurrency(remaining_due)} bold />}
+        <Row label="This Transaction Payment" value={formatCurrency(amount)} bold />
+        {total_paid_to_date != null && <Row label="Cumulative Paid to Date" value={formatCurrency(total_paid_to_date)} />}
+        {remaining_due != null && <Row label="Balance Outstanding Due" value={formatCurrency(remaining_due)} bold />}
       </div>
 
-      <div className="border-t border-dashed border-slate-300 pt-2 space-y-1 mb-4">
-        <Row label="Payment Method" value={payment_method} />
-        <Row label="Received By" value={received_by_name} />
-        {remarks && <Row label="Remarks" value={remarks} />}
+      <div className="border-t border-dashed border-slate-300 pt-3 space-y-0.5 mb-6">
+        <Row label="Payment Mode" value={payment_method} />
+        <Row label="Authorized Receiver" value={received_by_name} />
+        {remarks && <Row label="Remarks / Notes" value={remarks} />}
       </div>
 
-      <div className="flex justify-between items-end mt-8 mb-2">
+      <div className="flex justify-between items-end mt-12 mb-4 print:mt-16">
         <div className="text-center">
-          <div className="border-t border-slate-400 w-24 pt-1 text-xs text-slate-500">Signature</div>
+          <div className="border-t border-slate-400 w-36 pt-1 text-xs text-slate-500 print:text-sm">Authorized Signature</div>
         </div>
       </div>
 
-      <p className="text-center text-[10px] text-slate-400 mt-4">This is a system-generated receipt. Thank you.</p>
+      <p className="text-center text-[10px] print:text-xs text-slate-400 mt-6 border-t pt-3">This is a system-generated receipt. Thank you.</p>
     </div>
   );
 }
 
 function Row({ label, value, bold }) {
   return (
-    <div className="flex justify-between gap-2">
-      <span className="text-slate-500">{label}</span>
-      <span className={bold ? 'font-bold' : ''}>{value}</span>
+    <div className="flex justify-between gap-2 py-1 print:py-2 border-b border-transparent print:border-slate-100">
+      <span className="text-slate-500 print:text-slate-600">{label}</span>
+      <span className={`${bold ? 'font-bold text-navy-950' : 'text-slate-800'} print:text-sm`}>{value}</span>
     </div>
   );
 }

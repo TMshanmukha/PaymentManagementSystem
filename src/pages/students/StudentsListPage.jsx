@@ -14,6 +14,7 @@ import { useAuth } from '../../hooks/useAuth.js';
 import { ROLES } from '../../config/constants.js';
 import { StudentFormModal } from './StudentFormModal.jsx';
 import { getErrorMessage } from '../../config/api.js';
+import { exportToExcel } from '../../utils/export.js';
 
 export default function StudentsListPage() {
   const { user } = useAuth();
@@ -23,6 +24,23 @@ export default function StudentsListPage() {
   const isAdmin = user.role === ROLES.ADMIN;
 
   const [rows, setRows] = useState([]);
+
+  const handleExport = () => {
+    const headers = [
+      { key: 'student_code', label: 'Student Code' },
+      { key: 'student_name', label: 'Student Name' },
+      { key: 'parent_name', label: 'Parent Name' },
+      { key: 'parent_phone', label: 'Parent Phone' },
+      { key: 'class', label: 'Class' },
+      { key: 'section', label: 'Section' },
+      { key: 'student_type', label: 'Student Type' },
+      { key: 'total_fee', label: 'Total Fee' },
+      { key: 'paid_amount', label: 'Paid Amount' },
+      { key: 'due_amount', label: 'Due Amount' },
+      { key: 'status', label: 'Status' }
+    ];
+    exportToExcel(rows, `students_class_${selectedClass}`, headers);
+  };
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const pageSize = 15;
@@ -159,6 +177,11 @@ export default function StudentsListPage() {
                 ]}
                 className="w-40 sm:w-44"
               />
+            )}
+            {selectedClass !== null && rows.length > 0 && (
+              <Button variant="secondary" onClick={handleExport} className="no-print">
+                Export to Excel
+              </Button>
             )}
             <Button onClick={() => setFormOpen(true)}><Plus className="w-4 h-4" /> Add Student</Button>
           </div>

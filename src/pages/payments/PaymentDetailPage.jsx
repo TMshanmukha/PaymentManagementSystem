@@ -15,6 +15,7 @@ import { useAuth } from '../../hooks/useAuth.js';
 import { useToast } from '../../hooks/useToast.js';
 import { getErrorMessage } from '../../config/api.js';
 import { ROLES } from '../../config/constants.js';
+import { triggerPrint } from '../../utils/print.js';
 
 export default function PaymentDetailPage() {
   const { id } = useParams();
@@ -29,6 +30,7 @@ export default function PaymentDetailPage() {
   const [error, setError] = useState('');
   const [action, setAction] = useState(null); // 'cancel' | 'reverse'
   const [busy, setBusy] = useState(false);
+  const [printMenuOpen, setPrintMenuOpen] = useState(false);
 
   async function load() {
     setLoading(true);
@@ -77,7 +79,43 @@ export default function PaymentDetailPage() {
         actions={
           <>
             <Badge status={payment.status} />
-            <Button variant="secondary" onClick={() => window.print()}><Printer className="w-4 h-4" /> Print</Button>
+            <div className="relative no-print">
+              <Button
+                variant="secondary"
+                onClick={() => setPrintMenuOpen((o) => !o)}
+                className="justify-center"
+              >
+                <Printer className="w-4 h-4" /> Print Receipt
+              </Button>
+              {printMenuOpen && (
+                <>
+                  <div className="fixed inset-0 z-10" onClick={() => setPrintMenuOpen(false)} />
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-popover border border-slate-100 py-1 z-20">
+                    <button
+                      onClick={() => { setPrintMenuOpen(false); triggerPrint('A4'); }}
+                      className="w-full text-left px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 border-b border-slate-100"
+                    >
+                      <p className="font-semibold text-slate-800">Print A4 Size</p>
+                      <p className="text-xs text-slate-400">Optimized voucher scaling</p>
+                    </button>
+                    <button
+                      onClick={() => { setPrintMenuOpen(false); triggerPrint('A5'); }}
+                      className="w-full text-left px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 border-b border-slate-100"
+                    >
+                      <p className="font-semibold text-slate-800">Print A5 Size</p>
+                      <p className="text-xs text-slate-400">Voucher memo scale</p>
+                    </button>
+                    <button
+                      onClick={() => { setPrintMenuOpen(false); triggerPrint('NORMAL'); }}
+                      className="w-full text-left px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50"
+                    >
+                      <p className="font-semibold text-slate-800">Normal / Default</p>
+                      <p className="text-xs text-slate-400">Standard print layout</p>
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
             {isAdmin && payment.status === 'COMPLETED' && (
               <>
                 <Button variant="secondary" onClick={() => setAction('reverse')}><RotateCcw className="w-4 h-4" /> Reverse</Button>

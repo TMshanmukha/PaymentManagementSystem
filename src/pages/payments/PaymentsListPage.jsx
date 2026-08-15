@@ -15,6 +15,7 @@ import { useAuth } from '../../hooks/useAuth.js';
 import { useToast } from '../../hooks/useToast.js';
 import { getErrorMessage } from '../../config/api.js';
 import { ROLES } from '../../config/constants.js';
+import { exportToExcel } from '../../utils/export.js';
 
 export default function PaymentsListPage() {
   const { user } = useAuth();
@@ -24,6 +25,21 @@ export default function PaymentsListPage() {
   const isAdmin = user.role === ROLES.ADMIN;
 
   const [rows, setRows] = useState([]);
+
+  const handleExport = () => {
+    const headers = [
+      { key: 'receipt_number', label: 'Receipt No' },
+      { key: 'student_name', label: 'Student Name' },
+      { key: 'parent_name', label: 'Parent Name' },
+      { key: 'student_type', label: 'Student Type' },
+      { key: 'amount', label: 'Amount' },
+      { key: 'payment_method', label: 'Payment Method' },
+      { key: 'payment_date', label: 'Payment Date' },
+      { key: 'received_by_name', label: 'Received By' },
+      { key: 'status', label: 'Status' }
+    ];
+    exportToExcel(rows, 'payments_transactions_list', headers);
+  };
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const pageSize = 15;
@@ -101,7 +117,16 @@ export default function PaymentsListPage() {
       <PageHeader
         title="Payments"
         description="All recorded fee payments"
-        actions={<Button onClick={() => navigate(`${base}/payments/new`)}><Plus className="w-4 h-4" /> New Payment</Button>}
+        actions={
+          <div className="flex gap-2">
+            {rows.length > 0 && (
+              <Button variant="secondary" onClick={handleExport} className="no-print">
+                Export to Excel
+              </Button>
+            )}
+            <Button onClick={() => navigate(`${base}/payments/new`)}><Plus className="w-4 h-4" /> New Payment</Button>
+          </div>
+        }
       />
 
       <Card>
