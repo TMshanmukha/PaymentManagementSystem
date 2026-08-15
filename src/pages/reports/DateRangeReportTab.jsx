@@ -13,6 +13,7 @@ import { IndianRupee, TrendingDown, Wallet } from 'lucide-react';
 import { getErrorMessage } from '../../config/api.js';
 import { useSettings } from '../../context/SettingsContext.jsx';
 import { triggerPrint } from '../../utils/print.js';
+import { exportToExcel } from '../../utils/export.js';
 
 export function DateRangeReportTab({ studentType }) {
   const [fromDate, setFromDate] = useState(firstDayOfMonthISO());
@@ -22,6 +23,28 @@ export function DateRangeReportTab({ studentType }) {
   const [error, setError] = useState('');
   const [printMenuOpen, setPrintMenuOpen] = useState(false);
   const { settings } = useSettings();
+
+  const handleExportBreakdown = () => {
+    const headers = [
+      { key: 'payment_date', label: 'Date' },
+      { key: 'cash_total', label: 'Cash Collection' },
+      { key: 'upi_total', label: 'UPI Collection' },
+      { key: 'overall_total', label: 'Total Collection' }
+    ];
+    exportToExcel(data.dailyBreakdown || [], `daterange_report_breakdown_${fromDate}_to_${toDate}`, headers);
+  };
+
+  const handleExportExpenses = () => {
+    const headers = [
+      { key: 'expense_date', label: 'Date' },
+      { key: 'category_name', label: 'Category' },
+      { key: 'expense_type', label: 'Type' },
+      { key: 'amount', label: 'Amount' },
+      { key: 'description', label: 'Description' },
+      { key: 'created_by_name', label: 'Recorded By' }
+    ];
+    exportToExcel(data.expensesList || [], `daterange_report_expenses_${fromDate}_to_${toDate}`, headers);
+  };
 
   async function load() {
     setLoading(true);
@@ -115,13 +138,23 @@ export function DateRangeReportTab({ studentType }) {
             <StatCard label="Net Amount" value={formatCurrency(data.netAmount)} icon={Wallet} />
           </div>
           <Card>
-            <p className="font-semibold text-navy-900 mb-3">Daily Breakdown</p>
+            <div className="flex justify-between items-center mb-3">
+              <p className="font-semibold text-navy-900">Daily Breakdown</p>
+              {data.dailyBreakdown?.length > 0 && (
+                <Button variant="secondary" size="sm" onClick={handleExportBreakdown} className="no-print">Export to Excel</Button>
+              )}
+            </div>
             <DataTable columns={columns} rows={data.dailyBreakdown} loading={false} rowKey="payment_date" emptyMessage="No transactions in this date range." />
           </Card>
-
+ 
           {data.expensesList && (
             <Card className="mt-4">
-              <p className="font-semibold text-navy-900 mb-3">Expenses List</p>
+              <div className="flex justify-between items-center mb-3">
+                <p className="font-semibold text-navy-900">Expenses List</p>
+                {data.expensesList.length > 0 && (
+                  <Button variant="secondary" size="sm" onClick={handleExportExpenses} className="no-print">Export to Excel</Button>
+                )}
+              </div>
               <DataTable
                 columns={[
                   { key: 'expense_date', header: 'Date', render: (r) => formatDate(r.expense_date) },

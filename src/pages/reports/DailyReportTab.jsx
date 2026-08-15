@@ -13,6 +13,7 @@ import { IndianRupee, Banknote, Smartphone, School, BookOpen, Wallet } from 'luc
 import { getErrorMessage } from '../../config/api.js';
 import { useSettings } from '../../context/SettingsContext.jsx';
 import { triggerPrint } from '../../utils/print.js';
+import { exportToExcel } from '../../utils/export.js';
 
 export function DailyReportTab({ studentType }) {
   const [date, setDate] = useState(todayISO());
@@ -21,6 +22,31 @@ export function DailyReportTab({ studentType }) {
   const [error, setError] = useState('');
   const [printMenuOpen, setPrintMenuOpen] = useState(false);
   const { settings } = useSettings();
+
+  const handleExportTransactions = () => {
+    const headers = [
+      { key: 'receipt_number', label: 'Receipt No' },
+      { key: 'student_name', label: 'Student Name' },
+      { key: 'student_code', label: 'Student Code' },
+      { key: 'amount', label: 'Amount' },
+      { key: 'payment_method', label: 'Payment Method' },
+      { key: 'payment_time', label: 'Payment Time' },
+      { key: 'entered_by', label: 'Entered By' },
+      { key: 'status', label: 'Status' }
+    ];
+    exportToExcel(data.transactions, `daily_report_payments_${date}`, headers);
+  };
+
+  const handleExportExpenses = () => {
+    const headers = [
+      { key: 'category_name', label: 'Category' },
+      { key: 'expense_type', label: 'Type' },
+      { key: 'amount', label: 'Amount' },
+      { key: 'description', label: 'Description' },
+      { key: 'created_by_name', label: 'Recorded By' }
+    ];
+    exportToExcel(data.expensesList || [], `daily_report_expenses_${date}`, headers);
+  };
 
   async function load() {
     setLoading(true);
@@ -139,12 +165,22 @@ export function DailyReportTab({ studentType }) {
           </Card>
 
           <Card className="mb-4">
-            <p className="font-semibold text-navy-900 mb-3">Individual Transactions</p>
+            <div className="flex justify-between items-center mb-3">
+              <p className="font-semibold text-navy-900">Individual Transactions</p>
+              {data.transactions?.length > 0 && (
+                <Button variant="secondary" size="sm" onClick={handleExportTransactions} className="no-print">Export to Excel</Button>
+              )}
+            </div>
             <DataTable columns={columns} rows={data.transactions} loading={false} emptyMessage="No payments recorded for this date." />
           </Card>
 
           <Card className="mb-4">
-            <p className="font-semibold text-navy-900 mb-3">Individual Expenses</p>
+            <div className="flex justify-between items-center mb-3">
+              <p className="font-semibold text-navy-900">Individual Expenses</p>
+              {data.expensesList?.length > 0 && (
+                <Button variant="secondary" size="sm" onClick={handleExportExpenses} className="no-print">Export to Excel</Button>
+              )}
+            </div>
             <DataTable
               columns={[
                 { key: 'category_name', header: 'Category' },

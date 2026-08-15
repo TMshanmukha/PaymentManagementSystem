@@ -11,6 +11,7 @@ import { Pagination } from '../../components/Pagination.jsx';
 import { Badge } from '../../components/Badge.jsx';
 import { formatCurrency } from '../../utils/format.js';
 import { useAuth } from '../../hooks/useAuth.js';
+import { useToast } from '../../hooks/useToast.js';
 import { ROLES } from '../../config/constants.js';
 import { StudentFormModal } from './StudentFormModal.jsx';
 import { getErrorMessage } from '../../config/api.js';
@@ -18,6 +19,7 @@ import { exportToExcel } from '../../utils/export.js';
 
 export default function StudentsListPage() {
   const { user } = useAuth();
+  const toast = useToast();
   const navigate = useNavigate();
   const location = useLocation();
   const base = user.role === ROLES.ADMIN ? '/admin' : user.role === ROLES.SCHOOL_ACCOUNTANT ? '/school' : '/tuition';
@@ -40,6 +42,29 @@ export default function StudentsListPage() {
       { key: 'status', label: 'Status' }
     ];
     exportToExcel(rows, `students_class_${selectedClass}`, headers);
+  };
+
+  const handleExportAll = async () => {
+    try {
+      const { data } = await studentApi.list({ pageSize: 5000, studentType: studentType || undefined });
+      const items = data.data.items;
+      const headers = [
+        { key: 'student_code', label: 'Student Code' },
+        { key: 'student_name', label: 'Student Name' },
+        { key: 'parent_name', label: 'Parent Name' },
+        { key: 'parent_phone', label: 'Parent Phone' },
+        { key: 'class', label: 'Class' },
+        { key: 'section', label: 'Section' },
+        { key: 'student_type', label: 'Student Type' },
+        { key: 'total_fee', label: 'Total Fee' },
+        { key: 'paid_amount', label: 'Paid Amount' },
+        { key: 'due_amount', label: 'Due Amount' },
+        { key: 'status', label: 'Status' }
+      ];
+      exportToExcel(items, 'all_students_register', headers);
+    } catch (err) {
+      toast.error('Could not export all students.');
+    }
   };
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
@@ -181,6 +206,11 @@ export default function StudentsListPage() {
             {selectedClass !== null && rows.length > 0 && (
               <Button variant="secondary" onClick={handleExport} className="no-print">
                 Export to Excel
+              </Button>
+            )}
+            {selectedClass === null && (
+              <Button variant="secondary" onClick={handleExportAll} className="no-print">
+                Export All Students
               </Button>
             )}
             <Button onClick={() => setFormOpen(true)}><Plus className="w-4 h-4" /> Add Student</Button>

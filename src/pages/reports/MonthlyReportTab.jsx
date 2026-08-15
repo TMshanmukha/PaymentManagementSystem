@@ -15,6 +15,7 @@ import { IndianRupee, TrendingDown, Wallet, Users } from 'lucide-react';
 import { getErrorMessage } from '../../config/api.js';
 import { useSettings } from '../../context/SettingsContext.jsx';
 import { triggerPrint } from '../../utils/print.js';
+import { exportToExcel } from '../../utils/export.js';
 
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
@@ -27,6 +28,18 @@ export function MonthlyReportTab({ studentType }) {
   const [error, setError] = useState('');
   const [printMenuOpen, setPrintMenuOpen] = useState(false);
   const { settings } = useSettings();
+
+  const handleExportExpenses = () => {
+    const headers = [
+      { key: 'expense_date', label: 'Date' },
+      { key: 'category_name', label: 'Category' },
+      { key: 'expense_type', label: 'Type' },
+      { key: 'amount', label: 'Amount' },
+      { key: 'description', label: 'Description' },
+      { key: 'created_by_name', label: 'Recorded By' }
+    ];
+    exportToExcel(data.expensesList || [], `monthly_report_expenses_${year}_${month}`, headers);
+  };
 
   async function load() {
     setLoading(true);
@@ -145,7 +158,12 @@ export function MonthlyReportTab({ studentType }) {
 
           {data.expensesList && (
             <Card className="mt-4">
-              <p className="font-semibold text-navy-900 mb-3">Monthly Expenses List</p>
+              <div className="flex justify-between items-center mb-3">
+                <p className="font-semibold text-navy-900">Monthly Expenses List</p>
+                {data.expensesList.length > 0 && (
+                  <Button variant="secondary" size="sm" onClick={handleExportExpenses} className="no-print">Export to Excel</Button>
+                )}
+              </div>
               <DataTable
                 columns={[
                   { key: 'expense_date', header: 'Date', render: (r) => formatDate(r.expense_date) },
