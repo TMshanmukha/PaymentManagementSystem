@@ -58,8 +58,8 @@ export default function App() {
 
                 <Route element={<ProtectedRoute />}>
                   {/* Admin-only subtree */}
-                  <Route element={<RoleRoute allow={[ROLES.ADMIN]} />}>
-                    {roleSection('/admin', 'Admin', (
+                  <Route path="/admin" element={<RoleRoute allow={[ROLES.ADMIN]} />}>
+                    {roleSection('', 'Admin', (
                       <>
                         <Route path="expenses" element={<ExpensesPage />} />
                         <Route path="reports" element={<ReportsPage />} />
@@ -72,13 +72,13 @@ export default function App() {
                   </Route>
 
                   {/* School accountant subtree */}
-                  <Route element={<RoleRoute allow={[ROLES.SCHOOL_ACCOUNTANT]} />}>
-                    {roleSection('/school', 'School Accountant')}
+                  <Route path="/school" element={<RoleRoute allow={[ROLES.SCHOOL_ACCOUNTANT]} />}>
+                    {roleSection('', 'School Accountant')}
                   </Route>
 
                   {/* Tuition accountant subtree */}
-                  <Route element={<RoleRoute allow={[ROLES.TUITION_ACCOUNTANT]} />}>
-                    {roleSection('/tuition', 'Tuition Accountant')}
+                  <Route path="/tuition" element={<RoleRoute allow={[ROLES.TUITION_ACCOUNTANT]} />}>
+                    {roleSection('', 'Tuition Accountant')}
                   </Route>
                 </Route>
 
