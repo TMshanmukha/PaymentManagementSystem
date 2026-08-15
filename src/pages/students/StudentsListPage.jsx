@@ -27,21 +27,33 @@ export default function StudentsListPage() {
 
   const [rows, setRows] = useState([]);
 
-  const handleExport = () => {
-    const headers = [
-      { key: 'student_code', label: 'Student Code' },
-      { key: 'student_name', label: 'Student Name' },
-      { key: 'parent_name', label: 'Parent Name' },
-      { key: 'parent_phone', label: 'Parent Phone' },
-      { key: 'class', label: 'Class' },
-      { key: 'section', label: 'Section' },
-      { key: 'student_type', label: 'Student Type' },
-      { key: 'total_fee', label: 'Total Fee' },
-      { key: 'paid_amount', label: 'Paid Amount' },
-      { key: 'due_amount', label: 'Due Amount' },
-      { key: 'status', label: 'Status' }
-    ];
-    exportToExcel(rows, `students_class_${selectedClass}`, headers);
+  const handleExport = async () => {
+    try {
+      const classFilter = selectedClass === 'all' ? undefined : (selectedClass === 'unassigned' ? '' : selectedClass);
+      const { data } = await studentApi.list({
+        pageSize: 5000,
+        studentType: studentType || undefined,
+        status: status || undefined,
+        class: classFilter
+      });
+      const items = data.data.items;
+      const headers = [
+        { key: 'student_code', label: 'Student Code' },
+        { key: 'student_name', label: 'Student Name' },
+        { key: 'parent_name', label: 'Parent Name' },
+        { key: 'parent_phone', label: 'Parent Phone' },
+        { key: 'class', label: 'Class' },
+        { key: 'section', label: 'Section' },
+        { key: 'student_type', label: 'Student Type' },
+        { key: 'total_fee', label: 'Total Fee' },
+        { key: 'paid_amount', label: 'Paid Amount' },
+        { key: 'due_amount', label: 'Due Amount' },
+        { key: 'status', label: 'Status' }
+      ];
+      exportToExcel(items, `students_class_${selectedClass}`, headers);
+    } catch (err) {
+      toast.error('Could not export class students.');
+    }
   };
 
   const handleExportAll = async () => {
