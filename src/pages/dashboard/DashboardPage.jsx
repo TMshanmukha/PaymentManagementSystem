@@ -62,50 +62,60 @@ export default function DashboardPage() {
         }
       />
 
-      {/* Row 1 */}
-      <div className={`grid grid-cols-1 sm:grid-cols-2 ${isAdmin ? 'lg:grid-cols-4' : 'lg:grid-cols-2'} gap-4 mb-4`}>
-        <StatCard label="Today's Collection" value={formatCurrency(data.todayCollection)} icon={IndianRupee} tone="success"
-          sub={`${data.todayTransactionCount} transactions`} />
-        {isAdmin && <StatCard label="Today's Expenses" value={formatCurrency(data.todayExpenses)} icon={TrendingDown} tone="warning" />}
-        {isAdmin && <StatCard label="Today's Net Collection" value={formatCurrency(data.todayNetCollection)} icon={Wallet} tone="default" />}
-        <StatCard label="Total Outstanding Due" value={formatCurrency(data.totalOutstandingDue)} icon={AlertCircle} tone="danger" />
-      </div>
+      {/* Row 1 (Accountants Only) */}
+      {!isAdmin && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mb-4">
+          <StatCard label="Today's Collection" value={formatCurrency(data.todayCollection)} icon={IndianRupee} tone="success"
+            sub={`${data.todayTransactionCount} transactions`} />
+          <StatCard label="Total Outstanding Due" value={formatCurrency(data.totalOutstandingDue)} icon={AlertCircle} tone="danger" />
+        </div>
+      )}
 
-      {/* Row 2 */}
-      <div className={`grid grid-cols-1 sm:grid-cols-2 ${isAdmin ? 'lg:grid-cols-4' : 'lg:grid-cols-3'} gap-4 mb-6`}>
-        {(isAdmin || user.role === ROLES.SCHOOL_ACCOUNTANT) && (
-          <StatCard label="School Collection" value={formatCurrency(data.schoolCollection)} icon={School} />
-        )}
-        {(isAdmin || user.role === ROLES.TUITION_ACCOUNTANT) && (
-          <StatCard label="Tuition Collection" value={formatCurrency(data.tuitionCollection)} icon={BookOpen} />
-        )}
-        <StatCard label="Cash Collection" value={formatCurrency(data.cashCollection)} icon={Banknote} />
-        <StatCard label="UPI Collection" value={formatCurrency(data.upiCollection)} icon={Smartphone} />
-      </div>
+      {/* Row 2 (Accountants Only) */}
+      {!isAdmin && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+          {user.role === ROLES.SCHOOL_ACCOUNTANT && (
+            <StatCard label="School Collection" value={formatCurrency(data.schoolCollection)} icon={School} />
+          )}
+          {user.role === ROLES.TUITION_ACCOUNTANT && (
+            <StatCard label="Tuition Collection" value={formatCurrency(data.tuitionCollection)} icon={BookOpen} />
+          )}
+          <StatCard label="Cash Collection" value={formatCurrency(data.cashCollection)} icon={Banknote} />
+          <StatCard label="UPI Collection" value={formatCurrency(data.upiCollection)} icon={Smartphone} />
+        </div>
+      )}
 
       {/* Segment Breakdown for Admin */}
       {isAdmin && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
           {/* School Section Card */}
-          <Card className="border-t-4 border-indigo-600 bg-gradient-to-br from-indigo-50/10 via-white to-white shadow-sm">
-            <div className="flex items-center justify-between mb-4">
+          <Card className="border-t-4 border-indigo-600 bg-gradient-to-br from-indigo-50/10 via-white to-white shadow-md p-6">
+            <div className="flex items-center justify-between mb-4 border-b border-indigo-50 pb-3">
               <div className="flex items-center gap-2">
-                <School className="w-5 h-5 text-indigo-600" />
+                <School className="w-5.5 h-5.5 text-indigo-600" />
                 <h3 className="font-bold text-slate-800 text-lg">School Segment Overview</h3>
               </div>
               <Badge color="blue">School</Badge>
             </div>
-            <div className="grid grid-cols-2 gap-3 mb-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">
               <div className="bg-indigo-50/30 p-3 rounded-lg border border-indigo-100/50">
                 <p className="text-xs text-slate-500 font-medium">Today's Collection</p>
-                <p className="text-lg font-bold text-indigo-700 mt-0.5">{formatCurrency(data.schoolCollection)}</p>
+                <p className="text-lg font-bold text-indigo-700 mt-0.5">{formatCurrency(data.schoolSummary.todayCollection)}</p>
               </div>
-              <div className="bg-orange-50/30 p-3 rounded-lg border border-orange-100/50">
+              <div className="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                <p className="text-xs text-slate-500 font-medium">Cash Collection</p>
+                <p className="text-lg font-bold text-slate-700 mt-0.5">{formatCurrency(data.schoolSummary.cashCollection)}</p>
+              </div>
+              <div className="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                <p className="text-xs text-slate-500 font-medium">UPI Collection</p>
+                <p className="text-lg font-bold text-slate-700 mt-0.5">{formatCurrency(data.schoolSummary.upiCollection)}</p>
+              </div>
+              <div className="bg-orange-50/30 p-3 rounded-lg border border-orange-100/50 col-span-2 sm:col-span-1">
                 <p className="text-xs text-slate-500 font-medium">Outstanding Due</p>
                 <p className="text-lg font-bold text-orange-600 mt-0.5">{formatCurrency(data.schoolSummary.totalOutstandingDue)}</p>
               </div>
             </div>
-            <div className="space-y-2.5">
+            <div className="space-y-2.5 mt-2">
               <SummaryRow label="Total Registered Students" value={data.schoolSummary.totalStudents} />
               <SummaryRow label="Students with Outstanding Dues" value={data.schoolSummary.studentsWithDue} tone="warning" />
               <SummaryRow label="Fully Paid Students" value={data.schoolSummary.studentsFullyPaid} tone="success" />
@@ -113,25 +123,33 @@ export default function DashboardPage() {
           </Card>
 
           {/* Tuition Section Card */}
-          <Card className="border-t-4 border-amber-500 bg-gradient-to-br from-amber-50/10 via-white to-white shadow-sm">
-            <div className="flex items-center justify-between mb-4">
+          <Card className="border-t-4 border-amber-500 bg-gradient-to-br from-amber-50/10 via-white to-white shadow-md p-6">
+            <div className="flex items-center justify-between mb-4 border-b border-amber-50 pb-3">
               <div className="flex items-center gap-2">
-                <BookOpen className="w-5 h-5 text-amber-500" />
+                <BookOpen className="w-5.5 h-5.5 text-amber-500" />
                 <h3 className="font-bold text-slate-800 text-lg">Tuition Segment Overview</h3>
               </div>
               <Badge color="orange">Tuition</Badge>
             </div>
-            <div className="grid grid-cols-2 gap-3 mb-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">
               <div className="bg-amber-50/30 p-3 rounded-lg border border-amber-100/50">
                 <p className="text-xs text-slate-500 font-medium">Today's Collection</p>
-                <p className="text-lg font-bold text-amber-600 mt-0.5">{formatCurrency(data.tuitionCollection)}</p>
+                <p className="text-lg font-bold text-amber-600 mt-0.5">{formatCurrency(data.tuitionSummary.todayCollection)}</p>
               </div>
-              <div className="bg-orange-50/30 p-3 rounded-lg border border-orange-100/50">
+              <div className="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                <p className="text-xs text-slate-500 font-medium">Cash Collection</p>
+                <p className="text-lg font-bold text-slate-700 mt-0.5">{formatCurrency(data.tuitionSummary.cashCollection)}</p>
+              </div>
+              <div className="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                <p className="text-xs text-slate-500 font-medium">UPI Collection</p>
+                <p className="text-lg font-bold text-slate-700 mt-0.5">{formatCurrency(data.tuitionSummary.upiCollection)}</p>
+              </div>
+              <div className="bg-orange-50/30 p-3 rounded-lg border border-orange-100/50 col-span-2 sm:col-span-1">
                 <p className="text-xs text-slate-500 font-medium">Outstanding Due</p>
                 <p className="text-lg font-bold text-orange-600 mt-0.5">{formatCurrency(data.tuitionSummary.totalOutstandingDue)}</p>
               </div>
             </div>
-            <div className="space-y-2.5">
+            <div className="space-y-2.5 mt-2">
               <SummaryRow label="Total Registered Students" value={data.tuitionSummary.totalStudents} />
               <SummaryRow label="Students with Outstanding Dues" value={data.tuitionSummary.studentsWithDue} tone="warning" />
               <SummaryRow label="Fully Paid Students" value={data.tuitionSummary.studentsFullyPaid} tone="success" />
