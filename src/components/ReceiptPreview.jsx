@@ -27,7 +27,8 @@ export function ReceiptPreview({ receipt, institution: propInstitution }) {
     <div className="bg-white text-navy-900 max-w-sm mx-auto p-6 text-sm" style={{ fontFamily: 'ui-monospace, monospace' }}>
       <div className="text-center mb-4">
         <p className="font-bold text-base">{name}</p>
-        {address && <p className="text-xs text-slate-500">{address}</p>}
+        <p className="text-xs font-bold tracking-wider uppercase text-slate-500 mt-0.5">FEE RECEIPT</p>
+        {address && <p className="text-xs text-slate-500 mt-1">{address}</p>}
         {phone && <p className="text-xs text-slate-500">Ph: {phone}</p>}
       </div>
       <div className="border-t border-b border-dashed border-slate-300 py-2 mb-2 flex justify-between text-xs">

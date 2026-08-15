@@ -55,7 +55,7 @@ export function DailyReportTab() {
       {error && <ErrorState message={error} onRetry={load} />}
 
       {data && (
-        <div className="print-area">
+        <div className="print-area print-a4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 mb-4">
             <StatCard label="Total Collection" value={formatCurrency(data.summary.total_collection)} icon={IndianRupee} tone="success" />
             <StatCard label="Cash" value={formatCurrency(data.summary.cash_collection)} icon={Banknote} />

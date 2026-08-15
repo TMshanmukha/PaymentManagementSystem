@@ -43,8 +43,18 @@
   }
 }
 
-/* Print styles: applied when a page uses the .print-area wrapper */
+/* Print styles: reset fixed height viewports and define standard print layout */
 @media print {
+  /* Reset height/scrolling/flex layout for printing multi-page documents */
+  html, body, #root, .h-screen, main, .flex, .flex-col, .flex-1, .min-w-0 {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+    display: block !important;
+    position: static !important;
+  }
+
   body * {
     visibility: hidden;
   }
@@ -57,7 +67,57 @@
     top: 0;
     width: 100%;
   }
-  .no-print {
+  .no-print, .no-print * {
     display: none !important;
+  }
+
+  /* Specific formatting for A4 reports and list pages */
+  .print-a4 {
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+    display: block !important;
+  }
+
+  @page {
+    size: A4 portrait;
+    margin: 15mm 15mm 15mm 15mm;
+  }
+
+  .print-a4 .card {
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: none !important;
+    margin-bottom: 1.5rem !important;
+    page-break-inside: avoid;
+    background: #fff !important;
+  }
+
+  .print-a4 table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    page-break-inside: auto !important;
+  }
+  
+  .print-a4 tr {
+    page-break-inside: avoid !important;
+    page-break-after: auto !important;
+  }
+
+  .print-a4 thead {
+    display: table-header-group !important;
+  }
+
+  .print-a4 th, .print-a4 td {
+    padding: 6px 8px !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    font-size: 10pt !important;
+  }
+
+  /* Force grid columns to print nicely on paper */
+  .print-a4 .grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) !important;
+    gap: 1rem !important;
   }
 }

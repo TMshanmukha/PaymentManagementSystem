@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Plus } from 'lucide-react';
+import { Plus, Printer } from 'lucide-react';
 import { expenseSchema } from '../../schemas/expense.schema.js';
 import { expenseApi } from '../../services/expense.service.js';
 import { Card } from '../../components/Card.jsx';
@@ -90,22 +90,34 @@ export default function ExpensesPage() {
       <PageHeader
         title="Expenses"
         description="Track operational spending"
-        actions={<Button onClick={() => setFormOpen(true)}><Plus className="w-4 h-4" /> Add Expense</Button>}
+        actions={
+          <div className="flex gap-2 no-print">
+            <Button variant="secondary" onClick={() => window.print()}><Printer className="w-4 h-4" /> Print</Button>
+            <Button onClick={() => setFormOpen(true)}><Plus className="w-4 h-4" /> Add Expense</Button>
+          </div>
+        }
       />
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
-        <StatCard label="Total Expenses (filtered)" value={formatCurrency(totalAmount)} icon={Wallet} tone="warning" />
-        <StatCard label="Transactions" value={total} />
-        {isAdmin && (
-          <Select placeholder="All Types" value={expenseType} onChange={(e) => { setExpenseType(e.target.value); setPage(1); }}
-            options={[{ value: 'SCHOOL', label: 'School' }, { value: 'TUITION', label: 'Tuition' }]} className="self-center" />
-        )}
+      <div className="print-area print-a4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+          <StatCard label="Total Expenses (filtered)" value={formatCurrency(totalAmount)} icon={Wallet} tone="warning" />
+          <StatCard label="Transactions" value={total} />
+          {isAdmin && (
+            <div className="no-print self-center">
+              <Select placeholder="All Types" value={expenseType} onChange={(e) => { setExpenseType(e.target.value); setPage(1); }}
+                options={[{ value: 'SCHOOL', label: 'School' }, { value: 'TUITION', label: 'Tuition' }]} />
+            </div>
+          )}
+        </div>
+
+        <Card className="mb-4">
+          <DataTable columns={columns} rows={rows} loading={loading} error={error} onRetry={load} emptyMessage="No expenses recorded." />
+        </Card>
       </div>
 
-      <Card>
-        <DataTable columns={columns} rows={rows} loading={loading} error={error} onRetry={load} emptyMessage="No expenses recorded." />
+      <div className="no-print">
         <Pagination page={page} pageSize={pageSize} total={total} onPageChange={setPage} />
-      </Card>
+      </div>
 
       <Modal open={formOpen} onClose={() => setFormOpen(false)} title="Add Expense"
         footer={<>

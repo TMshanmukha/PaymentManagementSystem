@@ -4,6 +4,7 @@ import { userApi } from '../../services/user.service.js';
 import { Card } from '../../components/Card.jsx';
 import { StatCard } from '../../components/StatCard.jsx';
 import { Select } from '../../components/Select.jsx';
+import { Button } from '../../components/Button.jsx';
 import { DataTable } from '../../components/DataTable.jsx';
 import { Badge } from '../../components/Badge.jsx';
 import { LoadingState } from '../../components/LoadingState.jsx';
@@ -11,7 +12,7 @@ import { ErrorState } from '../../components/ErrorState.jsx';
 import { formatCurrency, formatDate, firstDayOfMonthISO, todayISO } from '../../utils/format.js';
 import { useAuth } from '../../hooks/useAuth.js';
 import { ROLES } from '../../config/constants.js';
-import { IndianRupee, Banknote, Smartphone } from 'lucide-react';
+import { IndianRupee, Banknote, Smartphone, Printer } from 'lucide-react';
 import { getErrorMessage } from '../../config/api.js';
 
 export function AccountantReportTab() {
@@ -60,13 +61,14 @@ export function AccountantReportTab() {
           <span className="text-slate-400 text-sm shrink-0">to</span>
           <input type="date" className="input w-full sm:w-auto" value={toDate} onChange={(e) => setToDate(e.target.value)} />
         </div>
+        <Button variant="secondary" className="sm:ml-auto w-full sm:w-auto justify-center" onClick={() => window.print()}><Printer className="w-4 h-4" /> Print</Button>
       </div>
 
       {loading && <LoadingState label="Loading report..." />}
       {error && <ErrorState message={error} onRetry={load} />}
 
       {data && (
-        <div>
+        <div className="print-area print-a4">
           <Card className="mb-4">
             <p className="font-semibold text-navy-900 mb-1">{data.summary.full_name || 'Accountant'}</p>
             <p className="text-sm text-slate-400 mb-4">{data.summary.role}</p>

@@ -90,9 +90,15 @@ export default function SettingsPage() {
             </div>
             <button
               onClick={toggleOverpayment}
-              className={`w-11 h-6 rounded-full transition-colors relative shrink-0 ${settings.allow_overpayment === 'true' ? 'bg-brand-600' : 'bg-slate-200'}`}
+              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 ${
+                settings.allow_overpayment === 'true' ? 'bg-brand-600' : 'bg-slate-200'
+              }`}
             >
-              <span className={`absolute top-0.5 w-5 h-5 bg-white rounded-full transition-transform ${settings.allow_overpayment === 'true' ? 'translate-x-5' : 'translate-x-0.5'}`} />
+              <span
+                className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out ${
+                  settings.allow_overpayment === 'true' ? 'translate-x-5' : 'translate-x-0'
+                }`}
+              />
             </button>
           </div>
         </Card>

@@ -53,7 +53,7 @@ export function MonthlyReportTab() {
       {error && <ErrorState message={error} onRetry={load} />}
 
       {data && (
-        <div className="print-area">
+        <div className="print-area print-a4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
             <StatCard label="Total Collection" value={formatCurrency(data.collection.total_collection)} icon={IndianRupee} tone="success" />
             <StatCard label="Total Expenses" value={formatCurrency(data.expenses.total_expenses)} icon={TrendingDown} tone="warning" />

@@ -82,10 +82,12 @@ export default function DuePage() {
             options={[{ value: 'false', label: 'With Due Only' }, { value: 'true', label: 'Fully Paid Only' }, { value: '', label: 'All Students' }]} />
         </div>
 
-        <div className="print-area">
+        <div className="print-area print-a4">
           <DataTable columns={columns} rows={rows} loading={loading} error={error} onRetry={load} rowKey="student_id" emptyMessage="No students found for this filter." />
         </div>
-        <Pagination page={page} pageSize={pageSize} total={total} onPageChange={setPage} />
+        <div className="no-print">
+          <Pagination page={page} pageSize={pageSize} total={total} onPageChange={setPage} />
+        </div>
       </Card>
     </div>
   );
