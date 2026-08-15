@@ -38,11 +38,11 @@ export default function StudentsListPage() {
   const [loadingClasses, setLoadingClasses] = useState(true);
   const [selectedClass, setSelectedClass] = useState(null); // null means grid view, 'all' or class value means list view
 
-  async function loadClasses() {
+  async function loadClasses(typeFilter) {
     setLoadingClasses(true);
     setError('');
     try {
-      const { data } = await studentApi.getClasses();
+      const { data } = await studentApi.getClasses({ studentType: typeFilter || undefined });
       setClasses(data.data);
     } catch (err) {
       setError(getErrorMessage(err, 'Could not load classes.'));
@@ -74,10 +74,12 @@ export default function StudentsListPage() {
     }
   }
 
-  // Load classes initially
+  // Load classes initially and when type filter changes
   useEffect(() => {
-    loadClasses();
-  }, []);
+    if (selectedClass === null) {
+      loadClasses(studentType);
+    }
+  }, [studentType, selectedClass]);
 
   // Handle Dashboard "Add Student" navigation state
   useEffect(() => {
@@ -143,7 +145,23 @@ export default function StudentsListPage() {
       <PageHeader
         title={selectedClass !== null ? `Students - Class ${selectedClass === 'all' ? 'All' : (selectedClass === 'unassigned' ? 'Unassigned' : selectedClass)}` : 'Students by Class'}
         description={selectedClass !== null ? 'View and search student profiles in this class' : 'Select a class box to view relative students'}
-        actions={<Button onClick={() => setFormOpen(true)}><Plus className="w-4 h-4" /> Add Student</Button>}
+        actions={
+          <div className="flex items-center gap-3">
+            {isAdmin && selectedClass === null && (
+              <Select
+                value={studentType}
+                onChange={(e) => { setStudentType(e.target.value); }}
+                options={[
+                  { value: '', label: 'All Types' },
+                  { value: 'SCHOOL', label: 'School Only' },
+                  { value: 'TUITION', label: 'Tuition Only' },
+                ]}
+                className="w-40 sm:w-44"
+              />
+            )}
+            <Button onClick={() => setFormOpen(true)}><Plus className="w-4 h-4" /> Add Student</Button>
+          </div>
+        }
       />
 
       {selectedClass === null ? (

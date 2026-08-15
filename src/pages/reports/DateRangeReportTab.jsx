@@ -5,13 +5,14 @@ import { Card } from '../../components/Card.jsx';
 import { StatCard } from '../../components/StatCard.jsx';
 import { Button } from '../../components/Button.jsx';
 import { DataTable } from '../../components/DataTable.jsx';
+import { Badge } from '../../components/Badge.jsx';
 import { LoadingState } from '../../components/LoadingState.jsx';
 import { ErrorState } from '../../components/ErrorState.jsx';
 import { formatCurrency, formatDate, firstDayOfMonthISO, todayISO } from '../../utils/format.js';
 import { IndianRupee, TrendingDown, Wallet } from 'lucide-react';
 import { getErrorMessage } from '../../config/api.js';
 
-export function DateRangeReportTab() {
+export function DateRangeReportTab({ studentType }) {
   const [fromDate, setFromDate] = useState(firstDayOfMonthISO());
   const [toDate, setToDate] = useState(todayISO());
   const [data, setData] = useState(null);
@@ -22,7 +23,7 @@ export function DateRangeReportTab() {
     setLoading(true);
     setError('');
     try {
-      const { data: res } = await reportApi.dateRange(fromDate, toDate);
+      const { data: res } = await reportApi.dateRange(fromDate, toDate, studentType);
       setData(res.data);
     } catch (err) {
       setError(getErrorMessage(err, 'Could not load report.'));
@@ -30,7 +31,7 @@ export function DateRangeReportTab() {
       setLoading(false);
     }
   }
-  useEffect(() => { load(); }, [fromDate, toDate]); // eslint-disable-line
+  useEffect(() => { load(); }, [fromDate, toDate, studentType]); // eslint-disable-line
 
   const columns = [
     { key: 'payment_date', header: 'Date', render: (r) => formatDate(r.payment_date) },
@@ -65,6 +66,26 @@ export function DateRangeReportTab() {
             <p className="font-semibold text-navy-900 mb-3">Daily Breakdown</p>
             <DataTable columns={columns} rows={data.dailyBreakdown} loading={false} rowKey="payment_date" emptyMessage="No transactions in this date range." />
           </Card>
+
+          {data.expensesList && (
+            <Card className="mt-4">
+              <p className="font-semibold text-navy-900 mb-3">Expenses List</p>
+              <DataTable
+                columns={[
+                  { key: 'expense_date', header: 'Date', render: (r) => formatDate(r.expense_date) },
+                  { key: 'category_name', header: 'Category' },
+                  { key: 'expense_type', header: 'Type', render: (r) => <Badge color={r.expense_type === 'SCHOOL' ? 'blue' : r.expense_type === 'TUITION' ? 'orange' : 'gray'}>{r.expense_type}</Badge> },
+                  { key: 'amount', header: 'Amount', render: (r) => formatCurrency(r.amount) },
+                  { key: 'description', header: 'Description', render: (r) => r.description || '—' },
+                  { key: 'created_by_name', header: 'Recorded By' },
+                ]}
+                rows={data.expensesList}
+                loading={false}
+                rowKey="id"
+                emptyMessage="No expenses recorded for this date range."
+              />
+            </Card>
+          )}
         </div>
       )}
     </div>

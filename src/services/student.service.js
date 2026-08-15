@@ -2,7 +2,7 @@ import { api } from './api.js';
 
 export const studentApi = {
   list: (params) => api.get('/students', { params }),
-  getClasses: () => api.get('/students/classes'),
+  getClasses: (params) => api.get('/students/classes', { params }),
   getOne: (id) => api.get(`/students/${id}`),
   paymentHistory: (id) => api.get(`/students/${id}/payments`),
   create: (payload) => api.post('/students', payload),

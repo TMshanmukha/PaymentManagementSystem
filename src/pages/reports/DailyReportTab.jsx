@@ -12,7 +12,7 @@ import { formatCurrency, formatDateTime, todayISO } from '../../utils/format.js'
 import { IndianRupee, Banknote, Smartphone, School, BookOpen, Wallet } from 'lucide-react';
 import { getErrorMessage } from '../../config/api.js';
 
-export function DailyReportTab() {
+export function DailyReportTab({ studentType }) {
   const [date, setDate] = useState(todayISO());
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -22,7 +22,7 @@ export function DailyReportTab() {
     setLoading(true);
     setError('');
     try {
-      const { data: res } = await reportApi.daily(date);
+      const { data: res } = await reportApi.daily(date, studentType);
       setData(res.data);
     } catch (err) {
       setError(getErrorMessage(err, 'Could not load daily report.'));
@@ -30,7 +30,7 @@ export function DailyReportTab() {
       setLoading(false);
     }
   }
-  useEffect(() => { load(); }, [date]); // eslint-disable-line
+  useEffect(() => { load(); }, [date, studentType]); // eslint-disable-line
 
   const columns = [
     { key: 'receipt_number', header: 'Receipt' },
@@ -88,6 +88,23 @@ export function DailyReportTab() {
           <Card className="mb-4">
             <p className="font-semibold text-navy-900 mb-3">Individual Transactions</p>
             <DataTable columns={columns} rows={data.transactions} loading={false} emptyMessage="No payments recorded for this date." />
+          </Card>
+
+          <Card className="mb-4">
+            <p className="font-semibold text-navy-900 mb-3">Individual Expenses</p>
+            <DataTable
+              columns={[
+                { key: 'category_name', header: 'Category' },
+                { key: 'expense_type', header: 'Type', render: (r) => <Badge color={r.expense_type === 'SCHOOL' ? 'blue' : r.expense_type === 'TUITION' ? 'orange' : 'gray'}>{r.expense_type}</Badge> },
+                { key: 'amount', header: 'Amount', render: (r) => formatCurrency(r.amount) },
+                { key: 'description', header: 'Description', render: (r) => r.description || '—' },
+                { key: 'created_by_name', header: 'Recorded By' },
+              ]}
+              rows={data.expensesList || []}
+              loading={false}
+              rowKey="id"
+              emptyMessage="No expenses recorded for this date."
+            />
           </Card>
 
           <Card>

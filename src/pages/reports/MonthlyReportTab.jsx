@@ -6,15 +6,17 @@ import { Card } from '../../components/Card.jsx';
 import { StatCard } from '../../components/StatCard.jsx';
 import { Button } from '../../components/Button.jsx';
 import { Select } from '../../components/Select.jsx';
+import { DataTable } from '../../components/DataTable.jsx';
+import { Badge } from '../../components/Badge.jsx';
 import { LoadingState } from '../../components/LoadingState.jsx';
 import { ErrorState } from '../../components/ErrorState.jsx';
-import { formatCurrency } from '../../utils/format.js';
+import { formatCurrency, formatDate } from '../../utils/format.js';
 import { IndianRupee, TrendingDown, Wallet, Users } from 'lucide-react';
 import { getErrorMessage } from '../../config/api.js';
 
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
-export function MonthlyReportTab() {
+export function MonthlyReportTab({ studentType }) {
   const now = new Date();
   const [year, setYear] = useState(now.getFullYear());
   const [month, setMonth] = useState(now.getMonth() + 1);
@@ -26,7 +28,7 @@ export function MonthlyReportTab() {
     setLoading(true);
     setError('');
     try {
-      const { data: res } = await reportApi.monthly(year, month);
+      const { data: res } = await reportApi.monthly(year, month, studentType);
       setData(res.data);
     } catch (err) {
       setError(getErrorMessage(err, 'Could not load monthly report.'));
@@ -34,7 +36,7 @@ export function MonthlyReportTab() {
       setLoading(false);
     }
   }
-  useEffect(() => { load(); }, [year, month]); // eslint-disable-line
+  useEffect(() => { load(); }, [year, month, studentType]); // eslint-disable-line
 
   const yearOptions = Array.from({ length: 5 }, (_, i) => now.getFullYear() - i).map((y) => ({ value: y, label: String(y) }));
   const monthOptions = MONTHS.map((m, i) => ({ value: i + 1, label: m }));
@@ -88,6 +90,26 @@ export function MonthlyReportTab() {
               </ResponsiveContainer>
             </div>
           </Card>
+
+          {data.expensesList && (
+            <Card className="mt-4">
+              <p className="font-semibold text-navy-900 mb-3">Monthly Expenses List</p>
+              <DataTable
+                columns={[
+                  { key: 'expense_date', header: 'Date', render: (r) => formatDate(r.expense_date) },
+                  { key: 'category_name', header: 'Category' },
+                  { key: 'expense_type', header: 'Type', render: (r) => <Badge color={r.expense_type === 'SCHOOL' ? 'blue' : r.expense_type === 'TUITION' ? 'orange' : 'gray'}>{r.expense_type}</Badge> },
+                  { key: 'amount', header: 'Amount', render: (r) => formatCurrency(r.amount) },
+                  { key: 'description', header: 'Description', render: (r) => r.description || '—' },
+                  { key: 'created_by_name', header: 'Recorded By' },
+                ]}
+                rows={data.expensesList}
+                loading={false}
+                rowKey="id"
+                emptyMessage="No expenses recorded for this month."
+              />
+            </Card>
+          )}
         </div>
       )}
     </div>
