@@ -21,13 +21,13 @@ export default function ReportsPage() {
     <div>
       <PageHeader title="Reports" description="Financial reports and collection summaries" />
 
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 border-b border-slate-200 pb-3 no-print">
-        <div className="flex gap-1 overflow-x-auto whitespace-nowrap">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 no-print">
+        <div className="flex gap-1 border-b border-slate-200 overflow-x-auto whitespace-nowrap flex-1">
           {TABS.map((t) => (
             <button
               key={t.id}
               onClick={() => setTab(t.id)}
-              className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors -mb-3.5 ${
+              className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors -mb-px ${
                 tab === t.id ? 'border-brand-600 text-brand-600' : 'border-transparent text-slate-500 hover:text-slate-700'
               }`}
             >
@@ -44,7 +44,7 @@ export default function ReportsPage() {
               { value: 'SCHOOL', label: 'School Only' },
               { value: 'TUITION', label: 'Tuition Only' },
             ]}
-            className="w-full sm:w-44"
+            className="w-full sm:w-44 self-end sm:self-center"
           />
         )}
       </div>

@@ -13,6 +13,7 @@ import { ErrorState } from '../../components/ErrorState.jsx';
 import { formatCurrency, formatDate } from '../../utils/format.js';
 import { IndianRupee, TrendingDown, Wallet, Users } from 'lucide-react';
 import { getErrorMessage } from '../../config/api.js';
+import { useSettings } from '../../context/SettingsContext.jsx';
 
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
@@ -23,6 +24,7 @@ export function MonthlyReportTab({ studentType }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const { settings } = useSettings();
 
   async function load() {
     setLoading(true);
@@ -56,6 +58,18 @@ export function MonthlyReportTab({ studentType }) {
 
       {data && (
         <div className="print-area print-a4">
+          {/* Printable A4 Report Header */}
+          <div className="hidden print:block mb-6 text-center border-b pb-4">
+            <h1 className="text-2xl font-bold text-navy-950">{settings?.institution_name || 'EduLedger'}</h1>
+            {settings?.institution_address && <p className="text-sm text-slate-600 mt-1">{settings.institution_address}</p>}
+            {settings?.institution_phone && <p className="text-sm text-slate-600">Ph: {settings.institution_phone}</p>}
+            <div className="mt-4 border-t pt-3 flex justify-between text-xs text-slate-500">
+              <span className="font-bold uppercase tracking-wider text-sm text-navy-900">Monthly Financial Report</span>
+              <span>Month: {MONTHS[month - 1]} {year}</span>
+              <span>Printed on: {new Date().toLocaleString()}</span>
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
             <StatCard label="Total Collection" value={formatCurrency(data.collection.total_collection)} icon={IndianRupee} tone="success" />
             <StatCard label="Total Expenses" value={formatCurrency(data.expenses.total_expenses)} icon={TrendingDown} tone="warning" />
@@ -74,7 +88,7 @@ export function MonthlyReportTab({ studentType }) {
             </Card>
           </div>
 
-          <Card>
+          <Card className="no-print">
             <p className="font-semibold text-navy-900 mb-4">Daily Collection — {MONTHS[month - 1]} {year}</p>
             <div className="h-72">
               <ResponsiveContainer width="100%" height="100%">

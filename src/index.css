@@ -82,13 +82,18 @@
 
   @page {
     size: A4 portrait;
-    margin: 15mm 15mm 15mm 15mm;
+    margin: 10mm 10mm 10mm 10mm;
+  }
+
+  .print-a4 {
+    font-size: 10pt !important;
   }
 
   .print-a4 .card {
     border: 1px solid #e2e8f0 !important;
     box-shadow: none !important;
-    margin-bottom: 1.5rem !important;
+    margin-bottom: 0.75rem !important;
+    padding: 0.75rem !important;
     page-break-inside: avoid;
     background: #fff !important;
   }

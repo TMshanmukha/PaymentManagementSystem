@@ -83,7 +83,64 @@ export default function DashboardPage() {
         <StatCard label="UPI Collection" value={formatCurrency(data.upiCollection)} icon={Smartphone} />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      {/* Segment Breakdown for Admin */}
+      {isAdmin && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          {/* School Section Card */}
+          <Card className="border-t-4 border-indigo-600 bg-gradient-to-br from-indigo-50/10 via-white to-white shadow-sm">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <School className="w-5 h-5 text-indigo-600" />
+                <h3 className="font-bold text-slate-800 text-lg">School Segment Overview</h3>
+              </div>
+              <Badge color="blue">School</Badge>
+            </div>
+            <div className="grid grid-cols-2 gap-3 mb-4">
+              <div className="bg-indigo-50/30 p-3 rounded-lg border border-indigo-100/50">
+                <p className="text-xs text-slate-500 font-medium">Today's Collection</p>
+                <p className="text-lg font-bold text-indigo-700 mt-0.5">{formatCurrency(data.schoolCollection)}</p>
+              </div>
+              <div className="bg-orange-50/30 p-3 rounded-lg border border-orange-100/50">
+                <p className="text-xs text-slate-500 font-medium">Outstanding Due</p>
+                <p className="text-lg font-bold text-orange-600 mt-0.5">{formatCurrency(data.schoolSummary.totalOutstandingDue)}</p>
+              </div>
+            </div>
+            <div className="space-y-2.5">
+              <SummaryRow label="Total Registered Students" value={data.schoolSummary.totalStudents} />
+              <SummaryRow label="Students with Outstanding Dues" value={data.schoolSummary.studentsWithDue} tone="warning" />
+              <SummaryRow label="Fully Paid Students" value={data.schoolSummary.studentsFullyPaid} tone="success" />
+            </div>
+          </Card>
+
+          {/* Tuition Section Card */}
+          <Card className="border-t-4 border-amber-500 bg-gradient-to-br from-amber-50/10 via-white to-white shadow-sm">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <BookOpen className="w-5 h-5 text-amber-500" />
+                <h3 className="font-bold text-slate-800 text-lg">Tuition Segment Overview</h3>
+              </div>
+              <Badge color="orange">Tuition</Badge>
+            </div>
+            <div className="grid grid-cols-2 gap-3 mb-4">
+              <div className="bg-amber-50/30 p-3 rounded-lg border border-amber-100/50">
+                <p className="text-xs text-slate-500 font-medium">Today's Collection</p>
+                <p className="text-lg font-bold text-amber-600 mt-0.5">{formatCurrency(data.tuitionCollection)}</p>
+              </div>
+              <div className="bg-orange-50/30 p-3 rounded-lg border border-orange-100/50">
+                <p className="text-xs text-slate-500 font-medium">Outstanding Due</p>
+                <p className="text-lg font-bold text-orange-600 mt-0.5">{formatCurrency(data.tuitionSummary.totalOutstandingDue)}</p>
+              </div>
+            </div>
+            <div className="space-y-2.5">
+              <SummaryRow label="Total Registered Students" value={data.tuitionSummary.totalStudents} />
+              <SummaryRow label="Students with Outstanding Dues" value={data.tuitionSummary.studentsWithDue} tone="warning" />
+              <SummaryRow label="Fully Paid Students" value={data.tuitionSummary.studentsFullyPaid} tone="success" />
+            </div>
+          </Card>
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Chart */}
         <Card className="lg:col-span-2">
           <p className="font-semibold text-navy-900 mb-4">Monthly Collection Trend</p>
@@ -104,20 +161,22 @@ export default function DashboardPage() {
         </Card>
 
         {/* Student summary */}
-        <Card>
-          <p className="font-semibold text-navy-900 mb-4">Student Due Summary</p>
-          <div className="space-y-3">
-            <SummaryRow label="Total Students" value={data.studentSummary.totalStudents} />
-            <SummaryRow label="Students with Due" value={data.studentSummary.studentsWithDue} tone="warning" />
-            <SummaryRow label="Fully Paid Students" value={data.studentSummary.studentsFullyPaid} tone="success" />
+        <Card className="flex flex-col justify-between">
+          <div>
+            <p className="font-semibold text-navy-900 mb-4">Combined Due Summary</p>
+            <div className="space-y-3">
+              <SummaryRow label="Total Students" value={data.studentSummary.totalStudents} />
+              <SummaryRow label="Students with Due" value={data.studentSummary.studentsWithDue} tone="warning" />
+              <SummaryRow label="Fully Paid Students" value={data.studentSummary.studentsFullyPaid} tone="success" />
+            </div>
           </div>
-          <Button variant="secondary" className="w-full mt-4" onClick={() => navigate(`${base}/due`)}>
+          <Button variant="secondary" className="w-full mt-6" onClick={() => navigate(`${base}/due`)}>
             View Due Students
           </Button>
         </Card>
       </div>
 
-      <div className={`grid grid-cols-1 ${isAdmin ? 'lg:grid-cols-2' : ''} gap-4 mt-4`}>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
         {/* Recent payments */}
         <Card>
           <div className="flex items-center justify-between mb-4">

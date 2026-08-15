@@ -8,15 +8,17 @@ import { DataTable } from '../../components/DataTable.jsx';
 import { LoadingState } from '../../components/LoadingState.jsx';
 import { ErrorState } from '../../components/ErrorState.jsx';
 import { Badge } from '../../components/Badge.jsx';
-import { formatCurrency, formatDateTime, todayISO } from '../../utils/format.js';
+import { formatCurrency, formatDate, formatDateTime, todayISO } from '../../utils/format.js';
 import { IndianRupee, Banknote, Smartphone, School, BookOpen, Wallet } from 'lucide-react';
 import { getErrorMessage } from '../../config/api.js';
+import { useSettings } from '../../context/SettingsContext.jsx';
 
 export function DailyReportTab({ studentType }) {
   const [date, setDate] = useState(todayISO());
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const { settings } = useSettings();
 
   async function load() {
     setLoading(true);
@@ -56,6 +58,18 @@ export function DailyReportTab({ studentType }) {
 
       {data && (
         <div className="print-area print-a4">
+          {/* Printable A4 Report Header */}
+          <div className="hidden print:block mb-6 text-center border-b pb-4">
+            <h1 className="text-2xl font-bold text-navy-950">{settings?.institution_name || 'EduLedger'}</h1>
+            {settings?.institution_address && <p className="text-sm text-slate-600 mt-1">{settings.institution_address}</p>}
+            {settings?.institution_phone && <p className="text-sm text-slate-600">Ph: {settings.institution_phone}</p>}
+            <div className="mt-4 border-t pt-3 flex justify-between text-xs text-slate-500">
+              <span className="font-bold uppercase tracking-wider text-sm text-navy-900">Daily Financial Report</span>
+              <span>Report Date: {formatDate(date)}</span>
+              <span>Printed on: {new Date().toLocaleString()}</span>
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 mb-4">
             <StatCard label="Total Collection" value={formatCurrency(data.summary.total_collection)} icon={IndianRupee} tone="success" />
             <StatCard label="Cash" value={formatCurrency(data.summary.cash_collection)} icon={Banknote} />
