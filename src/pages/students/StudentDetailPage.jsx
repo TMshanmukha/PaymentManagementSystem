@@ -14,15 +14,20 @@ import { formatCurrency, formatDate, formatDateTime } from '../../utils/format.j
 import { StudentFormModal } from './StudentFormModal.jsx';
 import { IndianRupee, CheckCircle2, AlertCircle, Receipt } from 'lucide-react';
 import { getErrorMessage } from '../../config/api.js';
+import { useAuth } from '../../hooks/useAuth.js';
+import { ROLES } from '../../config/constants.js';
 
 export default function StudentDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [student, setStudent] = useState(null);
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [editOpen, setEditOpen] = useState(false);
+
+  const base = user.role === ROLES.ADMIN ? '/admin' : user.role === ROLES.SCHOOL_ACCOUNTANT ? '/school' : '/tuition';
 
   async function load() {
     setLoading(true);
@@ -65,6 +70,7 @@ export default function StudentDetailPage() {
         actions={
           <>
             <Badge status={student.status} />
+            <Button onClick={() => navigate(`${base}/payments/new`, { state: { studentId: student.student_id } })}><Wallet className="w-4 h-4" /> Add Payment</Button>
             <Button variant="secondary" onClick={() => setEditOpen(true)}><Pencil className="w-4 h-4" /> Edit</Button>
             <Button variant="secondary" onClick={() => window.print()}><Printer className="w-4 h-4" /> Print Statement</Button>
           </>

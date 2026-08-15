@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowLeft, IndianRupee } from 'lucide-react';
@@ -22,6 +22,7 @@ import { PaymentSuccessModal } from './PaymentSuccessModal.jsx';
 export default function NewPaymentPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const toast = useToast();
   const base = user.role === ROLES.ADMIN ? '/admin' : user.role === ROLES.SCHOOL_ACCOUNTANT ? '/school' : '/tuition';
   const scope = ROLE_SCOPE[user.role]; // null for admin -> can pick either type, filtered client-side by chosen student
@@ -33,11 +34,13 @@ export default function NewPaymentPage() {
   const [receipt, setReceipt] = useState(null);
   const [clientRequestId] = useState(() => `req-${Date.now()}-${Math.random().toString(36).slice(2)}`);
 
+  const preselectedStudentId = location.state?.studentId ? String(location.state.studentId) : '';
+
   const {
     register, handleSubmit, watch, setValue, control, formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(paymentSchema),
-    defaultValues: { paymentDate: todayISO(), paymentMethod: 'CASH' },
+    defaultValues: { studentId: preselectedStudentId, paymentDate: todayISO(), paymentMethod: 'CASH' },
   });
 
   const studentId = watch('studentId');

@@ -26,29 +26,31 @@ export default function ExpensesPage() {
   const toast = useToast();
   const isAdmin = user.role === ROLES.ADMIN;
   const lockedType = ROLE_SCOPE[user.role];
-
+ 
   const [rows, setRows] = useState([]);
   const [total, setTotal] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
   const [page, setPage] = useState(1);
   const pageSize = 15;
-  const [expenseType, setExpenseType] = useState('');
+  const [tab, setTab] = useState('SCHOOL');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [formOpen, setFormOpen] = useState(false);
   const [categories, setCategories] = useState([]);
   const [serverError, setServerError] = useState('');
+ 
+  const activeExpenseType = lockedType || tab;
 
   const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm({
     resolver: zodResolver(expenseSchema),
-    defaultValues: { expenseDate: todayISO(), expenseType: lockedType || 'SCHOOL', paymentMethod: 'CASH' },
+    defaultValues: { expenseDate: todayISO(), expenseType: activeExpenseType, paymentMethod: 'CASH' },
   });
-
+ 
   async function load() {
     setLoading(true);
     setError('');
     try {
-      const { data } = await expenseApi.list({ page, pageSize, expenseType: expenseType || undefined });
+      const { data } = await expenseApi.list({ page, pageSize, expenseType: activeExpenseType });
       setRows(data.data.items);
       setTotal(data.data.total);
       setTotalAmount(data.data.totalAmount);
@@ -58,23 +60,29 @@ export default function ExpensesPage() {
       setLoading(false);
     }
   }
-
-  useEffect(() => { load(); }, [page, expenseType]); // eslint-disable-line
+ 
+  useEffect(() => { load(); }, [page, activeExpenseType]); // eslint-disable-line
   useEffect(() => { expenseApi.categories().then(({ data }) => setCategories(data.data)); }, []);
-
+ 
   async function onSubmit(values) {
     setServerError('');
     try {
       await expenseApi.create(values);
       toast.success('Expense added successfully.');
       setFormOpen(false);
-      reset({ expenseDate: todayISO(), expenseType: lockedType || 'SCHOOL', paymentMethod: 'CASH' });
+      reset({ expenseDate: todayISO(), expenseType: activeExpenseType, paymentMethod: 'CASH' });
       load();
     } catch (err) {
       setServerError(getErrorMessage(err, 'Could not add expense.'));
     }
   }
 
+  function handleOpenAdd() {
+    reset({ expenseDate: todayISO(), expenseType: activeExpenseType, paymentMethod: 'CASH' });
+    setServerError('');
+    setFormOpen(true);
+  }
+ 
   const columns = [
     { key: 'expense_date', header: 'Date', render: (r) => formatDate(r.expense_date) },
     { key: 'category_name', header: 'Category' },
@@ -84,7 +92,7 @@ export default function ExpensesPage() {
     { key: 'description', header: 'Description', render: (r) => r.description || '—' },
     { key: 'created_by_name', header: 'Created By' },
   ];
-
+ 
   return (
     <div>
       <PageHeader
@@ -93,23 +101,49 @@ export default function ExpensesPage() {
         actions={
           <div className="flex gap-2 no-print">
             <Button variant="secondary" onClick={() => window.print()}><Printer className="w-4 h-4" /> Print</Button>
-            <Button onClick={() => setFormOpen(true)}><Plus className="w-4 h-4" /> Add Expense</Button>
+            <Button onClick={handleOpenAdd}><Plus className="w-4 h-4" /> Add Expense</Button>
           </div>
         }
       />
 
+      {isAdmin && (
+        <div className="flex gap-1 border-b border-slate-200 overflow-x-auto whitespace-nowrap mb-6 no-print">
+          <button
+            onClick={() => { setTab('SCHOOL'); setPage(1); }}
+            className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors -mb-px ${
+              tab === 'SCHOOL' ? 'border-brand-600 text-brand-600' : 'border-transparent text-slate-500 hover:text-slate-700'
+            }`}
+          >
+            School Expenses
+          </button>
+          <button
+            onClick={() => { setTab('TUITION'); setPage(1); }}
+            className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors -mb-px ${
+              tab === 'TUITION' ? 'border-brand-600 text-brand-600' : 'border-transparent text-slate-500 hover:text-slate-700'
+            }`}
+          >
+            Tuition Expenses
+          </button>
+        </div>
+      )}
+ 
       <div className="print-area print-a4">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
-          <StatCard label="Total Expenses (filtered)" value={formatCurrency(totalAmount)} icon={Wallet} tone="warning" />
-          <StatCard label="Transactions" value={total} />
-          {isAdmin && (
-            <div className="no-print self-center">
-              <Select placeholder="All Types" value={expenseType} onChange={(e) => { setExpenseType(e.target.value); setPage(1); }}
-                options={[{ value: 'SCHOOL', label: 'School' }, { value: 'TUITION', label: 'Tuition' }]} />
-            </div>
-          )}
+        {/* Printable A4 Report Header */}
+        <div className="hidden print:block mb-6 text-center border-b pb-4">
+          <h1 className="text-2xl font-bold text-navy-950">EduLedger Institution</h1>
+          <div className="mt-4 border-t pt-3 flex justify-between text-xs text-slate-500">
+            <span className="font-bold uppercase tracking-wider text-sm text-navy-900">
+              {activeExpenseType === 'SCHOOL' ? 'School' : 'Tuition'} Expenses Report
+            </span>
+            <span>Printed on: {new Date().toLocaleString()}</span>
+          </div>
         </div>
 
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+          <StatCard label="Total Expenses (filtered)" value={formatCurrency(totalAmount)} icon={Wallet} tone="warning" />
+          <StatCard label="Transactions" value={total} />
+        </div>
+ 
         <Card className="mb-4">
           <DataTable columns={columns} rows={rows} loading={loading} error={error} onRetry={load} emptyMessage="No expenses recorded." />
         </Card>

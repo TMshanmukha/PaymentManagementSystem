@@ -133,3 +133,21 @@
     gap: 0.5rem !important;
   }
 }
+
+/* Print portal styling */
+#print-portal {
+  display: none;
+}
+
+@media print {
+  body.printing-active #root {
+    display: none !important;
+  }
+  body.printing-active #print-portal {
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+}

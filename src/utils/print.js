@@ -1,8 +1,30 @@
 /**
- * Dynamically injects @page layout sizes and scaling rules for A4, A5, or Normal
- * formats in the DOM document head, then triggers the native print dialog.
+ * Dynamically clones the active report container, mounts it directly under the
+ * body (outside of any scrollable container wrappers), and triggers print.
+ * This ensures clean multi-page pagination without scrollbars or clipped contents.
  */
 export function triggerPrint(size) {
+  // Find the printable area inside the current page view
+  const printArea = document.querySelector('.print-area');
+  if (!printArea) {
+    // Fallback if no specific print area is defined
+    window.print();
+    return;
+  }
+
+  // Find or create the print portal outside of React root
+  let portal = document.getElementById('print-portal');
+  if (!portal) {
+    portal = document.createElement('div');
+    portal.id = 'print-portal';
+    document.body.appendChild(portal);
+  }
+
+  // Clear previous clone and clone the active print container
+  portal.innerHTML = '';
+  const clone = printArea.cloneNode(true);
+  portal.appendChild(clone);
+
   // Remove any stale overrides
   const existing = document.getElementById('print-layout-style');
   if (existing) existing.remove();
@@ -17,20 +39,34 @@ export function triggerPrint(size) {
           size: A4 portrait !important;
           margin: 8mm 8mm 8mm 8mm !important;
         }
-        .print-a4 {
+        #print-portal {
           font-size: 9pt !important;
+          color: #0f172a !important;
         }
-        .print-a4 .card {
+        #print-portal .card {
           padding: 0.5rem !important;
           margin-bottom: 0.5rem !important;
+          border: 1px solid #e2e8f0 !important;
+          box-shadow: none !important;
+          page-break-inside: avoid !important;
+          background: #fff !important;
         }
-        .print-a4 th, .print-a4 td {
+        #print-portal th, #print-portal td {
           padding: 4px 6px !important;
           font-size: 8.5pt !important;
+          border-bottom: 1px solid #e2e8f0 !important;
         }
-        .print-a4 .grid {
+        #print-portal table {
+          width: 100% !important;
+          border-collapse: collapse !important;
+        }
+        #print-portal .grid {
+          display: grid !important;
           grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)) !important;
           gap: 0.5rem !important;
+        }
+        #print-portal .no-print {
+          display: none !important;
         }
       }
     `;
@@ -41,28 +77,42 @@ export function triggerPrint(size) {
           size: A5 portrait !important;
           margin: 4mm 4mm 4mm 4mm !important;
         }
-        .print-a4 {
+        #print-portal {
           font-size: 7.5pt !important;
+          color: #0f172a !important;
         }
-        .print-a4 .card {
+        #print-portal .card {
           padding: 0.35rem !important;
           margin-bottom: 0.35rem !important;
+          border: 1px solid #e2e8f0 !important;
+          box-shadow: none !important;
           border-radius: 4px !important;
+          page-break-inside: avoid !important;
+          background: #fff !important;
         }
-        .print-a4 th, .print-a4 td {
+        #print-portal th, #print-portal td {
           padding: 2px 4px !important;
           font-size: 7pt !important;
+          border-bottom: 1px solid #e2e8f0 !important;
         }
-        .print-a4 .grid {
+        #print-portal table {
+          width: 100% !important;
+          border-collapse: collapse !important;
+        }
+        #print-portal .grid {
+          display: grid !important;
           grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)) !important;
           gap: 0.35rem !important;
         }
-        .print-a4 h1, .print-a4 h2, .print-a4 h3, .print-a4 p, .print-a4 span {
+        #print-portal h1, #print-portal h2, #print-portal h3, #print-portal p, #print-portal span {
           font-size: 90% !important;
         }
-        .print-a4 .badge {
+        #print-portal .badge {
           font-size: 6.5pt !important;
           padding: 0.1rem 0.25rem !important;
+        }
+        #print-portal .no-print {
+          display: none !important;
         }
       }
     `;
@@ -74,19 +124,25 @@ export function triggerPrint(size) {
           size: auto !important;
           margin: 15mm 15mm 15mm 15mm !important;
         }
+        #print-portal .no-print {
+          display: none !important;
+        }
       }
     `;
   }
 
   document.head.appendChild(style);
+  document.body.classList.add('printing-active');
 
-  // Tiny delay to allow CSS reflow before browser opens dialog
+  // Short delay to allow CSS reflow and cloning layout before browser loads print dialog
   setTimeout(() => {
     window.print();
-    // Cleanup after user closes dialog
+    // Reset classes and empty the portal after dialog resolves
     setTimeout(() => {
+      document.body.classList.remove('printing-active');
       const added = document.getElementById('print-layout-style');
       if (added) added.remove();
+      portal.innerHTML = '';
     }, 1000);
   }, 150);
 }

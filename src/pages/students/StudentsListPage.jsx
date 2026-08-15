@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Plus, Search, Eye, ArrowLeft, Users, GraduationCap } from 'lucide-react';
+import { Plus, Search, Eye, ArrowLeft, Users, GraduationCap, Wallet } from 'lucide-react';
 import { studentApi } from '../../services/student.service.js';
 import { Card } from '../../components/Card.jsx';
 import { PageHeader } from '../../components/PageHeader.jsx';
@@ -119,7 +119,8 @@ export default function StudentsListPage() {
     {
       key: 'actions', header: 'Actions', render: (r) => (
         <div className="flex items-center gap-1">
-          <button onClick={() => navigate(`${base}/students/${r.student_id}`)} className="btn-ghost !px-2"><Eye className="w-4 h-4" /></button>
+          <button onClick={() => navigate(`${base}/students/${r.student_id}`)} className="btn-ghost !px-2" title="View Profile"><Eye className="w-4 h-4" /></button>
+          <button onClick={() => navigate(`${base}/payments/new`, { state: { studentId: r.student_id } })} className="btn-ghost !px-2 text-brand-600 hover:text-brand-700" title="Add Payment"><Wallet className="w-4 h-4" /></button>
         </div>
       )
     },
