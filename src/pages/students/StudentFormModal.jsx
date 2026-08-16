@@ -14,7 +14,7 @@ import { useAuth } from '../../hooks/useAuth.js';
 import { ROLES, ROLE_SCOPE } from '../../config/constants.js';
 import { todayISO } from '../../utils/format.js';
 
-export function StudentFormModal({ open, onClose, onSuccess, student }) {
+export function StudentFormModal({ open, onClose, onSuccess, student, defaultClass }) {
   const { user } = useAuth();
   const toast = useToast();
   const isEdit = Boolean(student);
@@ -43,11 +43,19 @@ export function StudentFormModal({ open, onClose, onSuccess, student }) {
           academicYearId: activeYear ? String(activeYear.id) : '',
           joiningDate: todayISO(),
           status: 'ACTIVE',
+          class: defaultClass || '',
+          section: '',
+          name: '',
+          parentName: '',
+          parentPhone: '',
+          studentPhone: '',
+          totalFee: '',
+          address: '',
         });
       });
       setServerError('');
     }
-  }, [open]); // eslint-disable-line
+  }, [open, student, defaultClass]); // eslint-disable-line
 
   async function onSubmit(values) {
     setServerError('');
@@ -58,6 +66,7 @@ export function StudentFormModal({ open, onClose, onSuccess, student }) {
       } else {
         await studentApi.create(values);
         toast.success('Student added successfully.');
+        reset();
       }
       onSuccess();
     } catch (err) {

@@ -352,7 +352,12 @@ export default function StudentsListPage() {
         </Card>
       )}
 
-      <StudentFormModal open={formOpen} onClose={() => setFormOpen(false)} onSuccess={() => { setFormOpen(false); if (selectedClass !== null) load(); loadClasses(); }} />
+      <StudentFormModal
+        open={formOpen}
+        onClose={() => setFormOpen(false)}
+        onSuccess={() => { setFormOpen(false); if (selectedClass !== null) load(); loadClasses(); }}
+        defaultClass={selectedClass && selectedClass !== 'all' && selectedClass !== 'unassigned' ? selectedClass : ''}
+      />
     </div>
   );
 }
