@@ -7,12 +7,12 @@ import { settingsApi } from '../../services/settings.service.js';
 import { triggerPrint } from '../../utils/print.js';
 
 /**
- * Shown immediately after a successful payment save. Offers Print / Close
- * per the ideal accountant flow in spec section 59: Save -> Receipt -> Print.
+ * Shown immediately after a successful payment save. Prompts the user with
+ * clear receipt printing options (A4, A5, Thermal Slip) directly at the top
+ * of the modal body.
  */
 export function PaymentSuccessModal({ receipt, onClose, onNewPayment }) {
   const [institution, setInstitution] = useState(null);
-  const [printMenuOpen, setPrintMenuOpen] = useState(false);
 
   useEffect(() => {
     if (receipt) {
@@ -31,46 +31,39 @@ export function PaymentSuccessModal({ receipt, onClose, onNewPayment }) {
       footer={
         <>
           <Button variant="secondary" onClick={onClose}>Close</Button>
-          <Button variant="secondary" onClick={onNewPayment}>Record Another</Button>
-          <div className="relative no-print inline-block">
-            <Button
-              onClick={() => setPrintMenuOpen((o) => !o)}
-              className="justify-center"
-            >
-              <Printer className="w-4 h-4" /> Print Receipt
-            </Button>
-            {printMenuOpen && (
-              <>
-                <div className="fixed inset-0 z-10" onClick={() => setPrintMenuOpen(false)} />
-                <div className="absolute right-0 bottom-full mb-2 w-48 bg-white rounded-lg shadow-popover border border-slate-100 py-1 z-20">
-                  <button
-                    onClick={() => { setPrintMenuOpen(false); triggerPrint('A4'); }}
-                    className="w-full text-left px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 border-b border-slate-100"
-                  >
-                    <p className="font-semibold text-slate-800">Print A4 Size</p>
-                    <p className="text-xs text-slate-400">Full-page voucher</p>
-                  </button>
-                  <button
-                    onClick={() => { setPrintMenuOpen(false); triggerPrint('A5'); }}
-                    className="w-full text-left px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 border-b border-slate-100"
-                  >
-                    <p className="font-semibold text-slate-800">Print A5 Size</p>
-                    <p className="text-xs text-slate-400">Compact memo size</p>
-                  </button>
-                  <button
-                    onClick={() => { setPrintMenuOpen(false); triggerPrint('NORMAL'); }}
-                    className="w-full text-left px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50"
-                  >
-                    <p className="font-semibold text-slate-800">Normal / Default</p>
-                    <p className="text-xs text-slate-400">Standard print layout</p>
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
+          <Button variant="primary" onClick={onNewPayment}>Record Another</Button>
         </>
       }
     >
+      <div className="bg-brand-50 border border-brand-100 rounded-xl p-4 mb-4 no-print">
+        <p className="text-sm font-semibold text-brand-900 mb-2.5 text-center flex items-center justify-center gap-1.5">
+          <Printer className="w-4 h-4 text-brand-650" /> Choose Paper Size to Print Receipt
+        </p>
+        <div className="grid grid-cols-3 gap-2">
+          <button
+            onClick={() => triggerPrint('A4')}
+            className="flex flex-col items-center justify-center p-3 bg-white border border-brand-200 rounded-lg hover:border-brand-500 hover:bg-brand-50/55 transition-all outline-none"
+          >
+            <span className="font-bold text-sm text-slate-800">A4 Sheet</span>
+            <span className="text-[10px] text-slate-400 mt-0.5">Full Page</span>
+          </button>
+          <button
+            onClick={() => triggerPrint('A5')}
+            className="flex flex-col items-center justify-center p-3 bg-white border border-brand-200 rounded-lg hover:border-brand-500 hover:bg-brand-50/55 transition-all outline-none"
+          >
+            <span className="font-bold text-sm text-slate-800">A5 Sheet</span>
+            <span className="text-[10px] text-slate-400 mt-0.5">Half Page</span>
+          </button>
+          <button
+            onClick={() => triggerPrint('NORMAL')}
+            className="flex flex-col items-center justify-center p-3 bg-white border border-brand-200 rounded-lg hover:border-brand-500 hover:bg-brand-50/55 transition-all outline-none"
+          >
+            <span className="font-bold text-sm text-slate-800">Thermal Slip</span>
+            <span className="text-[10px] text-slate-400 mt-0.5">Narrow Roll</span>
+          </button>
+        </div>
+      </div>
+
       <div className="print-area">
         <ReceiptPreview receipt={receipt} institution={institution} />
       </div>
