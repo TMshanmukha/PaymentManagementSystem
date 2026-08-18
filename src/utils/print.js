@@ -74,6 +74,11 @@ export function triggerPrint(size) {
           padding: 8px 0 !important;
           border-bottom: 1px solid #e2e8f0 !important;
         }
+        #print-portal th, #print-portal td {
+          white-space: nowrap !important;
+          text-overflow: ellipsis !important;
+          overflow: hidden !important;
+        }
         #print-portal .text-slate-500 {
           color: #475569 !important;
           font-size: 10pt !important;
@@ -136,6 +141,11 @@ export function triggerPrint(size) {
           padding: 5px 0 !important;
           border-bottom: 1px solid #e2e8f0 !important;
         }
+        #print-portal th, #print-portal td {
+          white-space: nowrap !important;
+          text-overflow: ellipsis !important;
+          overflow: hidden !important;
+        }
         #print-portal .text-slate-500 {
           color: #475569 !important;
           font-size: 8.5pt !important;
@@ -195,6 +205,9 @@ export function triggerPrint(size) {
         #print-portal .py-1 {
           padding: 4px 0 !important;
           border-bottom: 1px dashed #cbd5e1 !important;
+        }
+        #print-portal th, #print-portal td {
+          white-space: nowrap !important;
         }
         #print-portal .text-slate-500, #print-portal .text-slate-800, #print-portal .font-bold {
           font-size: 8pt !important;

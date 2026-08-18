@@ -87,9 +87,9 @@ export function ReceiptPreview({ receipt, institution: propInstitution }) {
 
 function Row({ label, value, bold }) {
   return (
-    <div className="flex justify-between gap-2 py-1 print:py-2 border-b border-transparent print:border-slate-100">
-      <span className="text-slate-500 print:text-slate-600">{label}</span>
-      <span className={`${bold ? 'font-bold text-navy-950' : 'text-slate-800'} print:text-sm`}>{value}</span>
+    <div className="flex justify-between gap-2 py-1 print:py-2 border-b border-transparent print:border-slate-100 items-baseline">
+      <span className="text-slate-500 print:text-slate-600 shrink-0">{label}</span>
+      <span className={`${bold ? 'font-bold text-navy-950' : 'text-slate-800'} print:text-sm truncate max-w-[200px] text-right`} title={value}>{value}</span>
     </div>
   );
 }
