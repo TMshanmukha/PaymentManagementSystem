@@ -49,6 +49,12 @@ export default function NewPaymentPage() {
   const watchSignature = watch('digitalSignature');
 
   useEffect(() => {
+    if (user?.fullName && !watchSignature) {
+      setValue('digitalSignature', user.fullName);
+    }
+  }, [user, setValue]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
     studentApi.list({ status: 'ACTIVE', pageSize: 200, studentType: scope || undefined })
       .then(({ data }) => setStudents(data.data.items))
       .finally(() => setLoadingStudents(false));
@@ -141,7 +147,7 @@ export default function NewPaymentPage() {
                 {watchSignature && (
                   <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg flex flex-col items-center justify-center">
                     <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider mb-1">Signature Preview</p>
-                    <span style={{ fontFamily: "'Great Vibes', cursive" }} className="text-3xl text-navy-800 font-medium">
+                    <span style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontStyle: "italic" }} className="text-2xl text-slate-800 font-semibold select-none">
                       {watchSignature}
                     </span>
                   </div>

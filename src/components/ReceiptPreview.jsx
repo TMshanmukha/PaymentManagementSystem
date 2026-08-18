@@ -66,7 +66,7 @@ export function ReceiptPreview({ receipt, institution: propInstitution }) {
               <img src={receipt.digital_signature} alt="Digital Signature" className="h-16 w-36 object-contain mb-1" />
             ) : (
               <div className="h-16 flex items-center justify-center mb-1 w-36 select-none">
-                <span style={{ fontFamily: "'Great Vibes', cursive" }} className="text-3xl text-navy-800 font-medium">
+                <span style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontStyle: "italic" }} className="text-2xl text-slate-800 font-semibold">
                   {receipt.digital_signature}
                 </span>
               </div>
