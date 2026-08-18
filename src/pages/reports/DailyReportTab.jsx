@@ -196,15 +196,22 @@ export function DailyReportTab({ studentType }) {
             />
           </Card>
 
-          <Card>
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-slate-500">Total Expenses</p>
-                <p className="text-lg font-bold text-red-500">{formatCurrency(data.expenses)}</p>
+          <Card className="bg-slate-50 border border-slate-200 mt-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-sm text-slate-600 font-medium">
+                <div>
+                  <span className="text-slate-400 block text-xs font-semibold uppercase tracking-wider">Total Collection</span>
+                  <span className="text-slate-800 text-lg font-bold block mt-0.5">{formatCurrency(data.summary.total_collection)}</span>
+                </div>
+                <div className="text-slate-350 hidden sm:block text-2xl font-light">-</div>
+                <div>
+                  <span className="text-slate-400 block text-xs font-semibold uppercase tracking-wider">Total Expenses</span>
+                  <span className="text-red-600 text-lg font-bold block mt-0.5">{formatCurrency(data.expenses)}</span>
+                </div>
               </div>
-              <div className="text-right">
-                <p className="text-sm text-slate-500">Net Collection</p>
-                <p className="text-lg font-bold text-emerald-600">{formatCurrency(data.netCollection)}</p>
+              <div className="border-t sm:border-t-0 sm:border-l border-slate-200 pt-3 sm:pt-0 sm:pl-6 text-left sm:text-right">
+                <span className="text-slate-500 block text-xs font-bold uppercase tracking-wider">Net Day Collection</span>
+                <span className="text-2xl font-black text-emerald-600 block mt-0.5">{formatCurrency(data.netCollection)}</span>
               </div>
             </div>
           </Card>

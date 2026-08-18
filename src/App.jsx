@@ -38,6 +38,7 @@ function roleSection(basePath, title, extraChildren = null) {
       <Route path="payments" element={<PaymentsListPage />} />
       <Route path="payments/new" element={<NewPaymentPage />} />
       <Route path="payments/:id" element={<PaymentDetailPage />} />
+      <Route path="expenses" element={<ExpensesPage />} />
       <Route path="due" element={<DuePage />} />
       <Route path="day-closing" element={<DayClosingPage />} />
       {extraChildren}
@@ -61,7 +62,6 @@ export default function App() {
                   <Route path="/admin" element={<RoleRoute allow={[ROLES.ADMIN]} />}>
                     {roleSection('', 'Admin', (
                       <>
-                        <Route path="expenses" element={<ExpensesPage />} />
                         <Route path="reports" element={<ReportsPage />} />
                         <Route path="users" element={<UsersPage />} />
                         <Route path="audit-logs" element={<AuditLogsPage />} />

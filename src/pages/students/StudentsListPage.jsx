@@ -14,6 +14,7 @@ import { useAuth } from '../../hooks/useAuth.js';
 import { useToast } from '../../hooks/useToast.js';
 import { ROLES } from '../../config/constants.js';
 import { StudentFormModal } from './StudentFormModal.jsx';
+import { ExportModal } from './ExportModal.jsx';
 import { getErrorMessage } from '../../config/api.js';
 import { exportToExcel } from '../../utils/export.js';
 
@@ -93,6 +94,7 @@ export default function StudentsListPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [formOpen, setFormOpen] = useState(false);
+  const [exportOpen, setExportOpen] = useState(false);
 
   // Class-wise view states
   const [classes, setClasses] = useState([]);
@@ -237,16 +239,9 @@ export default function StudentsListPage() {
                 className="w-40 sm:w-44"
               />
             )}
-            {selectedClass !== null && rows.length > 0 && (
-              <Button variant="secondary" onClick={handleExport} className="no-print">
-                Export to Excel
-              </Button>
-            )}
-            {selectedClass === null && (
-              <Button variant="secondary" onClick={handleExportAll} className="no-print">
-                Export All Students
-              </Button>
-            )}
+            <Button variant="secondary" onClick={() => setExportOpen(true)} className="no-print">
+              Export to Excel
+            </Button>
             <Button onClick={() => setFormOpen(true)}><Plus className="w-4 h-4" /> Add Student</Button>
           </div>
         }
@@ -381,6 +376,13 @@ export default function StudentsListPage() {
         onClose={() => setFormOpen(false)}
         onSuccess={() => { setFormOpen(false); if (selectedClass !== null) load(); loadClasses(); }}
         defaultClass={selectedClass && selectedClass !== 'all' && selectedClass !== 'unassigned' ? selectedClass : ''}
+      />
+
+      <ExportModal
+        open={exportOpen}
+        onClose={() => setExportOpen(false)}
+        studentType={studentType}
+        status={status}
       />
     </div>
   );

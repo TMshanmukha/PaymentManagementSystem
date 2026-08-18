@@ -114,6 +114,14 @@ export default function DashboardPage() {
                 <p className="text-xs text-slate-500 font-medium">Outstanding Due</p>
                 <p className="text-lg font-bold text-orange-600 mt-0.5">{formatCurrency(data.schoolSummary.totalOutstandingDue)}</p>
               </div>
+              <div className="bg-red-50/30 p-3 rounded-lg border border-red-100/50 col-span-2 sm:col-span-1">
+                <p className="text-xs text-slate-500 font-medium">Overall Expenses</p>
+                <p className="text-lg font-bold text-red-600 mt-0.5">{formatCurrency(data.schoolSummary.overallExpenses)}</p>
+              </div>
+              <div className="bg-emerald-50/30 p-3 rounded-lg border border-emerald-100/50 col-span-2 sm:col-span-1">
+                <p className="text-xs text-slate-500 font-medium">Net Available Balance</p>
+                <p className="text-lg font-bold text-emerald-600 mt-0.5">{formatCurrency(data.schoolSummary.overallNetCollection)}</p>
+              </div>
             </div>
             <div className="space-y-2.5 mt-2">
               <SummaryRow label="Total Registered Students" value={data.schoolSummary.totalStudents} />
@@ -147,6 +155,14 @@ export default function DashboardPage() {
               <div className="bg-orange-50/30 p-3 rounded-lg border border-orange-100/50 col-span-2 sm:col-span-1">
                 <p className="text-xs text-slate-500 font-medium">Outstanding Due</p>
                 <p className="text-lg font-bold text-orange-600 mt-0.5">{formatCurrency(data.tuitionSummary.totalOutstandingDue)}</p>
+              </div>
+              <div className="bg-red-50/30 p-3 rounded-lg border border-red-100/50 col-span-2 sm:col-span-1">
+                <p className="text-xs text-slate-500 font-medium">Overall Expenses</p>
+                <p className="text-lg font-bold text-red-600 mt-0.5">{formatCurrency(data.tuitionSummary.overallExpenses)}</p>
+              </div>
+              <div className="bg-emerald-50/30 p-3 rounded-lg border border-emerald-100/50 col-span-2 sm:col-span-1">
+                <p className="text-xs text-slate-500 font-medium">Net Available Balance</p>
+                <p className="text-lg font-bold text-emerald-600 mt-0.5">{formatCurrency(data.tuitionSummary.overallNetCollection)}</p>
               </div>
             </div>
             <div className="space-y-2.5 mt-2">
