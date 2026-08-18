@@ -47,7 +47,11 @@ export function Navbar({ title, onMenuClick }) {
             </div>
             <div className="text-left hidden sm:block">
               <p className="text-sm font-medium text-slate-800 leading-tight">{user?.fullName}</p>
-              <p className="text-xs text-slate-400 leading-tight">{ROLE_LABELS[user?.role]}</p>
+              <p className="text-xs text-slate-400 leading-tight">
+                {user?.role === 'ADMIN' && user?.createdBy !== null && user?.createdBy !== undefined
+                  ? 'Co-Admin'
+                  : ROLE_LABELS[user?.role]}
+              </p>
             </div>
             <ChevronDown className="w-4 h-4 text-slate-400" />
           </button>

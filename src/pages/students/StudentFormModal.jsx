@@ -36,10 +36,11 @@ export function StudentFormModal({ open, onClose, onSuccess, student, defaultCla
         reset(student ? {
           name: student.student_name, parentName: student.parent_name, parentPhone: student.parent_phone,
           studentPhone: '', class: student.class || '', section: student.section || '',
-          studentType: student.student_type, academicYearId: String(student.academic_year_id),
+          studentType: student.student_type, admissionType: student.admission_type || 'REGULAR', academicYearId: String(student.academic_year_id),
           totalFee: student.total_fee, joiningDate: todayISO(), address: '', status: student.status,
         } : {
           studentType: lockedType || 'SCHOOL',
+          admissionType: 'REGULAR',
           academicYearId: activeYear ? String(activeYear.id) : '',
           joiningDate: todayISO(),
           status: 'ACTIVE',
@@ -93,6 +94,9 @@ export function StudentFormModal({ open, onClose, onSuccess, student, defaultCla
         <Select label="Student Type" error={errors.studentType?.message} disabled={Boolean(lockedType)}
           options={[{ value: 'SCHOOL', label: 'School' }, { value: 'TUITION', label: 'Tuition' }]}
           {...register('studentType')} />
+        <Select label="Admission Type" error={errors.admissionType?.message}
+          options={[{ value: 'REGULAR', label: 'Regular' }, { value: 'SCHOLARSHIP', label: 'Scholarship (Free Seat)' }]}
+          {...register('admissionType')} />
         <Select label="Academic Year" placeholder="Select year" error={errors.academicYearId?.message}
           options={academicYears.map((y) => ({ value: String(y.id), label: y.year_name }))}
           {...register('academicYearId')} />

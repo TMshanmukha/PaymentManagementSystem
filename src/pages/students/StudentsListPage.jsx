@@ -33,6 +33,7 @@ export default function StudentsListPage() {
       const { data } = await studentApi.list({
         pageSize: 5000,
         studentType: studentType || undefined,
+        admissionType: admissionType || undefined,
         status: status || undefined,
         class: classFilter
       });
@@ -58,7 +59,11 @@ export default function StudentsListPage() {
 
   const handleExportAll = async () => {
     try {
-      const { data } = await studentApi.list({ pageSize: 5000, studentType: studentType || undefined });
+      const { data } = await studentApi.list({
+        pageSize: 5000,
+        studentType: studentType || undefined,
+        admissionType: admissionType || undefined
+      });
       const items = data.data.items;
       const headers = [
         { key: 'student_code', label: 'Student Code' },
@@ -83,6 +88,7 @@ export default function StudentsListPage() {
   const pageSize = 15;
   const [search, setSearch] = useState('');
   const [studentType, setStudentType] = useState('');
+  const [admissionType, setAdmissionType] = useState('');
   const [status, setStatus] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -97,7 +103,10 @@ export default function StudentsListPage() {
     setLoadingClasses(true);
     setError('');
     try {
-      const { data } = await studentApi.getClasses({ studentType: typeFilter || undefined });
+      const { data } = await studentApi.getClasses({
+        studentType: typeFilter || undefined,
+        admissionType: admissionType || undefined
+      });
       setClasses(data.data);
     } catch (err) {
       setError(getErrorMessage(err, 'Could not load classes.'));
@@ -117,6 +126,7 @@ export default function StudentsListPage() {
         pageSize,
         search: search || undefined,
         studentType: studentType || undefined,
+        admissionType: admissionType || undefined,
         status: status || undefined,
         class: classFilter,
       });
@@ -134,7 +144,7 @@ export default function StudentsListPage() {
     if (selectedClass === null) {
       loadClasses(studentType);
     }
-  }, [studentType, selectedClass]);
+  }, [studentType, admissionType, selectedClass]);
 
   // Handle Dashboard "Add Student" navigation state
   useEffect(() => {
@@ -150,7 +160,7 @@ export default function StudentsListPage() {
     if (selectedClass !== null) {
       load();
     }
-  }, [page, studentType, status, selectedClass]); // eslint-disable-line
+  }, [page, studentType, admissionType, status, selectedClass]); // eslint-disable-line
 
   // Handle search typing with debounce
   useEffect(() => {
@@ -167,6 +177,7 @@ export default function StudentsListPage() {
     { key: 'parent_phone', header: 'Phone' },
     { key: 'class', header: 'Class', render: (r) => r.class || '—' },
     ...(isAdmin ? [{ key: 'student_type', header: 'Type', render: (r) => <Badge color={r.student_type === 'SCHOOL' ? 'blue' : 'orange'}>{r.student_type}</Badge> }] : []),
+    { key: 'admission_type', header: 'Admission Category', render: (r) => <Badge color={r.admission_type === 'REGULAR' ? 'emerald' : 'purple'}>{r.admission_type === 'REGULAR' ? 'Regular' : 'Scholarship'}</Badge> },
     { key: 'total_fee', header: 'Total Fee', render: (r) => formatCurrency(r.total_fee) },
     { key: 'paid_amount', header: 'Paid', render: (r) => formatCurrency(r.paid_amount) },
     { key: 'due_amount', header: 'Due', render: (r) => <span className={r.due_amount > 0 ? 'text-orange-600 font-medium' : 'text-emerald-600'}>{formatCurrency(r.due_amount)}</span> },
@@ -210,6 +221,18 @@ export default function StudentsListPage() {
                   { value: '', label: 'All Types' },
                   { value: 'SCHOOL', label: 'School Only' },
                   { value: 'TUITION', label: 'Tuition Only' },
+                ]}
+                className="w-40 sm:w-44"
+              />
+            )}
+            {selectedClass === null && (
+              <Select
+                value={admissionType}
+                onChange={(e) => { setAdmissionType(e.target.value); }}
+                options={[
+                  { value: '', label: 'All Categories' },
+                  { value: 'REGULAR', label: 'Regular Students' },
+                  { value: 'SCHOLARSHIP', label: 'Scholarship Students' },
                 ]}
                 className="w-40 sm:w-44"
               />
@@ -342,6 +365,8 @@ export default function StudentsListPage() {
               <Select className="w-full sm:w-48" placeholder="All Types" value={studentType} onChange={(e) => { setStudentType(e.target.value); setPage(1); }}
                 options={[{ value: 'SCHOOL', label: 'School' }, { value: 'TUITION', label: 'Tuition' }]} />
             )}
+            <Select className="w-full sm:w-48" placeholder="All Categories" value={admissionType} onChange={(e) => { setAdmissionType(e.target.value); setPage(1); }}
+              options={[{ value: 'REGULAR', label: 'Regular' }, { value: 'SCHOLARSHIP', label: 'Scholarship' }]} />
             <Select className="w-full sm:w-48" placeholder="All Status" value={status} onChange={(e) => { setStatus(e.target.value); setPage(1); }}
               options={[{ value: 'ACTIVE', label: 'Active' }, { value: 'INACTIVE', label: 'Inactive' }]} />
           </div>

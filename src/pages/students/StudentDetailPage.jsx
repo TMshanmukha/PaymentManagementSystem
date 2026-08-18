@@ -66,7 +66,7 @@ export default function StudentDetailPage() {
 
       <PageHeader
         title={student.student_name}
-        description={`${student.student_code} · ${student.class || '—'} ${student.section || ''} · ${student.student_type}`}
+        description={`${student.student_code} · ${student.class || '—'} ${student.section || ''} · ${student.student_type} · ${student.admission_type === 'REGULAR' ? 'Regular' : 'Scholarship'}`}
         actions={
           <>
             <Badge status={student.status} />

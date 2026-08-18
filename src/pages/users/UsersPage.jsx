@@ -14,12 +14,14 @@ import { ConfirmationModal } from '../../components/ConfirmationModal.jsx';
 import { DataTable } from '../../components/DataTable.jsx';
 import { Badge } from '../../components/Badge.jsx';
 import { formatDate } from '../../utils/format.js';
+import { useAuth } from '../../hooks/useAuth.js';
 import { useToast } from '../../hooks/useToast.js';
 import { getErrorMessage } from '../../config/api.js';
 import { ROLE_LABELS } from '../../config/constants.js';
 
 export default function UsersPage() {
   const toast = useToast();
+  const { user } = useAuth();
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [formOpen, setFormOpen] = useState(false);
@@ -89,17 +91,21 @@ export default function UsersPage() {
   const columns = [
     { key: 'full_name', header: 'Name' },
     { key: 'username', header: 'Username' },
-    { key: 'role', header: 'Role', render: (r) => ROLE_LABELS[r.role] },
+    { key: 'role', header: 'Role', render: (r) => r.role === 'ADMIN' && r.created_by !== null ? 'Co-Admin' : ROLE_LABELS[r.role] },
     { key: 'status', header: 'Status', render: (r) => <Badge status={r.status} /> },
     { key: 'created_at', header: 'Created', render: (r) => formatDate(r.created_at) },
     { key: 'last_login_at', header: 'Last Login', render: (r) => r.last_login_at ? formatDate(r.last_login_at) : 'Never' },
     {
-      key: 'actions', header: 'Actions', render: (r) => (
-        <div className="flex gap-1">
-          <button onClick={() => setResetTarget(r)} className="btn-ghost !px-2"><KeyRound className="w-4 h-4" /></button>
-          <button onClick={() => setStatusTarget(r)} className={`btn-ghost !px-2 ${r.status === 'ACTIVE' ? 'text-red-500' : 'text-emerald-500'}`}><Power className="w-4 h-4" /></button>
-        </div>
-      )
+      key: 'actions', header: 'Actions', render: (r) => {
+        const isMainAdmin = r.role === 'ADMIN' && (r.created_by === null || r.created_by === undefined);
+        if (isMainAdmin) return <span className="text-xs text-slate-400">—</span>;
+        return (
+          <div className="flex gap-1">
+            <button onClick={() => setResetTarget(r)} className="btn-ghost !px-2"><KeyRound className="w-4 h-4" /></button>
+            <button onClick={() => setStatusTarget(r)} className={`btn-ghost !px-2 ${r.status === 'ACTIVE' ? 'text-red-500' : 'text-emerald-500'}`}><Power className="w-4 h-4" /></button>
+          </div>
+        );
+      }
     },
   ];
 
@@ -124,7 +130,11 @@ export default function UsersPage() {
           <Input label="Email (optional)" type="email" error={errors.email?.message} {...register('email')} />
           <Input label="Phone (optional)" {...register('phone')} />
           <Select label="Role" placeholder="Select role" error={errors.role?.message}
-            options={[{ value: 'SCHOOL_ACCOUNTANT', label: 'School Accountant' }, { value: 'TUITION_ACCOUNTANT', label: 'Tuition Accountant' }]}
+            options={[
+              ...(user?.createdBy === null || user?.createdBy === undefined ? [{ value: 'ADMIN', label: 'Co-Admin' }] : []),
+              { value: 'SCHOOL_ACCOUNTANT', label: 'School Accountant' },
+              { value: 'TUITION_ACCOUNTANT', label: 'Tuition Accountant' }
+            ]}
             {...register('role')} />
           <Input label="Password" type="password" className="sm:col-span-2" error={errors.password?.message} {...register('password')} />
         </form>

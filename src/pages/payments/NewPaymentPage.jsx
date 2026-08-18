@@ -18,6 +18,7 @@ import { useAuth } from '../../hooks/useAuth.js';
 import { ROLES, ROLE_SCOPE } from '../../config/constants.js';
 import { formatCurrency, todayISO } from '../../utils/format.js';
 import { PaymentSuccessModal } from './PaymentSuccessModal.jsx';
+import { SignaturePad } from '../../components/SignaturePad.jsx';
 
 export default function NewPaymentPage() {
   const { user } = useAuth();
@@ -65,6 +66,11 @@ export default function NewPaymentPage() {
 
   async function onSubmit(values) {
     setServerError('');
+    const isAdmin = user.role === ROLES.ADMIN;
+    if (isAdmin && !values.digitalSignature) {
+      setServerError('Digital signature is required.');
+      return;
+    }
     try {
       const { data } = await paymentApi.create({ ...values, clientRequestId });
       toast.success('Payment recorded successfully.');
@@ -122,6 +128,21 @@ export default function NewPaymentPage() {
               <Input label="Payment Date" type="date" error={errors.paymentDate?.message} {...register('paymentDate')} />
               <Input label="Remarks (optional)" {...register('remarks')} />
             </div>
+
+            {user.role === ROLES.ADMIN && (
+              <div className="border-t border-slate-100 pt-4">
+                <Controller
+                  control={control}
+                  name="digitalSignature"
+                  render={({ field }) => (
+                    <SignaturePad
+                      value={field.value}
+                      onChange={field.onChange}
+                    />
+                  )}
+                />
+              </div>
+            )}
 
             {selectedStudent && amount > 0 && (
               <div className="rounded-lg bg-brand-50 px-4 py-3 text-sm text-brand-800 flex justify-between">

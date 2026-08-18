@@ -27,7 +27,7 @@ export function ReceiptPreview({ receipt, institution: propInstitution }) {
     <div className="bg-white text-navy-900 max-w-sm mx-auto p-6 text-sm print:max-w-none print:w-full print:p-0" style={{ fontFamily: 'ui-monospace, monospace' }}>
       <div className="text-center mb-6 border-b print:border-b-2 pb-4">
         <p className="font-bold text-lg print:text-2xl text-navy-950">{name}</p>
-        <p className="text-xs font-bold tracking-wider uppercase text-slate-500 mt-0.5 print:text-sm">FEE RECEIPT VOUCHER</p>
+        <p className="text-xs font-bold tracking-wider uppercase text-slate-500 mt-0.5 print:text-sm">VVS-{receipt.id}</p>
         {address && <p className="text-xs text-slate-500 mt-1 print:text-sm">{address}</p>}
         {phone && <p className="text-xs text-slate-500 print:text-sm">Ph: {phone}</p>}
       </div>
@@ -59,9 +59,16 @@ export function ReceiptPreview({ receipt, institution: propInstitution }) {
         {remarks && <Row label="Remarks / Notes" value={remarks} />}
       </div>
 
-      <div className="flex justify-between items-end mt-12 mb-4 print:mt-16">
-        <div className="text-center">
-          <div className="border-t border-slate-400 w-36 pt-1 text-xs text-slate-500 print:text-sm">Authorized Signature</div>
+      <div className="flex justify-between items-end mt-8 mb-4 print:mt-12">
+        <div className="flex flex-col items-center">
+          {receipt.digital_signature ? (
+            <img src={receipt.digital_signature} alt="Digital Signature" className="h-16 w-36 object-contain mb-1" />
+          ) : (
+            <div className="h-16"></div>
+          )}
+          <div className="border-t border-slate-400 w-36 pt-1 text-xs text-slate-500 print:text-sm text-center">
+            Authorized Signature
+          </div>
         </div>
       </div>
 

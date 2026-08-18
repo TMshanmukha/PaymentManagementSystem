@@ -10,6 +10,7 @@ export const studentSchema = z.object({
   class: z.string().optional(),
   section: z.string().optional(),
   studentType: z.enum(['SCHOOL', 'TUITION']),
+  admissionType: z.enum(['REGULAR', 'SCHOLARSHIP']).default('REGULAR'),
   academicYearId: z.coerce.number().int().positive('Academic year is required'),
   totalFee: z.coerce.number().min(0, 'Total fee cannot be negative'),
   joiningDate: z.string().min(1, 'Joining date is required'),
