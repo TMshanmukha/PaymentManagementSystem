@@ -31,7 +31,15 @@ export default function UsersPage() {
   const [newPassword, setNewPassword] = useState('');
   const [busy, setBusy] = useState(false);
 
-  const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm({ resolver: zodResolver(createUserSchema) });
+  const { register, handleSubmit, reset, watch, formState: { errors, isSubmitting } } = useForm({ resolver: zodResolver(createUserSchema) });
+  const selectedRole = watch('role');
+
+  const roleLabelMap = {
+    ADMIN: 'Co-Admin',
+    SCHOOL_ACCOUNTANT: 'School Accountant',
+    TUITION_ACCOUNTANT: 'Tuition Accountant'
+  };
+  const roleLabel = roleLabelMap[selectedRole] || 'User';
 
   async function load() {
     setLoading(true);
@@ -50,9 +58,10 @@ export default function UsersPage() {
     setServerError('');
     try {
       await userApi.create(values);
-      toast.success('Accountant added successfully.');
+      const label = roleLabelMap[values.role] || 'User';
+      toast.success(`${label} added successfully.`);
       setFormOpen(false);
-      reset({});
+      reset({ role: '' });
       load();
     } catch (err) {
       setServerError(getErrorMessage(err, 'Could not add user.'));
@@ -111,17 +120,17 @@ export default function UsersPage() {
 
   return (
     <div>
-      <PageHeader title="User Management" description="Manage school and tuition accountant accounts"
-        actions={<Button onClick={() => setFormOpen(true)}><Plus className="w-4 h-4" /> Add Accountant</Button>} />
+      <PageHeader title="User Management" description="Manage school, tuition accountant and co-admin accounts"
+        actions={<Button onClick={() => setFormOpen(true)}><Plus className="w-4 h-4" /> Add Users</Button>} />
 
       <Card>
         <DataTable columns={columns} rows={rows} loading={loading} emptyMessage="No accountants added yet." />
       </Card>
 
-      <Modal open={formOpen} onClose={() => setFormOpen(false)} title="Add Accountant"
+      <Modal open={formOpen} onClose={() => setFormOpen(false)} title={`Add ${roleLabel}`}
         footer={<>
           <Button variant="secondary" onClick={() => setFormOpen(false)}>Cancel</Button>
-          <Button onClick={handleSubmit(onSubmit)} loading={isSubmitting}>Add Accountant</Button>
+          <Button onClick={handleSubmit(onSubmit)} loading={isSubmitting}>Add {roleLabel}</Button>
         </>}>
         {serverError && <div className="mb-4 rounded-lg bg-red-50 border border-red-100 px-3 py-2.5 text-sm text-red-700">{serverError}</div>}
         <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 sm:grid-cols-2 gap-4" noValidate>

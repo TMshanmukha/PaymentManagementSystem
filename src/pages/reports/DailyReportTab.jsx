@@ -135,12 +135,12 @@ export function DailyReportTab({ studentType }) {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 mb-4">
+          <div className={`grid grid-cols-1 sm:grid-cols-2 ${studentType ? 'lg:grid-cols-4' : 'lg:grid-cols-5'} gap-3 mb-4`}>
             <StatCard label="Total Collection" value={formatCurrency(data.summary.total_collection)} icon={IndianRupee} tone="success" />
             <StatCard label="Cash" value={formatCurrency(data.summary.cash_collection)} icon={Banknote} />
             <StatCard label="UPI" value={formatCurrency(data.summary.upi_collection)} icon={Smartphone} />
-            <StatCard label="School" value={formatCurrency(data.summary.school_collection)} icon={School} />
-            <StatCard label="Tuition" value={formatCurrency(data.summary.tuition_collection)} icon={BookOpen} />
+            {studentType !== 'TUITION' && <StatCard label="School" value={formatCurrency(data.summary.school_collection)} icon={School} />}
+            {studentType !== 'SCHOOL' && <StatCard label="Tuition" value={formatCurrency(data.summary.tuition_collection)} icon={BookOpen} />}
           </div>
 
           <Card className="mb-4">

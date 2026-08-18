@@ -128,16 +128,32 @@ export function MonthlyReportTab({ studentType }) {
             <StatCard label="Students (Due/Paid)" value={`${data.studentSummary.students_with_due}/${data.studentSummary.students_fully_paid}`} icon={Users} />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-            <Card>
-              <p className="text-sm text-slate-500">School Collection</p>
-              <p className="text-xl font-bold text-navy-900">{formatCurrency(data.collection.school_collection)}</p>
-            </Card>
-            <Card>
-              <p className="text-sm text-slate-500">Tuition Collection</p>
-              <p className="text-xl font-bold text-navy-900">{formatCurrency(data.collection.tuition_collection)}</p>
-            </Card>
-          </div>
+          {studentType ? (
+            <div className="grid grid-cols-1 gap-4 mb-4">
+              {studentType === 'SCHOOL' ? (
+                <Card>
+                  <p className="text-sm text-slate-500">School Collection</p>
+                  <p className="text-xl font-bold text-navy-900">{formatCurrency(data.collection.school_collection)}</p>
+                </Card>
+              ) : (
+                <Card>
+                  <p className="text-sm text-slate-500">Tuition Collection</p>
+                  <p className="text-xl font-bold text-navy-900">{formatCurrency(data.collection.tuition_collection)}</p>
+                </Card>
+              )}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+              <Card>
+                <p className="text-sm text-slate-500">School Collection</p>
+                <p className="text-xl font-bold text-navy-900">{formatCurrency(data.collection.school_collection)}</p>
+              </Card>
+              <Card>
+                <p className="text-sm text-slate-500">Tuition Collection</p>
+                <p className="text-xl font-bold text-navy-900">{formatCurrency(data.collection.tuition_collection)}</p>
+              </Card>
+            </div>
+          )}
 
           <Card className="no-print">
             <p className="font-semibold text-navy-900 mb-4">Daily Collection — {MONTHS[month - 1]} {year}</p>
