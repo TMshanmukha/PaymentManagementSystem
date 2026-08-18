@@ -6,4 +6,5 @@ export const paymentSchema = z.object({
   paymentMethod: z.enum(['CASH', 'UPI'], { required_error: 'Select a payment method' }),
   paymentDate: z.string().min(1, 'Payment date is required'),
   remarks: z.string().optional(),
+  digitalSignature: z.string().optional(),
 });
