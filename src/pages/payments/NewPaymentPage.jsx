@@ -18,7 +18,7 @@ import { useAuth } from '../../hooks/useAuth.js';
 import { ROLES, ROLE_SCOPE } from '../../config/constants.js';
 import { formatCurrency, todayISO } from '../../utils/format.js';
 import { PaymentSuccessModal } from './PaymentSuccessModal.jsx';
-import { SignaturePad } from '../../components/SignaturePad.jsx';
+// SignaturePad removed
 
 export default function NewPaymentPage() {
   const { user } = useAuth();
@@ -41,11 +41,12 @@ export default function NewPaymentPage() {
     register, handleSubmit, watch, setValue, control, formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(paymentSchema),
-    defaultValues: { studentId: preselectedStudentId, paymentDate: todayISO(), paymentMethod: 'CASH' },
+    defaultValues: { studentId: preselectedStudentId, paymentDate: todayISO(), paymentMethod: 'CASH', digitalSignature: user.fullName || '' },
   });
 
   const studentId = watch('studentId');
   const amount = watch('amount');
+  const watchSignature = watch('digitalSignature');
 
   useEffect(() => {
     studentApi.list({ status: 'ACTIVE', pageSize: 200, studentType: scope || undefined })
@@ -130,17 +131,21 @@ export default function NewPaymentPage() {
             </div>
 
             {user.role === ROLES.ADMIN && (
-              <div className="border-t border-slate-100 pt-4">
-                <Controller
-                  control={control}
-                  name="digitalSignature"
-                  render={({ field }) => (
-                    <SignaturePad
-                      value={field.value}
-                      onChange={field.onChange}
-                    />
-                  )}
+              <div className="border-t border-slate-100 pt-4 space-y-3">
+                <Input
+                  label="Digital Signature (Type your name to sign)"
+                  placeholder="Type your name to sign"
+                  error={errors.digitalSignature?.message}
+                  {...register('digitalSignature', { required: user.role === ROLES.ADMIN ? 'Signature is required' : false })}
                 />
+                {watchSignature && (
+                  <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg flex flex-col items-center justify-center">
+                    <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider mb-1">Signature Preview</p>
+                    <span style={{ fontFamily: "'Great Vibes', cursive" }} className="text-3xl text-navy-800 font-medium">
+                      {watchSignature}
+                    </span>
+                  </div>
+                )}
               </div>
             )}
 

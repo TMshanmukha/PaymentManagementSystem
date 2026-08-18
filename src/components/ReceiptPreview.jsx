@@ -62,7 +62,15 @@ export function ReceiptPreview({ receipt, institution: propInstitution }) {
       <div className="flex justify-between items-end mt-8 mb-4 print:mt-12">
         <div className="flex flex-col items-center">
           {receipt.digital_signature ? (
-            <img src={receipt.digital_signature} alt="Digital Signature" className="h-16 w-36 object-contain mb-1" />
+            receipt.digital_signature.startsWith('data:image/') ? (
+              <img src={receipt.digital_signature} alt="Digital Signature" className="h-16 w-36 object-contain mb-1" />
+            ) : (
+              <div className="h-16 flex items-center justify-center mb-1 w-36 select-none">
+                <span style={{ fontFamily: "'Great Vibes', cursive" }} className="text-3xl text-navy-800 font-medium">
+                  {receipt.digital_signature}
+                </span>
+              </div>
+            )
           ) : (
             <div className="h-16"></div>
           )}
