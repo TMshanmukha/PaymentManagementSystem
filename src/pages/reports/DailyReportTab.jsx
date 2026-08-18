@@ -146,18 +146,23 @@ export function DailyReportTab({ studentType }) {
           <Card className="mb-4">
             <p className="font-semibold text-navy-900 mb-3">Accountant-wise Breakdown</p>
             {data.accountantBreakdown.length === 0 ? (
-              <p className="text-sm text-slate-400 py-4">No transactions recorded for this date.</p>
+              <p className="text-sm text-slate-400 py-4">No activity recorded for this date.</p>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {data.accountantBreakdown.map((a) => (
-                  <div key={a.received_by} className="border border-slate-100 rounded-lg p-3">
-                    <p className="font-medium text-slate-800">{a.accountant_name}</p>
-                    <div className="grid grid-cols-3 gap-2 mt-2 text-sm">
-                      <div><p className="text-slate-400 text-xs">Txns</p><p className="font-semibold">{a.transaction_count}</p></div>
-                      <div><p className="text-slate-400 text-xs">Cash</p><p className="font-semibold">{formatCurrency(a.cash_total)}</p></div>
-                      <div><p className="text-slate-400 text-xs">UPI</p><p className="font-semibold">{formatCurrency(a.upi_total)}</p></div>
+                  <div key={a.userId} className="border border-slate-100 rounded-lg p-3 hover:shadow-sm transition-all bg-white">
+                    <p className="font-bold text-slate-850 text-sm">{a.userName}</p>
+                    <div className="grid grid-cols-3 gap-2 mt-2.5 text-xs">
+                      <div><p className="text-slate-400 font-medium">Txns</p><p className="font-semibold text-slate-850 mt-0.5">{a.transactionCount}</p></div>
+                      <div><p className="text-slate-400 font-medium">Collected</p><p className="font-semibold text-emerald-600 mt-0.5">{formatCurrency(a.overallTotal)}</p></div>
+                      <div><p className="text-slate-400 font-medium">Expenses</p><p className="font-semibold text-red-650 mt-0.5">{formatCurrency(a.expenseTotal)}</p></div>
                     </div>
-                    <p className="mt-2 text-sm font-bold text-brand-700">Total: {formatCurrency(a.overall_total)}</p>
+                    <div className="mt-3 pt-2.5 border-t border-slate-100 flex justify-between items-center text-xs">
+                      <span className="text-slate-500 font-medium">Net Amount:</span>
+                      <span className={`font-bold ${a.netAmount >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
+                        {formatCurrency(a.netAmount)}
+                      </span>
+                    </div>
                   </div>
                 ))}
               </div>
