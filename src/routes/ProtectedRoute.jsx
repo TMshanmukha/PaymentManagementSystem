@@ -11,7 +11,7 @@ export function ProtectedRoute() {
   const { user, loading } = useAuth();
   const location = useLocation();
 
-  if (loading) return <LoadingState fullScreen label="Loading EduLedger..." />;
+  if (loading) return <LoadingState fullScreen label="Loading VVSLedger..." />;
   if (!user) return <Navigate to="/login" state={{ from: location }} replace />;
   return <Outlet />;
 }

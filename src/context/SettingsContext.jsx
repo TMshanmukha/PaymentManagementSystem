@@ -5,7 +5,7 @@ const SettingsContext = createContext(null);
 
 export function SettingsProvider({ children }) {
   const [settings, setSettings] = useState({
-    app_name: 'EduLedger',
+    app_name: 'VVSLedger',
     app_subtitle: 'School & Tuition Management',
     institution_name: 'Demo Public School & Tuition Centre',
     institution_phone: '',
@@ -36,7 +36,7 @@ export function SettingsProvider({ children }) {
     loading,
     refreshSettings,
     institutionName: settings.institution_name || 'Demo Public School & Tuition Centre',
-    appName: settings.app_name || 'EduLedger',
+    appName: settings.app_name || 'VVSLedger',
     appSubtitle: settings.app_subtitle || 'School & Tuition Management',
   };
 

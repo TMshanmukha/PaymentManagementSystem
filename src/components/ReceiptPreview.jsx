@@ -13,7 +13,7 @@ export function ReceiptPreview({ receipt, institution: propInstitution }) {
   if (!receipt) return null;
 
   const institution = propInstitution || settings;
-  const name = institution?.institution_name || settings?.institution_name || 'EduLedger Institution';
+  const name = institution?.institution_name || settings?.institution_name || 'VVSLedger Institution';
   const address = institution?.institution_address || settings?.institution_address;
   const phone = institution?.institution_phone || settings?.institution_phone;
 

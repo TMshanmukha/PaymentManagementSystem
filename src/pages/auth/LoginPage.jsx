@@ -134,10 +134,6 @@ export default function LoginPage() {
               </Button>
             </form>
           </div>
-
-          <p className="text-center text-xs text-slate-400 mt-6">
-            Demo: admin / school.accountant / tuition.accountant
-          </p>
         </div>
       </div>
     </div>

@@ -1,5 +1,5 @@
 // Central place for brand/config so it's easy to replace later (spec section 8).
-export const APP_NAME = 'EduLedger';
+export const APP_NAME = 'VVSLedger';
 export const APP_SUBTITLE = 'School & Tuition Management';
 
 export const ROLES = {

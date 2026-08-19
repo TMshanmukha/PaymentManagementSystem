@@ -149,7 +149,7 @@ export default function ExpensesPage() {
       <div className="print-area print-a4">
         {/* Printable A4 Report Header */}
         <div className="hidden print:block mb-6 text-center border-b pb-4">
-          <h1 className="text-2xl font-bold text-navy-950">EduLedger Institution</h1>
+          <h1 className="text-2xl font-bold text-navy-950">VVSLedger Institution</h1>
           <div className="mt-4 border-t pt-3 flex justify-between text-xs text-slate-500">
             <span className="font-bold uppercase tracking-wider text-sm text-navy-900">
               {activeExpenseType === 'SCHOOL' ? 'School' : 'Tuition'} Expenses Report

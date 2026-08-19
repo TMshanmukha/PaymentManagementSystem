@@ -100,17 +100,10 @@ export function DailyReportTab({ studentType }) {
                 </button>
                 <button
                   onClick={() => { setPrintMenuOpen(false); triggerPrint('A5'); }}
-                  className="w-full text-left px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 border-b border-slate-100"
+                  className="w-full text-left px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50"
                 >
                   <p className="font-semibold text-slate-800">Print A5 Size</p>
                   <p className="text-xs text-slate-400">Compact scale</p>
-                </button>
-                <button
-                  onClick={() => { setPrintMenuOpen(false); triggerPrint('NORMAL'); }}
-                  className="w-full text-left px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50"
-                >
-                  <p className="font-semibold text-slate-800">Normal / Default</p>
-                  <p className="text-xs text-slate-400">Browser standard</p>
                 </button>
               </div>
             </>
@@ -125,7 +118,7 @@ export function DailyReportTab({ studentType }) {
         <div className="print-area print-a4">
           {/* Printable A4 Report Header */}
           <div className="hidden print:block mb-6 text-center border-b pb-4">
-            <h1 className="text-2xl font-bold text-navy-950">{settings?.institution_name || 'EduLedger'}</h1>
+            <h1 className="text-2xl font-bold text-navy-950">{settings?.institution_name || 'VVSLedger'}</h1>
             {settings?.institution_address && <p className="text-sm text-slate-600 mt-1">{settings.institution_address}</p>}
             {settings?.institution_phone && <p className="text-sm text-slate-600">Ph: {settings.institution_phone}</p>}
             <div className="mt-4 border-t pt-3 flex justify-between text-xs text-slate-500">
