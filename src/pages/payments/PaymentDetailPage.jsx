@@ -100,17 +100,10 @@ export default function PaymentDetailPage() {
                     </button>
                     <button
                       onClick={() => { setPrintMenuOpen(false); triggerPrint('A5'); }}
-                      className="w-full text-left px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 border-b border-slate-100"
+                      className="w-full text-left px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50"
                     >
                       <p className="font-semibold text-slate-800">Print A5 Size</p>
                       <p className="text-xs text-slate-400">Voucher memo scale</p>
-                    </button>
-                    <button
-                      onClick={() => { setPrintMenuOpen(false); triggerPrint('NORMAL'); }}
-                      className="w-full text-left px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50"
-                    >
-                      <p className="font-semibold text-slate-800">Normal / Default</p>
-                      <p className="text-xs text-slate-400">Standard print layout</p>
                     </button>
                   </div>
                 </>

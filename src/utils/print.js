@@ -21,6 +21,9 @@ export function triggerPrint(size) {
   const clone = printArea.cloneNode(true);
   portal.appendChild(clone);
 
+  const isReceipt = printArea.querySelector('.receipt-body-content') !== null;
+  portal.className = isReceipt ? 'portal-receipt' : 'portal-report';
+
   const existing = document.getElementById('print-layout-style');
   if (existing) existing.remove();
 
@@ -44,7 +47,34 @@ export function triggerPrint(size) {
           display: block !important;
           width: 100% !important;
         }
-        #print-portal > div {
+        
+        /* Receipt Specific Styles */
+        #print-portal.portal-receipt > div {
+          max-width: none !important;
+          width: 180mm !important;
+          height: 267mm !important;
+          margin: 0 auto !important;
+          padding: 20mm !important;
+          border: 2px solid #000000 !important;
+          border-radius: 0px !important;
+          box-shadow: none !important;
+          background: #ffffff !important;
+          font-family: ui-sans-serif, system-ui, sans-serif !important;
+          font-size: 10.5pt !important;
+          box-sizing: border-box !important;
+          display: flex !important;
+          flex-direction: column !important;
+          justify-content: space-between !important;
+        }
+        #print-portal.portal-receipt > div > div {
+          height: 100% !important;
+          display: flex !important;
+          flex-direction: column !important;
+          justify-content: space-between !important;
+        }
+
+        /* Report Specific Styles */
+        #print-portal.portal-report > div {
           max-width: 680px !important;
           width: 100% !important;
           margin: 0 auto !important;
@@ -56,12 +86,13 @@ export function triggerPrint(size) {
           font-family: ui-sans-serif, system-ui, sans-serif !important;
           font-size: 10pt !important;
         }
+
         #print-portal .text-center {
           text-align: center !important;
-          margin-bottom: 2rem !important;
+          margin-bottom: 1.5rem !important;
         }
         #print-portal .font-bold.text-lg {
-          font-size: 18pt !important;
+          font-size: 20pt !important;
           font-weight: 700 !important;
           color: #0f172a !important;
         }
@@ -70,9 +101,15 @@ export function triggerPrint(size) {
           color: #475569 !important;
           margin-top: 0.5rem !important;
         }
-        #print-portal .py-1 {
-          padding: 8px 0 !important;
-          border-bottom: 1px solid #e2e8f0 !important;
+        #print-portal div[class*="print:py-"] {
+          padding-top: 6px !important;
+          padding-bottom: 6px !important;
+        }
+        #print-portal div[class*="mb-"] {
+          margin-bottom: 0.75rem !important;
+        }
+        #print-portal div[class*="mt-"] {
+          margin-top: 0.75rem !important;
         }
         #print-portal th, #print-portal td {
           white-space: nowrap !important;
@@ -81,11 +118,11 @@ export function triggerPrint(size) {
         }
         #print-portal .text-slate-500 {
           color: #475569 !important;
-          font-size: 10pt !important;
+          font-size: 10.5pt !important;
         }
         #print-portal .text-slate-800, #print-portal .font-bold {
           color: #0f172a !important;
-          font-size: 10pt !important;
+          font-size: 10.5pt !important;
         }
         #print-portal .text-xs {
           font-size: 9.5pt !important;
@@ -112,7 +149,34 @@ export function triggerPrint(size) {
           display: block !important;
           width: 100% !important;
         }
-        #print-portal > div {
+        
+        /* Receipt Specific Styles */
+        #print-portal.portal-receipt > div {
+          max-width: none !important;
+          width: 128mm !important;
+          height: 190mm !important;
+          margin: 0 auto !important;
+          padding: 10mm !important;
+          border: 2px solid #000000 !important;
+          border-radius: 0px !important;
+          box-shadow: none !important;
+          background: #ffffff !important;
+          font-family: ui-sans-serif, system-ui, sans-serif !important;
+          font-size: 8.5pt !important;
+          box-sizing: border-box !important;
+          display: flex !important;
+          flex-direction: column !important;
+          justify-content: space-between !important;
+        }
+        #print-portal.portal-receipt > div > div {
+          height: 100% !important;
+          display: flex !important;
+          flex-direction: column !important;
+          justify-content: space-between !important;
+        }
+
+        /* Report Specific Styles */
+        #print-portal.portal-report > div {
           max-width: 460px !important;
           width: 100% !important;
           margin: 0 auto !important;
@@ -124,22 +188,29 @@ export function triggerPrint(size) {
           font-family: ui-sans-serif, system-ui, sans-serif !important;
           font-size: 8.5pt !important;
         }
+
         #print-portal .text-center {
           text-align: center !important;
-          margin-bottom: 1.25rem !important;
+          margin-bottom: 0.75rem !important;
         }
         #print-portal .font-bold.text-lg {
-          font-size: 14pt !important;
+          font-size: 13pt !important;
           font-weight: 700 !important;
           color: #0f172a !important;
         }
         #print-portal .text-xs.font-bold {
-          font-size: 9.5pt !important;
+          font-size: 9pt !important;
           color: #475569 !important;
         }
-        #print-portal .py-1 {
-          padding: 5px 0 !important;
-          border-bottom: 1px solid #e2e8f0 !important;
+        #print-portal div[class*="print:py-"] {
+          padding-top: 3px !important;
+          padding-bottom: 3px !important;
+        }
+        #print-portal div[class*="mb-"] {
+          margin-bottom: 0.5rem !important;
+        }
+        #print-portal div[class*="mt-"] {
+          margin-top: 0.5rem !important;
         }
         #print-portal th, #print-portal td {
           white-space: nowrap !important;

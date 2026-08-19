@@ -102,13 +102,23 @@ export default function DashboardPage() {
                 <p className="text-xs text-slate-500 font-medium">Today's Collection</p>
                 <p className="text-lg font-bold text-indigo-700 mt-0.5">{formatCurrency(data.schoolSummary.todayCollection)}</p>
               </div>
-              <div className="bg-slate-50 p-3 rounded-lg border border-slate-100">
-                <p className="text-xs text-slate-500 font-medium">Cash Collection</p>
-                <p className="text-lg font-bold text-slate-700 mt-0.5">{formatCurrency(data.schoolSummary.cashCollection)}</p>
+              <div className="bg-slate-50 p-3 rounded-lg border border-slate-100 flex flex-col justify-between">
+                <div>
+                  <p className="text-xs text-slate-500 font-medium">Cash Collection</p>
+                  <p className="text-lg font-bold text-slate-700 mt-0.5">{formatCurrency(data.schoolSummary.cashCollection)}</p>
+                </div>
+                <div className="border-t border-slate-200/60 mt-1.5 pt-1 text-[10px] text-slate-500">
+                  Overall: <span className="font-semibold text-slate-750">{formatCurrency(data.schoolSummary.overallCashCollection)}</span>
+                </div>
               </div>
-              <div className="bg-slate-50 p-3 rounded-lg border border-slate-100">
-                <p className="text-xs text-slate-500 font-medium">UPI Collection</p>
-                <p className="text-lg font-bold text-slate-700 mt-0.5">{formatCurrency(data.schoolSummary.upiCollection)}</p>
+              <div className="bg-slate-50 p-3 rounded-lg border border-slate-100 flex flex-col justify-between">
+                <div>
+                  <p className="text-xs text-slate-500 font-medium">UPI Collection</p>
+                  <p className="text-lg font-bold text-slate-700 mt-0.5">{formatCurrency(data.schoolSummary.upiCollection)}</p>
+                </div>
+                <div className="border-t border-slate-200/60 mt-1.5 pt-1 text-[10px] text-slate-500">
+                  Overall: <span className="font-semibold text-slate-750">{formatCurrency(data.schoolSummary.overallUpiCollection)}</span>
+                </div>
               </div>
               <div className="bg-orange-50/30 p-3 rounded-lg border border-orange-100/50 col-span-2 sm:col-span-1">
                 <p className="text-xs text-slate-500 font-medium">Outstanding Due</p>
@@ -144,13 +154,23 @@ export default function DashboardPage() {
                 <p className="text-xs text-slate-500 font-medium">Today's Collection</p>
                 <p className="text-lg font-bold text-amber-600 mt-0.5">{formatCurrency(data.tuitionSummary.todayCollection)}</p>
               </div>
-              <div className="bg-slate-50 p-3 rounded-lg border border-slate-100">
-                <p className="text-xs text-slate-500 font-medium">Cash Collection</p>
-                <p className="text-lg font-bold text-slate-700 mt-0.5">{formatCurrency(data.tuitionSummary.cashCollection)}</p>
+              <div className="bg-slate-50 p-3 rounded-lg border border-slate-100 flex flex-col justify-between">
+                <div>
+                  <p className="text-xs text-slate-500 font-medium">Cash Collection</p>
+                  <p className="text-lg font-bold text-slate-700 mt-0.5">{formatCurrency(data.tuitionSummary.cashCollection)}</p>
+                </div>
+                <div className="border-t border-slate-200/60 mt-1.5 pt-1 text-[10px] text-slate-500">
+                  Overall: <span className="font-semibold text-slate-750">{formatCurrency(data.tuitionSummary.overallCashCollection)}</span>
+                </div>
               </div>
-              <div className="bg-slate-50 p-3 rounded-lg border border-slate-100">
-                <p className="text-xs text-slate-500 font-medium">UPI Collection</p>
-                <p className="text-lg font-bold text-slate-700 mt-0.5">{formatCurrency(data.tuitionSummary.upiCollection)}</p>
+              <div className="bg-slate-50 p-3 rounded-lg border border-slate-100 flex flex-col justify-between">
+                <div>
+                  <p className="text-xs text-slate-500 font-medium">UPI Collection</p>
+                  <p className="text-lg font-bold text-slate-700 mt-0.5">{formatCurrency(data.tuitionSummary.upiCollection)}</p>
+                </div>
+                <div className="border-t border-slate-200/60 mt-1.5 pt-1 text-[10px] text-slate-500">
+                  Overall: <span className="font-semibold text-slate-750">{formatCurrency(data.tuitionSummary.overallUpiCollection)}</span>
+                </div>
               </div>
               <div className="bg-orange-50/30 p-3 rounded-lg border border-orange-100/50 col-span-2 sm:col-span-1">
                 <p className="text-xs text-slate-500 font-medium">Outstanding Due</p>

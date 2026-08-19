@@ -39,7 +39,7 @@ export function PaymentSuccessModal({ receipt, onClose, onNewPayment }) {
         <p className="text-sm font-semibold text-brand-900 mb-2.5 text-center flex items-center justify-center gap-1.5">
           <Printer className="w-4 h-4 text-brand-650" /> Choose Paper Size to Print Receipt
         </p>
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-2 gap-2">
           <button
             onClick={() => triggerPrint('A4')}
             className="flex flex-col items-center justify-center p-3 bg-white border border-brand-200 rounded-lg hover:border-brand-500 hover:bg-brand-50/55 transition-all outline-none"
@@ -53,13 +53,6 @@ export function PaymentSuccessModal({ receipt, onClose, onNewPayment }) {
           >
             <span className="font-bold text-sm text-slate-800">A5 Sheet</span>
             <span className="text-[10px] text-slate-400 mt-0.5">Half Page</span>
-          </button>
-          <button
-            onClick={() => triggerPrint('NORMAL')}
-            className="flex flex-col items-center justify-center p-3 bg-white border border-brand-200 rounded-lg hover:border-brand-500 hover:bg-brand-50/55 transition-all outline-none"
-          >
-            <span className="font-bold text-sm text-slate-800">Thermal Slip</span>
-            <span className="text-[10px] text-slate-400 mt-0.5">Narrow Roll</span>
           </button>
         </div>
       </div>
