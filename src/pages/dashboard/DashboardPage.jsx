@@ -97,7 +97,7 @@ export default function DashboardPage() {
               </div>
               <Badge color="blue">School</Badge>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
               <div className="bg-indigo-50/30 p-3 rounded-lg border border-indigo-100/50">
                 <p className="text-xs text-slate-500 font-medium">Today's Collection</p>
                 <p className="text-lg font-bold text-indigo-700 mt-0.5">{formatCurrency(data.schoolSummary.todayCollection)}</p>
@@ -127,7 +127,7 @@ export default function DashboardPage() {
                 <p className="text-xs text-slate-500 font-medium">Overall Expenses</p>
                 <p className="text-lg font-bold text-red-600 mt-0.5">{formatCurrency(data.schoolSummary.overallExpenses)}</p>
               </div>
-              <div className="bg-emerald-50/30 p-3 rounded-lg border border-emerald-100/50 col-span-1 sm:col-span-2 lg:col-span-2">
+              <div className="bg-emerald-50/30 p-3 rounded-lg border border-emerald-100/50 col-span-1 sm:col-span-2">
                 <p className="text-xs text-slate-500 font-medium">Net Available Balance</p>
                 <p className="text-lg font-bold text-emerald-600 mt-0.5">{formatCurrency(data.schoolSummary.overallNetCollection)}</p>
               </div>
@@ -148,7 +148,7 @@ export default function DashboardPage() {
               </div>
               <Badge color="orange">Tuition</Badge>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
               <div className="bg-amber-50/30 p-3 rounded-lg border border-amber-100/50">
                 <p className="text-xs text-slate-500 font-medium">Today's Collection</p>
                 <p className="text-lg font-bold text-amber-600 mt-0.5">{formatCurrency(data.tuitionSummary.todayCollection)}</p>
@@ -178,7 +178,7 @@ export default function DashboardPage() {
                 <p className="text-xs text-slate-500 font-medium">Overall Expenses</p>
                 <p className="text-lg font-bold text-red-600 mt-0.5">{formatCurrency(data.tuitionSummary.overallExpenses)}</p>
               </div>
-              <div className="bg-emerald-50/30 p-3 rounded-lg border border-emerald-100/50 col-span-1 sm:col-span-2 lg:col-span-2">
+              <div className="bg-emerald-50/30 p-3 rounded-lg border border-emerald-100/50 col-span-1 sm:col-span-2">
                 <p className="text-xs text-slate-500 font-medium">Net Available Balance</p>
                 <p className="text-lg font-bold text-emerald-600 mt-0.5">{formatCurrency(data.tuitionSummary.overallNetCollection)}</p>
               </div>
