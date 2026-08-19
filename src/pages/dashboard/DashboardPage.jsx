@@ -128,9 +128,15 @@ export default function DashboardPage() {
                 <p className="text-xs text-slate-500 font-medium">Overall Expenses</p>
                 <p className="text-lg font-bold text-red-600 mt-0.5">{formatCurrency(data.schoolSummary.overallExpenses)}</p>
               </div>
-              <div className="bg-emerald-50/30 p-3 rounded-lg border border-emerald-100/50 col-span-2">
-                <p className="text-xs text-slate-500 font-medium">Net Available Balance</p>
-                <p className="text-lg font-bold text-emerald-600 mt-0.5">{formatCurrency(data.schoolSummary.overallNetCollection)}</p>
+              <div className="bg-emerald-50/30 p-3 rounded-lg border border-emerald-100/50 col-span-2 flex flex-col justify-between">
+                <div>
+                  <p className="text-xs text-slate-500 font-medium">Net Available Balance</p>
+                  <p className="text-lg font-bold text-emerald-600 mt-0.5">{formatCurrency(data.schoolSummary.overallNetCollection)}</p>
+                </div>
+                <div className="border-t border-emerald-100/65 mt-1.5 pt-1 text-[10px] text-slate-500 flex flex-row gap-4">
+                  <div>Cash Available: <span className="font-semibold text-emerald-700">{formatCurrency(data.schoolSummary.overallNetCash)}</span></div>
+                  <div>UPI Available: <span className="font-semibold text-emerald-700">{formatCurrency(data.schoolSummary.overallNetUpi)}</span></div>
+                </div>
               </div>
             </div>
             <div className="space-y-2.5 mt-2">
@@ -180,9 +186,15 @@ export default function DashboardPage() {
                 <p className="text-xs text-slate-500 font-medium">Overall Expenses</p>
                 <p className="text-lg font-bold text-red-600 mt-0.5">{formatCurrency(data.tuitionSummary.overallExpenses)}</p>
               </div>
-              <div className="bg-emerald-50/30 p-3 rounded-lg border border-emerald-100/50 col-span-2">
-                <p className="text-xs text-slate-500 font-medium">Net Available Balance</p>
-                <p className="text-lg font-bold text-emerald-600 mt-0.5">{formatCurrency(data.tuitionSummary.overallNetCollection)}</p>
+              <div className="bg-emerald-50/30 p-3 rounded-lg border border-emerald-100/50 col-span-2 flex flex-col justify-between">
+                <div>
+                  <p className="text-xs text-slate-500 font-medium">Net Available Balance</p>
+                  <p className="text-lg font-bold text-emerald-600 mt-0.5">{formatCurrency(data.tuitionSummary.overallNetCollection)}</p>
+                </div>
+                <div className="border-t border-emerald-100/65 mt-1.5 pt-1 text-[10px] text-slate-500 flex flex-row gap-4">
+                  <div>Cash Available: <span className="font-semibold text-emerald-700">{formatCurrency(data.tuitionSummary.overallNetCash)}</span></div>
+                  <div>UPI Available: <span className="font-semibold text-emerald-700">{formatCurrency(data.tuitionSummary.overallNetUpi)}</span></div>
+                </div>
               </div>
             </div>
             <div className="space-y-2.5 mt-2">
