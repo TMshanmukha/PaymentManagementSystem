@@ -97,7 +97,7 @@ export default function DashboardPage() {
               </div>
               <Badge color="blue">School</Badge>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
               <div className="bg-indigo-50/30 p-3 rounded-lg border border-indigo-100/50">
                 <p className="text-xs text-slate-500 font-medium">Today's Collection</p>
                 <p className="text-lg font-bold text-indigo-700 mt-0.5">{formatCurrency(data.schoolSummary.todayCollection)}</p>
@@ -110,6 +110,15 @@ export default function DashboardPage() {
                 <p className="text-xs text-slate-500 font-medium">UPI Collection</p>
                 <p className="text-lg font-bold text-slate-700 mt-0.5">{formatCurrency(data.schoolSummary.upiCollection)}</p>
               </div>
+              <div className="bg-indigo-50/20 p-3 rounded-lg border border-indigo-100/30 flex flex-col justify-between">
+                <div>
+                  <p className="text-xs text-slate-500 font-medium">Overall Collection</p>
+                  <p className="text-lg font-bold text-indigo-700 mt-0.5">{formatCurrency(data.schoolSummary.overallCollection)}</p>
+                </div>
+                <div className="border-t border-indigo-100/65 mt-1.5 pt-1 text-[10px] text-slate-500">
+                  Cash: <span className="font-semibold text-slate-700">{formatCurrency(data.schoolSummary.overallCashCollection)}</span> | UPI: <span className="font-semibold text-slate-700">{formatCurrency(data.schoolSummary.overallUpiCollection)}</span>
+                </div>
+              </div>
               <div className="bg-orange-50/30 p-3 rounded-lg border border-orange-100/50 col-span-2 sm:col-span-1">
                 <p className="text-xs text-slate-500 font-medium">Outstanding Due</p>
                 <p className="text-lg font-bold text-orange-600 mt-0.5">{formatCurrency(data.schoolSummary.totalOutstandingDue)}</p>
@@ -118,14 +127,9 @@ export default function DashboardPage() {
                 <p className="text-xs text-slate-500 font-medium">Overall Expenses</p>
                 <p className="text-lg font-bold text-red-600 mt-0.5">{formatCurrency(data.schoolSummary.overallExpenses)}</p>
               </div>
-              <div className="bg-emerald-50/30 p-3 rounded-lg border border-emerald-100/50 col-span-2 sm:col-span-1 flex flex-col justify-between">
-                <div>
-                  <p className="text-xs text-slate-500 font-medium">Net Available Balance</p>
-                  <p className="text-lg font-bold text-emerald-600 mt-0.5">{formatCurrency(data.schoolSummary.overallNetCollection)}</p>
-                </div>
-                <div className="border-t border-emerald-200 mt-1.5 pt-1 text-[10px] text-emerald-700/85">
-                  Cash: <span className="font-semibold">{formatCurrency(data.schoolSummary.overallCashCollection)}</span> | UPI: <span className="font-semibold">{formatCurrency(data.schoolSummary.overallUpiCollection)}</span>
-                </div>
+              <div className="bg-emerald-50/30 p-3 rounded-lg border border-emerald-100/50 col-span-2 sm:col-span-1">
+                <p className="text-xs text-slate-500 font-medium">Net Available Balance</p>
+                <p className="text-lg font-bold text-emerald-600 mt-0.5">{formatCurrency(data.schoolSummary.overallNetCollection)}</p>
               </div>
             </div>
             <div className="space-y-2.5 mt-2">
@@ -144,7 +148,7 @@ export default function DashboardPage() {
               </div>
               <Badge color="orange">Tuition</Badge>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
               <div className="bg-amber-50/30 p-3 rounded-lg border border-amber-100/50">
                 <p className="text-xs text-slate-500 font-medium">Today's Collection</p>
                 <p className="text-lg font-bold text-amber-600 mt-0.5">{formatCurrency(data.tuitionSummary.todayCollection)}</p>
@@ -157,6 +161,15 @@ export default function DashboardPage() {
                 <p className="text-xs text-slate-500 font-medium">UPI Collection</p>
                 <p className="text-lg font-bold text-slate-700 mt-0.5">{formatCurrency(data.tuitionSummary.upiCollection)}</p>
               </div>
+              <div className="bg-amber-50/20 p-3 rounded-lg border border-amber-100/30 flex flex-col justify-between">
+                <div>
+                  <p className="text-xs text-slate-500 font-medium">Overall Collection</p>
+                  <p className="text-lg font-bold text-amber-600 mt-0.5">{formatCurrency(data.tuitionSummary.overallCollection)}</p>
+                </div>
+                <div className="border-t border-amber-100/65 mt-1.5 pt-1 text-[10px] text-slate-500">
+                  Cash: <span className="font-semibold text-slate-750">{formatCurrency(data.tuitionSummary.overallCashCollection)}</span> | UPI: <span className="font-semibold text-slate-750">{formatCurrency(data.tuitionSummary.overallUpiCollection)}</span>
+                </div>
+              </div>
               <div className="bg-orange-50/30 p-3 rounded-lg border border-orange-100/50 col-span-2 sm:col-span-1">
                 <p className="text-xs text-slate-500 font-medium">Outstanding Due</p>
                 <p className="text-lg font-bold text-orange-600 mt-0.5">{formatCurrency(data.tuitionSummary.totalOutstandingDue)}</p>
@@ -165,14 +178,9 @@ export default function DashboardPage() {
                 <p className="text-xs text-slate-500 font-medium">Overall Expenses</p>
                 <p className="text-lg font-bold text-red-600 mt-0.5">{formatCurrency(data.tuitionSummary.overallExpenses)}</p>
               </div>
-              <div className="bg-emerald-50/30 p-3 rounded-lg border border-emerald-100/50 col-span-2 sm:col-span-1 flex flex-col justify-between">
-                <div>
-                  <p className="text-xs text-slate-500 font-medium">Net Available Balance</p>
-                  <p className="text-lg font-bold text-emerald-600 mt-0.5">{formatCurrency(data.tuitionSummary.overallNetCollection)}</p>
-                </div>
-                <div className="border-t border-emerald-200 mt-1.5 pt-1 text-[10px] text-emerald-700/85">
-                  Cash: <span className="font-semibold">{formatCurrency(data.tuitionSummary.overallCashCollection)}</span> | UPI: <span className="font-semibold">{formatCurrency(data.tuitionSummary.overallUpiCollection)}</span>
-                </div>
+              <div className="bg-emerald-50/30 p-3 rounded-lg border border-emerald-100/50 col-span-2 sm:col-span-1">
+                <p className="text-xs text-slate-500 font-medium">Net Available Balance</p>
+                <p className="text-lg font-bold text-emerald-600 mt-0.5">{formatCurrency(data.tuitionSummary.overallNetCollection)}</p>
               </div>
             </div>
             <div className="space-y-2.5 mt-2">
