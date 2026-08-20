@@ -50,7 +50,7 @@ export function Sidebar({ role, mobileOpen, onCloseMobile }) {
             <GraduationCap className="w-5 h-5 text-white" />
           </div>
           <div className="min-w-0 flex-1">
-            <p className="font-bold text-white leading-tight truncate text-sm sm:text-base">{institutionName}</p>
+            <p className="font-bold text-white leading-tight text-xs sm:text-sm">{institutionName}</p>
             <p className="text-[11px] text-slate-400 leading-tight truncate mt-0.5">{appSubtitle}</p>
           </div>
         </div>
