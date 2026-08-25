@@ -3,7 +3,8 @@
  * body (outside of any scrollable container wrappers), applies page-size styles,
  * and triggers the native browser print.
  */
-export function triggerPrint(size) {
+export function triggerPrint() {
+  const size = 'A5'; // Force A5 print size globally
   const printArea = document.querySelector('.print-area');
   if (!printArea) {
     window.print();
@@ -179,15 +180,15 @@ export function triggerPrint(size) {
         /* Receipt Specific Styles */
         #print-portal.portal-receipt > div {
           max-width: none !important;
-          width: 118mm !important;
-          height: 180mm !important;
-          padding: 8mm !important;
-          border: 2px solid #000000 !important;
+          width: 138mm !important;
+          height: 190mm !important;
+          padding: 10mm !important;
+          border: none !important;
           border-radius: 0px !important;
           box-shadow: none !important;
           background: #ffffff !important;
           font-family: ui-sans-serif, system-ui, sans-serif !important;
-          font-size: 8pt !important;
+          font-size: 10pt !important;
           box-sizing: border-box !important;
           display: flex !important;
           flex-direction: column !important;
@@ -204,59 +205,59 @@ export function triggerPrint(size) {
         /* Report Specific Styles */
         #print-portal.portal-report > div {
           max-width: none !important;
-          width: 118mm !important;
-          height: 180mm !important;
-          padding: 8mm !important;
-          border: 2px solid #000000 !important;
+          width: 138mm !important;
+          height: 190mm !important;
+          padding: 10mm !important;
+          border: none !important;
           border-radius: 0px !important;
           box-shadow: none !important;
           background: #ffffff !important;
           font-family: ui-sans-serif, system-ui, sans-serif !important;
-          font-size: 8pt !important;
+          font-size: 9.5pt !important;
           box-sizing: border-box !important;
           page-break-inside: avoid !important;
         }
 
         #print-portal .text-center {
           text-align: center !important;
-          margin-bottom: 0.5rem !important;
+          margin-bottom: 0.6rem !important;
         }
         #print-portal .font-bold.text-lg {
-          font-size: 11pt !important;
+          font-size: 14pt !important;
           font-weight: 700 !important;
           color: #0f172a !important;
         }
         #print-portal .text-xs.font-bold {
-          font-size: 8pt !important;
+          font-size: 10.5pt !important;
           color: #475569 !important;
         }
         #print-portal div[class*="print:py-"], #print-portal .py-1, #print-portal .py-2, #print-portal div[class*="py-"] {
-          padding-top: 1px !important;
-          padding-bottom: 1px !important;
+          padding-top: 5px !important;
+          padding-bottom: 5px !important;
         }
         #print-portal div[class*="mb-"] {
-          margin-bottom: 0.25rem !important;
+          margin-bottom: 0.65rem !important;
         }
         #print-portal div[class*="mt-"] {
-          margin-top: 0.25rem !important;
+          margin-top: 0.65rem !important;
         }
         #print-portal th, #print-portal td {
           white-space: nowrap !important;
           text-overflow: ellipsis !important;
           overflow: hidden !important;
-          padding: 2px 4px !important;
-          font-size: 7.5pt !important;
+          padding: 4px 6px !important;
+          font-size: 9pt !important;
         }
         #print-portal .text-slate-500 {
           color: #475569 !important;
-          font-size: 8pt !important;
+          font-size: 10pt !important;
         }
         #print-portal .text-slate-800, #print-portal .font-bold {
           color: #0f172a !important;
-          font-size: 8pt !important;
+          font-size: 10pt !important;
         }
         #print-portal .text-xs {
-          font-size: 7.5pt !important;
+          font-size: 9pt !important;
         }
         #print-portal .no-print {
           display: none !important;

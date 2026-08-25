@@ -7,5 +7,5 @@ export const studentApi = {
   paymentHistory: (id) => api.get(`/students/${id}/payments`),
   create: (payload) => api.post('/students', payload),
   update: (id, payload) => api.put(`/students/${id}`, payload),
-  updateStatus: (id, status) => api.patch(`/students/${id}/status`, { status }),
+  updateStatus: (id, status, cancelDues) => api.patch(`/students/${id}/status`, { status, cancelDues }),
 };

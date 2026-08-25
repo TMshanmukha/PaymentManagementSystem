@@ -79,32 +79,11 @@ export function DateRangeReportTab({ studentType }) {
         <div className="relative sm:ml-auto w-full sm:w-auto">
           <Button
             variant="secondary"
-            onClick={() => setPrintMenuOpen((o) => !o)}
+            onClick={() => triggerPrint()}
             className="w-full justify-center"
           >
             <Printer className="w-4 h-4" /> Print Report
           </Button>
-          {printMenuOpen && (
-            <>
-              <div className="fixed inset-0 z-10" onClick={() => setPrintMenuOpen(false)} />
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-popover border border-slate-100 py-1 z-20">
-                <button
-                  onClick={() => { setPrintMenuOpen(false); triggerPrint('A4'); }}
-                  className="w-full text-left px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 border-b border-slate-100"
-                >
-                  <p className="font-semibold text-slate-800">Print A4 Size</p>
-                  <p className="text-xs text-slate-400">Optimized report scaling</p>
-                </button>
-                <button
-                  onClick={() => { setPrintMenuOpen(false); triggerPrint('A5'); }}
-                  className="w-full text-left px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50"
-                >
-                  <p className="font-semibold text-slate-800">Print A5 Size</p>
-                  <p className="text-xs text-slate-400">Compact scale</p>
-                </button>
-              </div>
-            </>
-          )}
         </div>
       </div>
 

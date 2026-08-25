@@ -55,7 +55,7 @@ export default function NewPaymentPage() {
   }, [user, setValue]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    studentApi.list({ status: 'ACTIVE', pageSize: 200, studentType: scope || undefined })
+    studentApi.list({ status: 'ACTIVE', pageSize: 10000, studentType: scope || undefined })
       .then(({ data }) => setStudents(data.data.items))
       .finally(() => setLoadingStudents(false));
   }, []); // eslint-disable-line
@@ -98,56 +98,21 @@ export default function NewPaymentPage() {
         <Card className="lg:col-span-2">
           {serverError && <div className="mb-4 rounded-lg bg-red-50 border border-red-100 px-3 py-2.5 text-sm text-red-700">{serverError}</div>}
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <Input
-                  label="Quick Lookup by Student ID"
-                  placeholder="Enter Student ID (e.g., STU-000001)"
-                  onChange={async (e) => {
-                    const val = e.target.value.trim().toUpperCase();
-                    if (val.match(/^STU-\d+$/)) {
-                      const found = students.find((s) => s.student_code.toUpperCase() === val);
-                      if (found) {
-                        setValue('studentId', String(found.student_id));
-                      } else {
-                        try {
-                          const { data: res } = await studentApi.list({ search: val, pageSize: 1 });
-                          if (res.data.items && res.data.items[0] && res.data.items[0].student_code.toUpperCase() === val) {
-                            const fetched = res.data.items[0];
-                            setStudents((prev) => {
-                              if (!prev.some((p) => p.student_id === fetched.student_id)) {
-                                return [...prev, fetched];
-                              }
-                              return prev;
-                            });
-                            setValue('studentId', String(fetched.student_id));
-                          }
-                        } catch (err) {
-                          console.error(err);
-                        }
-                      }
-                    }
-                  }}
+            <Controller
+              control={control}
+              name="studentId"
+              render={({ field }) => (
+                <SearchableSelect
+                  label="Search Student"
+                  options={options}
+                  value={field.value}
+                  onChange={field.onChange}
+                  loading={loadingStudents}
+                  error={errors.studentId?.message}
+                  placeholder="Search by name, ID, or phone..."
                 />
-              </div>
-              <div className="flex flex-col justify-end">
-                <Controller
-                  control={control}
-                  name="studentId"
-                  render={({ field }) => (
-                    <SearchableSelect
-                      label="Or Search Student"
-                      options={options}
-                      value={field.value}
-                      onChange={field.onChange}
-                      loading={loadingStudents}
-                      error={errors.studentId?.message}
-                      placeholder="Search by name, ID, or phone..."
-                    />
-                  )}
-                />
-              </div>
-            </div>
+              )}
+            />
 
             {selectedStudent && (
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 rounded-lg p-3 text-sm">

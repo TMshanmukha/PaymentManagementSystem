@@ -98,6 +98,8 @@ export default function StudentsListPage() {
 
   // Class-wise view states
   const [classes, setClasses] = useState([]);
+  const [activeCount, setActiveCount] = useState(0);
+  const [inactiveCount, setInactiveCount] = useState(0);
   const [loadingClasses, setLoadingClasses] = useState(true);
   const [selectedClass, setSelectedClass] = useState(null); // null means grid view, 'all' or class value means list view
 
@@ -109,7 +111,16 @@ export default function StudentsListPage() {
         studentType: typeFilter || undefined,
         admissionType: admissionType || undefined
       });
-      setClasses(data.data);
+      const responseData = data.data;
+      if (responseData && responseData.classes) {
+        setClasses(responseData.classes);
+        setActiveCount(responseData.activeCount || 0);
+        setInactiveCount(responseData.inactiveCount || 0);
+      } else {
+        setClasses(responseData || []);
+        setActiveCount((responseData || []).reduce((acc, c) => acc + c.student_count, 0));
+        setInactiveCount(0);
+      }
     } catch (err) {
       setError(getErrorMessage(err, 'Could not load classes.'));
     } finally {
@@ -246,6 +257,17 @@ export default function StudentsListPage() {
           </div>
         }
       />
+
+      <div className="flex gap-4 mb-4 text-xs font-semibold text-slate-500 no-print">
+        <span className="bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full border border-emerald-100 flex items-center gap-1.5 shadow-sm">
+          <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full" />
+          Active Students: {activeCount}
+        </span>
+        <span className="bg-slate-100 text-slate-700 px-3 py-1 rounded-full border border-slate-200 flex items-center gap-1.5 shadow-sm">
+          <span className="w-1.5 h-1.5 bg-slate-400 rounded-full" />
+          Inactive Students: {inactiveCount}
+        </span>
+      </div>
 
       {selectedClass === null ? (
         // Grid View of Class boxes

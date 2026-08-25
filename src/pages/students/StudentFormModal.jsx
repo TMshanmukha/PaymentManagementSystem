@@ -62,7 +62,15 @@ export function StudentFormModal({ open, onClose, onSuccess, student, defaultCla
     setServerError('');
     try {
       if (isEdit) {
-        await studentApi.update(student.student_id, values);
+        let cancelDues = false;
+        if (student.status === 'ACTIVE' && values.status === 'INACTIVE' && Number(student.due_amount || 0) > 0) {
+          const proceed = window.confirm(
+            `Warning: This student has an outstanding due balance of ₹${Number(student.due_amount).toFixed(2)}. Marking them inactive will cancel this due by setting their total academic fee to their total paid amount (₹${Number(student.paid_amount).toFixed(2)}). Do you want to proceed?`
+          );
+          if (!proceed) return;
+          cancelDues = true;
+        }
+        await studentApi.update(student.student_id, { ...values, cancelDues });
         toast.success('Student updated successfully.');
       } else {
         await studentApi.create(values);

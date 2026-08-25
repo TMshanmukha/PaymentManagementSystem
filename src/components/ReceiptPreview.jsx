@@ -28,7 +28,7 @@ export function ReceiptPreview({ receipt, institution: propInstitution }) {
       <div className="receipt-body-content">
         <div className="text-center mb-6 border-b print:border-b-2 pb-4">
           <p className="font-bold text-lg print:text-2xl text-navy-950">{name}</p>
-          <p className="text-xs font-bold tracking-wider uppercase text-slate-500 mt-0.5 print:text-sm">VVS-{receipt.id}</p>
+          <p className="text-xs font-bold tracking-wider uppercase text-slate-500 mt-0.5 print:text-sm">REC-{receipt.id}</p>
           {address && <p className="text-xs text-slate-500 mt-1 print:text-sm">{address}</p>}
           {phone && <p className="text-xs text-slate-500 print:text-sm">Ph: {phone}</p>}
         </div>
