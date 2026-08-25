@@ -373,9 +373,10 @@ export default function StudentsListPage() {
               );
             })}
           </div>
-        </div>
         )
-      ) : (
+      }
+    </div>
+  ) : (
         // Students List Table for Selected Class
         <Card>
           <div className="flex flex-col lg:flex-row gap-3 mb-4">
