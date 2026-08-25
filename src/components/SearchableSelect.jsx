@@ -20,7 +20,9 @@ export function SearchableSelect({ label, options, value, onChange, placeholder 
   }, []);
 
   const filtered = options.filter((o) =>
-    o.label.toLowerCase().includes(query.toLowerCase()) || (o.meta || '').toLowerCase().includes(query.toLowerCase())
+    o.label.toLowerCase().includes(query.toLowerCase()) ||
+    (o.meta || '').toLowerCase().includes(query.toLowerCase()) ||
+    (o.tags || '').toLowerCase().includes(query.toLowerCase())
   );
 
   return (

@@ -68,7 +68,8 @@ export default function NewPaymentPage() {
   const options = useMemo(() => students.map((s) => ({
     value: s.student_id,
     label: `${s.student_name} (${s.student_code})`,
-    meta: `${s.parent_name} · ${s.class || '—'} · Due: ${formatCurrency(s.due_amount)}`,
+    meta: `${s.parent_name} · Ph: ${s.parent_phone || s.student_phone || '—'} · Due: ${formatCurrency(s.due_amount)}`,
+    tags: `${s.parent_phone || ''} ${s.student_phone || ''}`,
   })), [students]);
 
   async function onSubmit(values) {
