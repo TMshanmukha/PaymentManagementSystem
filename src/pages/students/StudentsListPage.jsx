@@ -249,7 +249,33 @@ export default function StudentsListPage() {
 
       {selectedClass === null ? (
         // Grid View of Class boxes
-        loadingClasses ? (
+        <div>
+          <div className="mb-6 max-w-md no-print">
+            <div className="relative flex">
+              <div className="relative flex-1">
+                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <input
+                  className="input pl-9 rounded-r-none"
+                  placeholder="Search name, ID, parent, or phone..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      setSelectedClass('all');
+                    }
+                  }}
+                />
+              </div>
+              <Button
+                className="rounded-l-none"
+                onClick={() => setSelectedClass('all')}
+              >
+                Search
+              </Button>
+            </div>
+          </div>
+
+          {loadingClasses ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {[1, 2, 3].map(i => (
               <div key={i} className="animate-pulse bg-white border border-slate-100 rounded-xl p-5 h-44 flex flex-col justify-between">
@@ -347,23 +373,40 @@ export default function StudentsListPage() {
               );
             })}
           </div>
+        </div>
         )
       ) : (
         // Students List Table for Selected Class
         <Card>
-          <div className="flex flex-col sm:flex-row gap-3 mb-4">
-            <div className="relative flex-1">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-              <input className="input pl-9" placeholder="Search name, parent, ID, or phone..." value={search} onChange={(e) => setSearch(e.target.value)} />
+          <div className="flex flex-col lg:flex-row gap-3 mb-4">
+            <div className="relative flex flex-1">
+              <div className="relative flex-1">
+                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <input
+                  className="input pl-9 rounded-r-none"
+                  placeholder="Search name, parent, ID, or phone..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      setPage(1);
+                      load();
+                    }
+                  }}
+                />
+              </div>
+              <Button className="rounded-l-none" onClick={() => { setPage(1); load(); }}>Search</Button>
             </div>
-            {isAdmin && (
-              <Select className="w-full sm:w-48" placeholder="All Types" value={studentType} onChange={(e) => { setStudentType(e.target.value); setPage(1); }}
-                options={[{ value: 'SCHOOL', label: 'School' }, { value: 'TUITION', label: 'Tuition' }]} />
-            )}
-            <Select className="w-full sm:w-48" placeholder="All Categories" value={admissionType} onChange={(e) => { setAdmissionType(e.target.value); setPage(1); }}
-              options={[{ value: 'REGULAR', label: 'Regular' }, { value: 'SCHOLARSHIP', label: 'Scholarship' }]} />
-            <Select className="w-full sm:w-48" placeholder="All Status" value={status} onChange={(e) => { setStatus(e.target.value); setPage(1); }}
-              options={[{ value: 'ACTIVE', label: 'Active' }, { value: 'INACTIVE', label: 'Inactive' }]} />
+            <div className="flex flex-col sm:flex-row gap-3">
+              {isAdmin && (
+                <Select className="w-full sm:w-40" placeholder="All Types" value={studentType} onChange={(e) => { setStudentType(e.target.value); setPage(1); }}
+                  options={[{ value: 'SCHOOL', label: 'School' }, { value: 'TUITION', label: 'Tuition' }]} />
+              )}
+              <Select className="w-full sm:w-40" placeholder="All Categories" value={admissionType} onChange={(e) => { setAdmissionType(e.target.value); setPage(1); }}
+                options={[{ value: 'REGULAR', label: 'Regular' }, { value: 'SCHOLARSHIP', label: 'Scholarship' }]} />
+              <Select className="w-full sm:w-40" placeholder="All Status" value={status} onChange={(e) => { setStatus(e.target.value); setPage(1); }}
+                options={[{ value: 'ACTIVE', label: 'Active' }, { value: 'INACTIVE', label: 'Inactive' }]} />
+            </div>
           </div>
 
           <DataTable columns={columns} rows={rows} loading={loading} error={error} onRetry={load} rowKey="student_id" emptyMessage="No students found." />

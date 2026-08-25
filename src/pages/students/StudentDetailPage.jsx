@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Pencil, Printer, Wallet } from 'lucide-react';
 import { studentApi } from '../../services/student.service.js';
+import { triggerPrint } from '../../utils/print.js';
 import { Card } from '../../components/Card.jsx';
 import { PageHeader } from '../../components/PageHeader.jsx';
 import { Button } from '../../components/Button.jsx';
@@ -72,7 +73,7 @@ export default function StudentDetailPage() {
             <Badge status={student.status} />
             <Button onClick={() => navigate(`${base}/payments/new`, { state: { studentId: student.student_id } })}><Wallet className="w-4 h-4" /> Add Payment</Button>
             <Button variant="secondary" onClick={() => setEditOpen(true)}><Pencil className="w-4 h-4" /> Edit</Button>
-            <Button variant="secondary" onClick={() => window.print()}><Printer className="w-4 h-4" /> Print Statement</Button>
+            <Button variant="secondary" onClick={() => triggerPrint('A4')}><Printer className="w-4 h-4" /> Print Statement</Button>
           </>
         }
       />

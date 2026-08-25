@@ -35,10 +35,14 @@ export function triggerPrint(size) {
       @media print {
         @page {
           size: A4 portrait !important;
-          margin: 15mm 15mm 15mm 15mm !important;
+          margin: 5mm 5mm 5mm 5mm !important;
         }
-        body {
+        body, html {
           background: #ffffff !important;
+          max-height: 100vh !important;
+          overflow: hidden !important;
+          page-break-inside: avoid !important;
+          break-inside: avoid !important;
         }
         #root {
           display: none !important;
@@ -46,25 +50,28 @@ export function triggerPrint(size) {
         #print-portal {
           display: block !important;
           width: 100% !important;
+          max-height: 100vh !important;
+          overflow: hidden !important;
         }
         
         /* Receipt Specific Styles */
         #print-portal.portal-receipt > div {
           max-width: none !important;
-          width: 180mm !important;
-          height: 267mm !important;
+          width: 190mm !important;
+          height: 277mm !important;
           margin: 0 auto !important;
-          padding: 20mm !important;
+          padding: 8mm !important;
           border: 2px solid #000000 !important;
           border-radius: 0px !important;
           box-shadow: none !important;
           background: #ffffff !important;
           font-family: ui-sans-serif, system-ui, sans-serif !important;
-          font-size: 10.5pt !important;
+          font-size: 9pt !important;
           box-sizing: border-box !important;
           display: flex !important;
           flex-direction: column !important;
           justify-content: space-between !important;
+          page-break-inside: avoid !important;
         }
         #print-portal.portal-receipt > div > div {
           height: 100% !important;
@@ -75,147 +82,49 @@ export function triggerPrint(size) {
 
         /* Report Specific Styles */
         #print-portal.portal-report > div {
-          max-width: 680px !important;
+          max-width: none !important;
           width: 100% !important;
           margin: 0 auto !important;
-          padding: 2rem !important;
+          padding: 10mm !important;
           border: 1px solid #cbd5e1 !important;
           border-radius: 8px !important;
           box-shadow: none !important;
           background: #ffffff !important;
           font-family: ui-sans-serif, system-ui, sans-serif !important;
-          font-size: 10pt !important;
+          font-size: 8.5pt !important;
+          page-break-inside: avoid !important;
         }
 
         #print-portal .text-center {
           text-align: center !important;
-          margin-bottom: 1.5rem !important;
-        }
-        #print-portal .font-bold.text-lg {
-          font-size: 20pt !important;
-          font-weight: 700 !important;
-          color: #0f172a !important;
-        }
-        #print-portal .text-xs.font-bold {
-          font-size: 11pt !important;
-          color: #475569 !important;
-          margin-top: 0.5rem !important;
-        }
-        #print-portal div[class*="print:py-"] {
-          padding-top: 6px !important;
-          padding-bottom: 6px !important;
-        }
-        #print-portal div[class*="mb-"] {
-          margin-bottom: 0.75rem !important;
-        }
-        #print-portal div[class*="mt-"] {
-          margin-top: 0.75rem !important;
-        }
-        #print-portal th, #print-portal td {
-          white-space: nowrap !important;
-          text-overflow: ellipsis !important;
-          overflow: hidden !important;
-        }
-        #print-portal .text-slate-500 {
-          color: #475569 !important;
-          font-size: 10.5pt !important;
-        }
-        #print-portal .text-slate-800, #print-portal .font-bold {
-          color: #0f172a !important;
-          font-size: 10.5pt !important;
-        }
-        #print-portal .text-xs {
-          font-size: 9.5pt !important;
-        }
-        #print-portal .no-print {
-          display: none !important;
-        }
-      }
-    `;
-  } else if (size === 'A5') {
-    style.innerHTML = `
-      @media print {
-        @page {
-          size: A5 portrait !important;
-          margin: 10mm 10mm 10mm 10mm !important;
-        }
-        body {
-          background: #ffffff !important;
-        }
-        #root {
-          display: none !important;
-        }
-        #print-portal {
-          display: block !important;
-          width: 100% !important;
-        }
-        
-        /* Receipt Specific Styles */
-        #print-portal.portal-receipt > div {
-          max-width: none !important;
-          width: 128mm !important;
-          height: 190mm !important;
-          margin: 0 auto !important;
-          padding: 10mm !important;
-          border: 2px solid #000000 !important;
-          border-radius: 0px !important;
-          box-shadow: none !important;
-          background: #ffffff !important;
-          font-family: ui-sans-serif, system-ui, sans-serif !important;
-          font-size: 8.5pt !important;
-          box-sizing: border-box !important;
-          display: flex !important;
-          flex-direction: column !important;
-          justify-content: space-between !important;
-        }
-        #print-portal.portal-receipt > div > div {
-          height: 100% !important;
-          display: flex !important;
-          flex-direction: column !important;
-          justify-content: space-between !important;
-        }
-
-        /* Report Specific Styles */
-        #print-portal.portal-report > div {
-          max-width: 460px !important;
-          width: 100% !important;
-          margin: 0 auto !important;
-          padding: 1.25rem !important;
-          border: 1px solid #cbd5e1 !important;
-          border-radius: 6px !important;
-          box-shadow: none !important;
-          background: #ffffff !important;
-          font-family: ui-sans-serif, system-ui, sans-serif !important;
-          font-size: 8.5pt !important;
-        }
-
-        #print-portal .text-center {
-          text-align: center !important;
-          margin-bottom: 0.75rem !important;
-        }
-        #print-portal .font-bold.text-lg {
-          font-size: 13pt !important;
-          font-weight: 700 !important;
-          color: #0f172a !important;
-        }
-        #print-portal .text-xs.font-bold {
-          font-size: 9pt !important;
-          color: #475569 !important;
-        }
-        #print-portal div[class*="print:py-"] {
-          padding-top: 3px !important;
-          padding-bottom: 3px !important;
-        }
-        #print-portal div[class*="mb-"] {
           margin-bottom: 0.5rem !important;
         }
+        #print-portal .font-bold.text-lg {
+          font-size: 14pt !important;
+          font-weight: 700 !important;
+          color: #0f172a !important;
+        }
+        #print-portal .text-xs.font-bold {
+          font-size: 9.5pt !important;
+          color: #475569 !important;
+          margin-top: 0.25rem !important;
+        }
+        #print-portal div[class*="print:py-"], #print-portal .py-1, #print-portal .py-2, #print-portal div[class*="py-"] {
+          padding-top: 1px !important;
+          padding-bottom: 1px !important;
+        }
+        #print-portal div[class*="mb-"] {
+          margin-bottom: 0.25rem !important;
+        }
         #print-portal div[class*="mt-"] {
-          margin-top: 0.5rem !important;
+          margin-top: 0.25rem !important;
         }
         #print-portal th, #print-portal td {
           white-space: nowrap !important;
           text-overflow: ellipsis !important;
           overflow: hidden !important;
+          padding: 2px 4px !important;
+          font-size: 8pt !important;
         }
         #print-portal .text-slate-500 {
           color: #475569 !important;
@@ -227,6 +136,127 @@ export function triggerPrint(size) {
         }
         #print-portal .text-xs {
           font-size: 8pt !important;
+        }
+        #print-portal .no-print {
+          display: none !important;
+        }
+      }
+    `;
+  } else if (size === 'A5') {
+    style.innerHTML = `
+      @media print {
+        @page {
+          size: A5 portrait !important;
+          margin: 0 !important;
+        }
+        body, html {
+          background: #ffffff !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          width: 148mm !important;
+          height: 210mm !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          max-height: 100vh !important;
+          overflow: hidden !important;
+          page-break-inside: avoid !important;
+          break-inside: avoid !important;
+        }
+        #root {
+          display: none !important;
+        }
+        #print-portal {
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          width: 148mm !important;
+          height: 210mm !important;
+          max-height: 100vh !important;
+          overflow: hidden !important;
+        }
+        
+        /* Receipt Specific Styles */
+        #print-portal.portal-receipt > div {
+          max-width: none !important;
+          width: 118mm !important;
+          height: 180mm !important;
+          padding: 8mm !important;
+          border: 2px solid #000000 !important;
+          border-radius: 0px !important;
+          box-shadow: none !important;
+          background: #ffffff !important;
+          font-family: ui-sans-serif, system-ui, sans-serif !important;
+          font-size: 8pt !important;
+          box-sizing: border-box !important;
+          display: flex !important;
+          flex-direction: column !important;
+          justify-content: space-between !important;
+          page-break-inside: avoid !important;
+        }
+        #print-portal.portal-receipt > div > div {
+          height: 100% !important;
+          display: flex !important;
+          flex-direction: column !important;
+          justify-content: space-between !important;
+        }
+
+        /* Report Specific Styles */
+        #print-portal.portal-report > div {
+          max-width: none !important;
+          width: 118mm !important;
+          height: 180mm !important;
+          padding: 8mm !important;
+          border: 2px solid #000000 !important;
+          border-radius: 0px !important;
+          box-shadow: none !important;
+          background: #ffffff !important;
+          font-family: ui-sans-serif, system-ui, sans-serif !important;
+          font-size: 8pt !important;
+          box-sizing: border-box !important;
+          page-break-inside: avoid !important;
+        }
+
+        #print-portal .text-center {
+          text-align: center !important;
+          margin-bottom: 0.5rem !important;
+        }
+        #print-portal .font-bold.text-lg {
+          font-size: 11pt !important;
+          font-weight: 700 !important;
+          color: #0f172a !important;
+        }
+        #print-portal .text-xs.font-bold {
+          font-size: 8pt !important;
+          color: #475569 !important;
+        }
+        #print-portal div[class*="print:py-"], #print-portal .py-1, #print-portal .py-2, #print-portal div[class*="py-"] {
+          padding-top: 1px !important;
+          padding-bottom: 1px !important;
+        }
+        #print-portal div[class*="mb-"] {
+          margin-bottom: 0.25rem !important;
+        }
+        #print-portal div[class*="mt-"] {
+          margin-top: 0.25rem !important;
+        }
+        #print-portal th, #print-portal td {
+          white-space: nowrap !important;
+          text-overflow: ellipsis !important;
+          overflow: hidden !important;
+          padding: 2px 4px !important;
+          font-size: 7.5pt !important;
+        }
+        #print-portal .text-slate-500 {
+          color: #475569 !important;
+          font-size: 8pt !important;
+        }
+        #print-portal .text-slate-800, #print-portal .font-bold {
+          color: #0f172a !important;
+          font-size: 8pt !important;
+        }
+        #print-portal .text-xs {
+          font-size: 7.5pt !important;
         }
         #print-portal .no-print {
           display: none !important;
@@ -241,8 +271,12 @@ export function triggerPrint(size) {
           size: auto !important;
           margin: 5mm 5mm 5mm 5mm !important;
         }
-        body {
+        body, html {
           background: #ffffff !important;
+          max-height: 100vh !important;
+          overflow: hidden !important;
+          page-break-inside: avoid !important;
+          break-inside: avoid !important;
         }
         #root {
           display: none !important;
@@ -250,21 +284,24 @@ export function triggerPrint(size) {
         #print-portal {
           display: block !important;
           width: 100% !important;
+          max-height: 100vh !important;
+          overflow: hidden !important;
         }
         #print-portal > div {
           max-width: 320px !important;
           width: 100% !important;
           margin: 0 auto !important;
-          padding: 0.5rem 0.25rem !important;
+          padding: 0.25rem !important;
           border: none !important;
           box-shadow: none !important;
           background: #ffffff !important;
           font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
           font-size: 8pt !important;
+          page-break-inside: avoid !important;
         }
         #print-portal .text-center {
           text-align: center !important;
-          margin-bottom: 1rem !important;
+          margin-bottom: 0.5rem !important;
         }
         #print-portal .font-bold.text-lg {
           font-size: 11pt !important;
@@ -273,12 +310,13 @@ export function triggerPrint(size) {
         #print-portal .text-xs.font-bold {
           font-size: 8.5pt !important;
         }
-        #print-portal .py-1 {
-          padding: 4px 0 !important;
+        #print-portal .py-1, #print-portal .py-2, #print-portal div[class*="py-"] {
+          padding: 1px 0 !important;
           border-bottom: 1px dashed #cbd5e1 !important;
         }
         #print-portal th, #print-portal td {
           white-space: nowrap !important;
+          padding: 2px !important;
         }
         #print-portal .text-slate-500, #print-portal .text-slate-800, #print-portal .font-bold {
           font-size: 8pt !important;

@@ -57,6 +57,14 @@
     position: static !important;
   }
 
+  body.printing-active, body.printing-active html, body.printing-active #root {
+    height: 100vh !important;
+    min-height: 0 !important;
+    max-height: 100vh !important;
+    overflow: hidden !important;
+    display: block !important;
+  }
+
   body * {
     visibility: hidden;
   }

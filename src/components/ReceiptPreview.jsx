@@ -62,28 +62,23 @@ export function ReceiptPreview({ receipt, institution: propInstitution }) {
       </div>
 
       <div className="receipt-footer-content">
-        <div className="flex justify-between items-end mt-8 mb-4 print:mt-12">
-          <div className="flex flex-col items-center">
+        <div className="mt-4 border-t border-slate-200 pt-2 flex items-center justify-between text-xs text-slate-500 print:text-sm">
+          <span>Authorized Signature:</span>
+          <span className="font-semibold text-slate-800">
             {receipt.digital_signature ? (
               receipt.digital_signature.startsWith('data:image/') ? (
-                <img src={receipt.digital_signature} alt="Digital Signature" className="h-16 w-36 object-contain mb-1" />
+                <img src={receipt.digital_signature} alt="Digital Signature" className="h-6 w-24 object-contain inline-block" />
               ) : (
-                <div className="h-16 flex items-center justify-center mb-1 w-36 select-none">
-                  <span style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontStyle: "italic" }} className="text-2xl text-slate-800 font-semibold">
-                    {receipt.digital_signature}
-                  </span>
-                </div>
+                <span style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontStyle: "italic" }} className="text-xs text-slate-800 font-bold whitespace-nowrap inline-block">
+                  {receipt.digital_signature}
+                </span>
               )
             ) : (
-              <div className="h-16"></div>
+              <span>___________________</span>
             )}
-            <div className="border-t border-slate-400 w-36 pt-1 text-xs text-slate-500 print:text-sm text-center">
-              Authorized Signature
-            </div>
-          </div>
+          </span>
         </div>
-
-        <p className="text-center text-[10px] print:text-xs text-slate-400 mt-6 border-t pt-3">This is a system-generated receipt. Thank you.</p>
+        <p className="text-center text-[10px] print:text-xs text-slate-400 mt-3 border-t pt-1.5">This is a system-generated receipt. Thank you.</p>
       </div>
     </div>
   );
@@ -91,7 +86,7 @@ export function ReceiptPreview({ receipt, institution: propInstitution }) {
 
 function Row({ label, value, bold }) {
   return (
-    <div className="flex justify-between gap-2 py-1 print:py-2 border-b border-transparent print:border-slate-100 items-baseline">
+    <div className="flex justify-between gap-2 py-0.5 border-b border-transparent items-baseline">
       <span className="text-slate-500 print:text-slate-600 shrink-0">{label}</span>
       <span className={`${bold ? 'font-bold text-navy-950' : 'text-slate-800'} print:text-sm truncate max-w-[200px] text-right`} title={value}>{value}</span>
     </div>

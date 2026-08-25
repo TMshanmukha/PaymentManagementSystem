@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Plus, Printer } from 'lucide-react';
 import { expenseSchema } from '../../schemas/expense.schema.js';
 import { expenseApi } from '../../services/expense.service.js';
+import { triggerPrint } from '../../utils/print.js';
 import { Card } from '../../components/Card.jsx';
 import { PageHeader } from '../../components/PageHeader.jsx';
 import { Button } from '../../components/Button.jsx';
@@ -119,7 +120,7 @@ export default function ExpensesPage() {
                 Export to Excel
               </Button>
             )}
-            <Button variant="secondary" onClick={() => window.print()}><Printer className="w-4 h-4" /> Print</Button>
+            <Button variant="secondary" onClick={() => triggerPrint('A4')}><Printer className="w-4 h-4" /> Print</Button>
             <Button onClick={handleOpenAdd}><Plus className="w-4 h-4" /> Add Expense</Button>
           </div>
         }

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { reportApi } from '../../services/report.service.js';
 import { userApi } from '../../services/user.service.js';
+import { triggerPrint } from '../../utils/print.js';
 import { Card } from '../../components/Card.jsx';
 import { StatCard } from '../../components/StatCard.jsx';
 import { Select } from '../../components/Select.jsx';
@@ -61,7 +62,7 @@ export function AccountantReportTab() {
           <span className="text-slate-400 text-sm shrink-0">to</span>
           <input type="date" className="input w-full sm:w-auto" value={toDate} onChange={(e) => setToDate(e.target.value)} />
         </div>
-        <Button variant="secondary" className="sm:ml-auto w-full sm:w-auto justify-center" onClick={() => window.print()}><Printer className="w-4 h-4" /> Print</Button>
+        <Button variant="secondary" className="sm:ml-auto w-full sm:w-auto justify-center" onClick={() => triggerPrint('A4')}><Printer className="w-4 h-4" /> Print</Button>
       </div>
 
       {loading && <LoadingState label="Loading report..." />}

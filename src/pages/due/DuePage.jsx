@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Search, Printer } from 'lucide-react';
 import { reportApi } from '../../services/report.service.js';
+import { triggerPrint } from '../../utils/print.js';
 import { Card } from '../../components/Card.jsx';
 import { PageHeader } from '../../components/PageHeader.jsx';
 import { Select } from '../../components/Select.jsx';
@@ -65,7 +66,7 @@ export default function DuePage() {
       <PageHeader
         title="Due Management"
         description="Students with outstanding fee balances"
-        actions={<Button variant="secondary" onClick={() => window.print()}><Printer className="w-4 h-4" /> Print</Button>}
+        actions={<Button variant="secondary" onClick={() => triggerPrint('A4')}><Printer className="w-4 h-4" /> Print</Button>}
       />
 
       <Card>
