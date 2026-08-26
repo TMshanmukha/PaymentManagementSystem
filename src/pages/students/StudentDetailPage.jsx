@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Pencil, Printer, Wallet } from 'lucide-react';
+import { ArrowLeft, Pencil, Printer, Wallet, Users } from 'lucide-react';
 import { studentApi } from '../../services/student.service.js';
 import { triggerPrint } from '../../utils/print.js';
 import { Card } from '../../components/Card.jsx';
@@ -27,6 +27,7 @@ export default function StudentDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [editOpen, setEditOpen] = useState(false);
+  const [siblings, setSiblings] = useState([]);
 
   const base = user.role === ROLES.ADMIN ? '/admin' : user.role === ROLES.SCHOOL_ACCOUNTANT ? '/school' : '/tuition';
 
@@ -35,8 +36,13 @@ export default function StudentDetailPage() {
     setError('');
     try {
       const [s, h] = await Promise.all([studentApi.getOne(id), studentApi.paymentHistory(id)]);
-      setStudent(s.data.data);
+      const studentData = s.data.data;
+      setStudent(studentData);
       setHistory(h.data.data);
+      
+      const sibRes = await studentApi.list({ search: studentData.parent_phone, pageSize: 50 });
+      const sibs = (sibRes.data?.data?.items || []).filter(item => item.student_id !== studentData.student_id);
+      setSiblings(sibs);
     } catch (err) {
       setError(getErrorMessage(err, 'Could not load student details.'));
     } finally {
@@ -92,6 +98,23 @@ export default function StudentDetailPage() {
           <div><p className="text-slate-400">Parent Phone</p><p className="text-slate-800 font-medium">{student.parent_phone}</p></div>
           <div><p className="text-slate-400">Last Payment</p><p className="text-slate-800 font-medium">{formatDate(student.last_payment_date)}</p></div>
         </div>
+        {siblings.length > 0 && (
+          <div className="border-t border-slate-100 pt-3 mt-3 no-print">
+            <p className="text-slate-400 text-xs mb-2 font-medium">Sibling Students (Click to view profile)</p>
+            <div className="flex flex-wrap gap-2">
+              {siblings.map(sib => (
+                <button
+                  key={sib.student_id}
+                  onClick={() => navigate(`${base}/students/${sib.student_id}`)}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-50 hover:bg-brand-100 text-brand-700 hover:text-brand-800 text-xs font-semibold rounded-lg border border-brand-100 transition-all outline-none animate-fade-in"
+                >
+                  <Users className="w-3.5 h-3.5" />
+                  {sib.student_name} ({sib.student_code}) · Class {sib.class || '—'}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </Card>
 
       <Card>
