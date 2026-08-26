@@ -100,6 +100,7 @@ export default function StudentsListPage() {
   const [classes, setClasses] = useState([]);
   const [activeCount, setActiveCount] = useState(0);
   const [inactiveCount, setInactiveCount] = useState(0);
+  const [siblingsOnly, setSiblingsOnly] = useState(false);
   const [loadingClasses, setLoadingClasses] = useState(true);
   const [selectedClass, setSelectedClass] = useState(null); // null means grid view, 'all' or class value means list view
 
@@ -142,6 +143,7 @@ export default function StudentsListPage() {
         admissionType: admissionType || undefined,
         status: status || undefined,
         class: classFilter,
+        siblingsOnly: siblingsOnly || undefined,
       });
       setRows(data.data.items);
       setTotal(data.data.total);
@@ -173,7 +175,7 @@ export default function StudentsListPage() {
     if (selectedClass !== null) {
       load();
     }
-  }, [page, studentType, admissionType, status, selectedClass]); // eslint-disable-line
+  }, [page, studentType, admissionType, status, selectedClass, siblingsOnly]); // eslint-disable-line
 
   // Handle search typing with debounce
   useEffect(() => {
@@ -249,6 +251,21 @@ export default function StudentsListPage() {
                 ]}
                 className="w-40 sm:w-44"
               />
+            )}
+            {selectedClass === null && (
+              <Button
+                variant={siblingsOnly ? 'primary' : 'secondary'}
+                onClick={() => {
+                  const nextVal = !siblingsOnly;
+                  setSiblingsOnly(nextVal);
+                  setPage(1);
+                  if (nextVal) setSelectedClass('all');
+                }}
+                className="no-print flex items-center gap-1.5"
+              >
+                <Users className="w-4 h-4" />
+                Siblings
+              </Button>
             )}
             <Button variant="secondary" onClick={() => setExportOpen(true)} className="no-print">
               Export to Excel
@@ -429,6 +446,14 @@ export default function StudentsListPage() {
                 options={[{ value: 'REGULAR', label: 'Regular' }, { value: 'SCHOLARSHIP', label: 'Scholarship' }]} />
               <Select className="w-full sm:w-40" placeholder="All Status" value={status} onChange={(e) => { setStatus(e.target.value); setPage(1); }}
                 options={[{ value: 'ACTIVE', label: 'Active' }, { value: 'INACTIVE', label: 'Inactive' }]} />
+              <Button
+                variant={siblingsOnly ? 'primary' : 'secondary'}
+                onClick={() => { setSiblingsOnly(!siblingsOnly); setPage(1); }}
+                className="w-full sm:w-40 shrink-0 justify-center flex items-center gap-1.5"
+              >
+                <Users className="w-4 h-4" />
+                {siblingsOnly ? 'Siblings Only' : 'Filter Siblings'}
+              </Button>
             </div>
           </div>
 

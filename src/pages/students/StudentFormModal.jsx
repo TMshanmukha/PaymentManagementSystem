@@ -24,8 +24,44 @@ export function StudentFormModal({ open, onClose, onSuccess, student, defaultCla
   const [serverError, setServerError] = useState('');
 
   const {
-    register, handleSubmit, reset, formState: { errors, isSubmitting },
+    register, handleSubmit, reset, setValue, formState: { errors, isSubmitting },
   } = useForm({ resolver: zodResolver(studentSchema) });
+
+  const [siblingClass, setSiblingClass] = useState('');
+  const [siblingSection, setSiblingSection] = useState('');
+  const [siblingStudents, setSiblingStudents] = useState([]);
+  const [siblingLoading, setSiblingLoading] = useState(false);
+  const [selectedSiblingId, setSelectedSiblingId] = useState('');
+
+  // Reset sibling states on open
+  useEffect(() => {
+    if (open) {
+      setSiblingClass('');
+      setSiblingSection('');
+      setSiblingStudents([]);
+      setSelectedSiblingId('');
+    }
+  }, [open]);
+
+  useEffect(() => {
+    if (siblingClass) {
+      setSiblingLoading(true);
+      studentApi.list({
+        class: siblingClass || undefined,
+        section: siblingSection || undefined,
+        pageSize: 1000,
+        status: 'ACTIVE',
+      }).then(({ data }) => {
+        setSiblingStudents(data.data.items || []);
+      }).catch((err) => {
+        console.error('Failed to load sibling options', err);
+      }).finally(() => {
+        setSiblingLoading(false);
+      });
+    } else {
+      setSiblingStudents([]);
+    }
+  }, [siblingClass, siblingSection]);
 
   useEffect(() => {
     if (open) {
@@ -114,6 +150,58 @@ export function StudentFormModal({ open, onClose, onSuccess, student, defaultCla
         {isEdit && (
           <Select label="Status" options={[{ value: 'ACTIVE', label: 'Active' }, { value: 'INACTIVE', label: 'Inactive' }]} {...register('status')} />
         )}
+
+        {/* Sibling Autofill Details Section */}
+        <div className="sm:col-span-2 border-t border-slate-100 pt-4 mt-2">
+          <p className="font-semibold text-navy-900 text-sm mb-3">Sibling Details (Autofill Parent Details)</p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-100">
+            <div>
+              <label className="label text-slate-500 font-medium">Sibling's Class</label>
+              <input
+                type="text"
+                placeholder="e.g. 5, 10th"
+                className="input w-full bg-white"
+                value={siblingClass}
+                onChange={(e) => setSiblingClass(e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="label text-slate-500 font-medium">Sibling's Section (Optional)</label>
+              <input
+                type="text"
+                placeholder="e.g. A, B"
+                className="input w-full bg-white"
+                value={siblingSection}
+                onChange={(e) => setSiblingSection(e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="label text-slate-500 font-medium">Select Sibling Student</label>
+              <select
+                className="input w-full bg-white"
+                value={selectedSiblingId}
+                disabled={siblingLoading || siblingStudents.length === 0}
+                onChange={(e) => {
+                  const id = e.target.value;
+                  setSelectedSiblingId(id);
+                  if (id) {
+                    const sib = siblingStudents.find(s => String(s.student_id) === id || s.student_id === Number(id));
+                    if (sib) {
+                      setValue('parentName', sib.parent_name);
+                      setValue('parentPhone', sib.parent_phone);
+                      toast.success(`Linked sibling: ${sib.student_name}. Parent details filled.`);
+                    }
+                  }
+                }}
+              >
+                <option value="">{siblingLoading ? 'Loading...' : (siblingClass ? (siblingStudents.length === 0 ? 'No students found' : 'Select sibling...') : 'Enter class first')}</option>
+                {siblingStudents.map(s => (
+                  <option key={s.student_id} value={String(s.student_id)}>{s.student_name} ({s.student_code})</option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </div>
       </form>
     </Modal>
   );
