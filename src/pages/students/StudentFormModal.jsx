@@ -133,7 +133,29 @@ export function StudentFormModal({ open, onClose, onSuccess, student, defaultCla
         <Input label="Parent Name" error={errors.parentName?.message} {...register('parentName')} />
         <Input label="Parent Phone" error={errors.parentPhone?.message} {...register('parentPhone')} />
         <Input label="Student Phone (optional)" {...register('studentPhone')} />
-        <Input label="Class" {...register('class')} />
+        <Select
+          label="Class"
+          error={errors.class?.message}
+          options={[
+            { value: '', label: 'Select Class...' },
+            { value: 'Nursery', label: 'Nursery' },
+            { value: 'LKG', label: 'LKG' },
+            { value: 'UKG', label: 'UKG' },
+            { value: '1', label: 'Class 1' },
+            { value: '2', label: 'Class 2' },
+            { value: '3', label: 'Class 3' },
+            { value: '4', label: 'Class 4' },
+            { value: '5', label: 'Class 5' },
+            { value: '6', label: 'Class 6' },
+            { value: '7', label: 'Class 7' },
+            { value: '8', label: 'Class 8' },
+            { value: '9', label: 'Class 9' },
+            { value: '10', label: 'Class 10' },
+            { value: '11', label: 'Class 11' },
+            { value: '12', label: 'Class 12' }
+          ]}
+          {...register('class')}
+        />
         <Input label="Section (optional)" {...register('section')} />
         <Select label="Student Type" error={errors.studentType?.message} disabled={Boolean(lockedType)}
           options={[{ value: 'SCHOOL', label: 'School' }, { value: 'TUITION', label: 'Tuition' }]}

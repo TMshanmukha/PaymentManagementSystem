@@ -366,6 +366,10 @@ export default function StudentsListPage() {
                   <span className="text-slate-500 font-medium">Total Fees</span>
                   <span className="font-semibold text-slate-800">{formatCurrency(totalFees)}</span>
                 </div>
+                <div className="flex justify-between text-xs mb-1">
+                  <span className="text-slate-500 font-medium">Total Paid</span>
+                  <span className="font-semibold text-emerald-600">{formatCurrency(totalPaid)}</span>
+                </div>
                 <div className="flex justify-between text-xs">
                   <span className="text-slate-500 font-medium">Remaining Due</span>
                   <span className="font-semibold text-orange-600">{formatCurrency(totalDue)}</span>

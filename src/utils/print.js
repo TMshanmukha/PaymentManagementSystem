@@ -66,7 +66,7 @@ export function triggerPrint() {
           border-radius: 0px !important;
           box-shadow: none !important;
           background: #ffffff !important;
-          font-family: ui-sans-serif, system-ui, sans-serif !important;
+          font-family: Georgia, 'Times New Roman', serif !important;
           font-size: 9pt !important;
           box-sizing: border-box !important;
           display: flex !important;
@@ -127,13 +127,17 @@ export function triggerPrint() {
           padding: 2px 4px !important;
           font-size: 8pt !important;
         }
+        #print-portal.portal-report .text-slate-500 {
+          font-size: 8.5pt !important;
+        }
+        #print-portal.portal-report .text-slate-800, #print-portal.portal-report .font-bold {
+          font-size: 8.5pt !important;
+        }
         #print-portal .text-slate-500 {
           color: #475569 !important;
-          font-size: 8.5pt !important;
         }
         #print-portal .text-slate-800, #print-portal .font-bold {
           color: #0f172a !important;
-          font-size: 8.5pt !important;
         }
         #print-portal .text-xs {
           font-size: 8pt !important;
@@ -183,11 +187,11 @@ export function triggerPrint() {
           width: 138mm !important;
           height: 190mm !important;
           padding: 10mm !important;
-          border: none !important;
+          border: 1px solid #000000 !important;
           border-radius: 0px !important;
           box-shadow: none !important;
           background: #ffffff !important;
-          font-family: ui-sans-serif, system-ui, sans-serif !important;
+          font-family: Georgia, 'Times New Roman', serif !important;
           font-size: 10pt !important;
           box-sizing: border-box !important;
           display: flex !important;
@@ -248,13 +252,17 @@ export function triggerPrint() {
           padding: 4px 6px !important;
           font-size: 9pt !important;
         }
+        #print-portal.portal-report .text-slate-500 {
+          font-size: 10pt !important;
+        }
+        #print-portal.portal-report .text-slate-800, #print-portal.portal-report .font-bold {
+          font-size: 10pt !important;
+        }
         #print-portal .text-slate-500 {
           color: #475569 !important;
-          font-size: 10pt !important;
         }
         #print-portal .text-slate-800, #print-portal .font-bold {
           color: #0f172a !important;
-          font-size: 10pt !important;
         }
         #print-portal .text-xs {
           font-size: 9pt !important;
