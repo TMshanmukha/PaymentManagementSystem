@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Pencil, Printer, Wallet, Users } from 'lucide-react';
+import { ArrowLeft, Pencil, Printer, Wallet, Users, IndianRupee, CheckCircle2, AlertCircle, Receipt } from 'lucide-react';
 import { studentApi } from '../../services/student.service.js';
 import { triggerPrint } from '../../utils/print.js';
 import { Card } from '../../components/Card.jsx';
@@ -13,15 +13,16 @@ import { ErrorState } from '../../components/ErrorState.jsx';
 import { StatCard } from '../../components/StatCard.jsx';
 import { formatCurrency, formatDate, formatDateTime } from '../../utils/format.js';
 import { StudentFormModal } from './StudentFormModal.jsx';
-import { IndianRupee, CheckCircle2, AlertCircle, Receipt } from 'lucide-react';
 import { getErrorMessage } from '../../config/api.js';
 import { useAuth } from '../../hooks/useAuth.js';
+import { useSettings } from '../../context/SettingsContext.jsx';
 import { ROLES } from '../../config/constants.js';
 
 export default function StudentDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { settings } = useSettings();
   const [student, setStudent] = useState(null);
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -67,62 +68,92 @@ export default function StudentDetailPage() {
 
   return (
     <div>
-      <button onClick={() => navigate(-1)} className="flex items-center gap-1 text-sm text-slate-500 hover:text-slate-700 mb-4">
-        <ArrowLeft className="w-4 h-4" /> Back
-      </button>
+      <div className="no-print">
+        <button onClick={() => navigate(-1)} className="flex items-center gap-1 text-sm text-slate-500 hover:text-slate-700 mb-4">
+          <ArrowLeft className="w-4 h-4" /> Back
+        </button>
 
-      <PageHeader
-        title={student.student_name}
-        description={`${student.student_code} · ${student.class || '—'} ${student.section || ''} · ${student.student_type} · ${student.admission_type === 'REGULAR' ? 'Regular' : 'Scholarship'}`}
-        actions={
-          <>
-            <Badge status={student.status} />
-            <Button onClick={() => navigate(`${base}/payments/new`, { state: { studentId: student.student_id } })}><Wallet className="w-4 h-4" /> Add Payment</Button>
-            <Button variant="secondary" onClick={() => setEditOpen(true)}><Pencil className="w-4 h-4" /> Edit</Button>
-            <Button variant="secondary" onClick={() => triggerPrint('A4')}><Printer className="w-4 h-4" /> Print Statement</Button>
-          </>
-        }
-      />
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <StatCard label="Total Fee" value={formatCurrency(student.total_fee)} icon={IndianRupee} />
-        <StatCard label="Total Paid" value={formatCurrency(student.paid_amount)} icon={CheckCircle2} tone="success" />
-        <StatCard label="Remaining Due" value={formatCurrency(student.due_amount)} icon={AlertCircle} tone={student.due_amount > 0 ? 'danger' : 'success'} />
-        <StatCard label="Payment Count" value={student.payment_count} icon={Receipt} />
+        <PageHeader
+          title={student.student_name}
+          description={`${student.student_code} · ${student.class || '—'} ${student.section || ''} · ${student.student_type} · ${student.admission_type === 'REGULAR' ? 'Regular' : 'Scholarship'}`}
+          actions={
+            <>
+              <Badge status={student.status} />
+              <Button onClick={() => navigate(`${base}/payments/new`, { state: { studentId: student.student_id } })}><Wallet className="w-4 h-4" /> Add Payment</Button>
+              <Button variant="secondary" onClick={() => setEditOpen(true)}><Pencil className="w-4 h-4" /> Edit</Button>
+              <Button variant="secondary" onClick={() => triggerPrint('A4')}><Printer className="w-4 h-4" /> Print Statement</Button>
+            </>
+          }
+        />
       </div>
 
-      <Card className="mb-4">
-        <p className="font-semibold text-navy-900 mb-3">Parent / Contact Details</p>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
-          <div><p className="text-slate-400">Parent Name</p><p className="text-slate-800 font-medium">{student.parent_name}</p></div>
-          <div><p className="text-slate-400">Parent Phone</p><p className="text-slate-800 font-medium">{student.parent_phone}</p></div>
-          <div><p className="text-slate-400">Last Payment</p><p className="text-slate-800 font-medium">{formatDate(student.last_payment_date)}</p></div>
-        </div>
-        {siblings.length > 0 && (
-          <div className="border-t border-slate-100 pt-3 mt-3 no-print">
-            <p className="text-slate-400 text-xs mb-2 font-medium">Sibling Students (Click to view profile)</p>
-            <div className="flex flex-wrap gap-2">
-              {siblings.map(sib => (
-                <button
-                  key={sib.student_id}
-                  onClick={() => navigate(`${base}/students/${sib.student_id}`)}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-50 hover:bg-brand-100 text-brand-700 hover:text-brand-800 text-xs font-semibold rounded-lg border border-brand-100 transition-all outline-none animate-fade-in"
-                >
-                  <Users className="w-3.5 h-3.5" />
-                  {sib.student_name} ({sib.student_code}) · Class {sib.class || '—'}
-                </button>
-              ))}
-            </div>
+      <div className="print-area print-a4">
+        {/* Printable Institution & Statement Header */}
+        <div className="hidden print:block print-only mb-6 text-center border-b pb-4">
+          <h1 className="text-2xl font-bold text-navy-950">{settings?.institution_name || 'VVSLedger'}</h1>
+          {settings?.institution_address && <p className="text-sm text-slate-600 mt-1">{settings.institution_address}</p>}
+          {settings?.institution_phone && <p className="text-sm text-slate-600">Ph: {settings.institution_phone}</p>}
+          <div className="mt-4 border-t pt-3 flex justify-between text-xs text-slate-500">
+            <span className="font-bold uppercase tracking-wider text-sm text-navy-900">Student Account Statement</span>
+            <span>Date: {formatDate(new Date())}</span>
+            <span>Generated on: {formatDateTime(new Date())}</span>
           </div>
-        )}
-      </Card>
+        </div>
 
-      <Card>
-        <p className="font-semibold text-navy-900 mb-3">Payment History</p>
-        <DataTable columns={columns} rows={history} loading={false} emptyMessage="No payments recorded for this student yet." />
-      </Card>
+        {/* Student Profile Card for Print */}
+        <div className="hidden print:block print-only mb-4 p-4 border border-slate-300 rounded-lg bg-slate-50">
+          <div className="grid grid-cols-3 gap-3 text-xs">
+            <div><span className="text-slate-500 font-medium">Student Name:</span> <strong className="text-slate-900 font-bold">{student.student_name}</strong></div>
+            <div><span className="text-slate-500 font-medium">Student Code / GR:</span> <strong className="text-slate-900 font-bold">{student.student_code}</strong></div>
+            <div><span className="text-slate-500 font-medium">Class & Section:</span> <strong className="text-slate-900 font-bold">{student.class || '—'} {student.section || ''}</strong></div>
+            <div><span className="text-slate-500 font-medium">Parent Name:</span> <strong className="text-slate-900 font-bold">{student.parent_name || '—'}</strong></div>
+            <div><span className="text-slate-500 font-medium">Parent Phone:</span> <strong className="text-slate-900 font-bold">{student.parent_phone || '—'}</strong></div>
+            <div><span className="text-slate-500 font-medium">Student Type:</span> <strong className="text-slate-900 font-bold">{student.student_type} ({student.admission_type})</strong></div>
+          </div>
+        </div>
 
-      <StudentFormModal open={editOpen} onClose={() => setEditOpen(false)} student={student} onSuccess={() => { setEditOpen(false); load(); }} />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <StatCard label="Total Fee" value={formatCurrency(student.total_fee)} icon={IndianRupee} />
+          <StatCard label="Total Paid" value={formatCurrency(student.paid_amount)} icon={CheckCircle2} tone="success" />
+          <StatCard label="Remaining Due" value={formatCurrency(student.due_amount)} icon={AlertCircle} tone={student.due_amount > 0 ? 'danger' : 'success'} />
+          <StatCard label="Payment Count" value={student.payment_count} icon={Receipt} />
+        </div>
+
+        <Card className="mb-4">
+          <p className="font-semibold text-navy-900 mb-3">Parent / Contact Details</p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+            <div><p className="text-slate-400">Parent Name</p><p className="text-slate-800 font-medium">{student.parent_name}</p></div>
+            <div><p className="text-slate-400">Parent Phone</p><p className="text-slate-800 font-medium">{student.parent_phone}</p></div>
+            <div><p className="text-slate-400">Last Payment</p><p className="text-slate-800 font-medium">{formatDate(student.last_payment_date)}</p></div>
+          </div>
+          {siblings.length > 0 && (
+            <div className="border-t border-slate-100 pt-3 mt-3 no-print">
+              <p className="text-slate-400 text-xs mb-2 font-medium">Sibling Students (Click to view profile)</p>
+              <div className="flex flex-wrap gap-2">
+                {siblings.map(sib => (
+                  <button
+                    key={sib.student_id}
+                    onClick={() => navigate(`${base}/students/${sib.student_id}`)}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-50 hover:bg-brand-100 text-brand-700 hover:text-brand-800 text-xs font-semibold rounded-lg border border-brand-100 transition-all outline-none animate-fade-in"
+                  >
+                    <Users className="w-3.5 h-3.5" />
+                    {sib.student_name} ({sib.student_code}) · Class {sib.class || '—'}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </Card>
+
+        <Card>
+          <p className="font-semibold text-navy-900 mb-3">Payment History</p>
+          <DataTable columns={columns} rows={history} loading={false} emptyMessage="No payments recorded for this student yet." />
+        </Card>
+      </div>
+
+      <div className="no-print">
+        <StudentFormModal open={editOpen} onClose={() => setEditOpen(false)} student={student} onSuccess={() => { setEditOpen(false); load(); }} />
+      </div>
     </div>
   );
 }

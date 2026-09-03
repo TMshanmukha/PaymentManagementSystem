@@ -31,12 +31,12 @@ export function triggerPrint() {
   style.id = 'print-layout-style';
 
   if (isReceipt) {
-    // A5 Landscape Layout for Fee Receipts (Wide width, low height)
+    // 100% Width and Top 50% Length (Height) Layout on Portrait Page (Bottom half blank)
     style.innerHTML = `
       @media print {
         @page {
-          size: A5 landscape !important;
-          margin: 0 !important;
+          size: portrait !important;
+          margin: 6mm 8mm !important;
         }
         *, *:before, *:after {
           -webkit-print-color-adjust: exact !important;
@@ -46,11 +46,9 @@ export function triggerPrint() {
           background: #ffffff !important;
           margin: 0 !important;
           padding: 0 !important;
-          width: 210mm !important;
-          height: 148mm !important;
-          display: flex !important;
-          align-items: center !important;
-          justify-content: center !important;
+          width: 100% !important;
+          height: 100% !important;
+          display: block !important;
           overflow: hidden !important;
           page-break-inside: avoid !important;
           break-inside: avoid !important;
@@ -59,24 +57,22 @@ export function triggerPrint() {
           display: none !important;
         }
         #print-portal {
-          display: flex !important;
-          align-items: center !important;
-          justify-content: center !important;
-          width: 210mm !important;
-          height: 148mm !important;
-          margin: 0 auto !important;
+          display: block !important;
+          width: 100% !important;
+          height: 100% !important;
+          margin: 0 !important;
           padding: 0 !important;
           overflow: hidden !important;
         }
         
-        /* Receipt Specific Styles */
+        /* Receipt Specific Styles: Full 100% width, top 50% page length */
         #print-portal.portal-receipt > div {
-          max-width: none !important;
-          width: 198mm !important;
-          height: 136mm !important;
-          max-height: 136mm !important;
-          margin: auto !important;
-          padding: 5mm 7mm !important;
+          max-width: 100% !important;
+          width: 100% !important;
+          height: 48vh !important;
+          max-height: 49vh !important;
+          margin: 0 0 auto 0 !important;
+          padding: 5mm 8mm !important;
           border: 1.5px solid #000000 !important;
           border-radius: 0px !important;
           box-shadow: none !important;
@@ -162,6 +158,22 @@ export function triggerPrint() {
           overflow: hidden !important;
           padding: 3px 5px !important;
           font-size: 8pt !important;
+        }
+        #print-portal .print-only, 
+        #print-portal .hidden.print\\:block,
+        #print-portal .print\\:block {
+          display: block !important;
+        }
+        #print-portal .print-only-flex,
+        #print-portal .hidden.print\\:flex,
+        #print-portal .print\\:flex {
+          display: flex !important;
+        }
+        #print-portal .print-hidden, 
+        #print-portal .print\\:hidden, 
+        #print-portal .no-print,
+        #print-portal .no-print * {
+          display: none !important;
         }
         #print-portal .no-print {
           display: none !important;
