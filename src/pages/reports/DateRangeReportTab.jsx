@@ -8,7 +8,7 @@ import { DataTable } from '../../components/DataTable.jsx';
 import { Badge } from '../../components/Badge.jsx';
 import { LoadingState } from '../../components/LoadingState.jsx';
 import { ErrorState } from '../../components/ErrorState.jsx';
-import { formatCurrency, formatDate, firstDayOfMonthISO, todayISO } from '../../utils/format.js';
+import { formatCurrency, formatDate, formatDateTime, firstDayOfMonthISO, todayISO } from '../../utils/format.js';
 import { IndianRupee, TrendingDown, Wallet } from 'lucide-react';
 import { getErrorMessage } from '../../config/api.js';
 import { useSettings } from '../../context/SettingsContext.jsx';
@@ -100,7 +100,7 @@ export function DateRangeReportTab({ studentType }) {
             <div className="mt-4 border-t pt-3 flex justify-between text-xs text-slate-500">
               <span className="font-bold uppercase tracking-wider text-sm text-navy-900">Financial Report (Custom Date Range)</span>
               <span>Range: {formatDate(fromDate)} to {formatDate(toDate)}</span>
-              <span>Printed on: {new Date().toLocaleString()}</span>
+              <span>Printed on: {formatDateTime(new Date())}</span>
             </div>
           </div>
 

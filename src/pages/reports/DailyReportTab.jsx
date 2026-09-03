@@ -103,7 +103,7 @@ export function DailyReportTab({ studentType }) {
             <div className="mt-4 border-t pt-3 flex justify-between text-xs text-slate-500">
               <span className="font-bold uppercase tracking-wider text-sm text-navy-900">Daily Financial Report</span>
               <span>Report Date: {formatDate(date)}</span>
-              <span>Printed on: {new Date().toLocaleString()}</span>
+              <span>Printed on: {formatDateTime(new Date())}</span>
             </div>
           </div>
 

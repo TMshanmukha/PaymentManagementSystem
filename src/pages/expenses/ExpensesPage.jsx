@@ -15,7 +15,8 @@ import { DataTable } from '../../components/DataTable.jsx';
 import { Pagination } from '../../components/Pagination.jsx';
 import { StatCard } from '../../components/StatCard.jsx';
 import { Badge } from '../../components/Badge.jsx';
-import { formatCurrency, formatDate, todayISO } from '../../utils/format.js';
+import { formatCurrency, formatDate, formatDateTime, todayISO } from '../../utils/format.js';
+import { useSettings } from '../../context/SettingsContext.jsx';
 import { useAuth } from '../../hooks/useAuth.js';
 import { useToast } from '../../hooks/useToast.js';
 import { getErrorMessage } from '../../config/api.js';
@@ -25,6 +26,7 @@ import { exportToExcel } from '../../utils/export.js';
 
 export default function ExpensesPage() {
   const { user } = useAuth();
+  const { settings } = useSettings();
   const toast = useToast();
   const isAdmin = user.role === ROLES.ADMIN;
   const lockedType = ROLE_SCOPE[user.role];
@@ -150,12 +152,14 @@ export default function ExpensesPage() {
       <div className="print-area print-a4">
         {/* Printable A4 Report Header */}
         <div className="hidden print:block mb-6 text-center border-b pb-4">
-          <h1 className="text-2xl font-bold text-navy-950">VVSLedger Institution</h1>
+          <h1 className="text-2xl font-bold text-navy-950">{settings?.institution_name || 'VVSLedger Institution'}</h1>
+          {settings?.institution_address && <p className="text-sm text-slate-600 mt-1">{settings.institution_address}</p>}
+          {settings?.institution_phone && <p className="text-sm text-slate-600">Ph: {settings.institution_phone}</p>}
           <div className="mt-4 border-t pt-3 flex justify-between text-xs text-slate-500">
             <span className="font-bold uppercase tracking-wider text-sm text-navy-900">
               {activeExpenseType === 'SCHOOL' ? 'School' : 'Tuition'} Expenses Report
             </span>
-            <span>Printed on: {new Date().toLocaleString()}</span>
+            <span>Printed on: {formatDateTime(new Date())}</span>
           </div>
         </div>
 

@@ -10,7 +10,7 @@ import { DataTable } from '../../components/DataTable.jsx';
 import { Badge } from '../../components/Badge.jsx';
 import { LoadingState } from '../../components/LoadingState.jsx';
 import { ErrorState } from '../../components/ErrorState.jsx';
-import { formatCurrency, formatDate } from '../../utils/format.js';
+import { formatCurrency, formatDate, formatDateTime } from '../../utils/format.js';
 import { IndianRupee, TrendingDown, Wallet, Users } from 'lucide-react';
 import { getErrorMessage } from '../../config/api.js';
 import { useSettings } from '../../context/SettingsContext.jsx';
@@ -89,7 +89,7 @@ export function MonthlyReportTab({ studentType }) {
             <div className="mt-4 border-t pt-3 flex justify-between text-xs text-slate-500">
               <span className="font-bold uppercase tracking-wider text-sm text-navy-900">Monthly Financial Report</span>
               <span>Month: {MONTHS[month - 1]} {year}</span>
-              <span>Printed on: {new Date().toLocaleString()}</span>
+              <span>Printed on: {formatDateTime(new Date())}</span>
             </div>
           </div>
 
