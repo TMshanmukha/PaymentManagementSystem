@@ -1,4 +1,4 @@
-import { formatCurrency, formatDate } from '../utils/format.js';
+import { formatCurrency, formatDate, formatTime } from '../utils/format.js';
 import { useSettings } from '../context/SettingsContext.jsx';
 
 // Function to convert number to words (Indian Rupees format)
@@ -31,19 +31,21 @@ export function ReceiptPreview({ receipt, institution: propInstitution }) {
   const phone = institution?.institution_phone || settings?.institution_phone;
 
   const {
-    receipt_number, payment_date, student_name, student_code,
+    receipt_number, payment_date, payment_time, created_at, student_name, student_code,
     class: className, section, amount, payment_method, remarks,
   } = receipt;
 
   const amountInWords = numberToWords(amount);
+  const displayDate = formatDate(payment_date || payment_time || created_at);
+  const displayTime = formatTime(payment_time || created_at);
 
   return (
     <div
-      className="receipt-card bg-white text-slate-900 w-full max-w-2xl mx-auto p-5 sm:p-6 text-xs sm:text-sm font-serif border-[1.5px] border-slate-900 rounded-none shadow-none box-border relative"
+      className="receipt-card bg-white text-slate-900 w-full max-w-4xl mx-auto p-4 sm:p-5 text-xs sm:text-sm font-serif border-[1.5px] border-slate-900 rounded-none shadow-none box-border relative"
       style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
     >
       {/* Header Section */}
-      <div className="border-b-[1.5px] border-slate-900 pb-3 mb-3 relative">
+      <div className="border-b-[1.5px] border-slate-900 pb-2 mb-2 relative">
         {/* Top Right Original Copy Tag */}
         <div className="absolute right-0 top-0">
           <span className="text-[9px] uppercase tracking-widest font-bold border border-slate-900 px-2 py-0.5 text-slate-900">
@@ -52,28 +54,36 @@ export function ReceiptPreview({ receipt, institution: propInstitution }) {
         </div>
 
         {/* Center Institution Info */}
-        <div className="text-center px-8">
+        <div className="text-center px-12">
           <h2 className="text-xs sm:text-sm font-bold tracking-[0.25em] uppercase text-slate-700 mb-0.5">R E C E I P T</h2>
           <h1 className="text-base sm:text-lg font-bold uppercase text-slate-950 leading-snug">{name}</h1>
-          {address && <p className="text-[11px] leading-tight text-slate-600 mt-0.5">{address}</p>}
-          {phone && <p className="text-[11px] text-slate-600 leading-tight">Ph: {phone}</p>}
+          {address && <p className="text-[10px] sm:text-[11px] leading-tight text-slate-600 mt-0.5">{address}</p>}
+          {phone && <p className="text-[10px] sm:text-[11px] text-slate-600 leading-tight">Ph: {phone}</p>}
         </div>
       </div>
 
-      {/* Metadata Row: Receipt No. and Date */}
-      <div className="flex justify-between items-center text-xs border-b border-dashed border-slate-300 pb-2 mb-3 px-0.5">
+      {/* Metadata Row: Receipt No., Date, and Time */}
+      <div className="flex justify-between items-center text-xs border-b border-dashed border-slate-300 pb-1.5 mb-2.5 px-0.5">
         <div>
           <span className="text-slate-600 font-medium">Receipt No. : </span>
           <b className="text-sm text-slate-950 font-bold tracking-wide">{receipt_number}</b>
         </div>
-        <div>
-          <span className="text-slate-600 font-medium">Date : </span>
-          <b className="text-sm text-slate-950 font-bold">{formatDate(payment_date)}</b>
+        <div className="flex items-center gap-3 sm:gap-4">
+          <div>
+            <span className="text-slate-600 font-medium">Date : </span>
+            <b className="text-sm text-slate-950 font-bold">{displayDate}</b>
+          </div>
+          {displayTime && (
+            <div>
+              <span className="text-slate-600 font-medium">Time : </span>
+              <b className="text-sm text-slate-950 font-bold">{displayTime}</b>
+            </div>
+          )}
         </div>
       </div>
 
       {/* Student & Fee Fields */}
-      <div className="space-y-3 px-0.5 mb-4">
+      <div className="space-y-2.5 px-0.5 mb-3">
         {/* Student Name */}
         <div className="flex items-baseline gap-2 w-full">
           <span className="shrink-0 text-slate-700 text-xs font-medium">Received with thanks from :</span>
@@ -90,13 +100,13 @@ export function ReceiptPreview({ receipt, institution: propInstitution }) {
               {className || '—'}
             </span>
           </div>
-          <div className="col-span-3 flex items-baseline gap-1.5">
+          <div className="col-span-4 flex items-baseline gap-1.5">
             <span className="shrink-0 text-slate-700 text-xs font-medium">Div / Section :</span>
             <span className="border-b border-dotted border-slate-400 flex-1 font-bold pl-1.5 pb-0.5 text-slate-950 text-sm">
               {section || '—'}
             </span>
           </div>
-          <div className="col-span-5 flex items-baseline gap-1.5">
+          <div className="col-span-4 flex items-baseline gap-1.5">
             <span className="shrink-0 text-slate-700 text-xs font-medium">Admission No. :</span>
             <span className="border-b border-dotted border-slate-400 flex-1 font-bold pl-1.5 pb-0.5 text-slate-950 text-sm">
               {student_code}
@@ -122,14 +132,14 @@ export function ReceiptPreview({ receipt, institution: propInstitution }) {
       </div>
 
       {/* Amount Box & Signature Section */}
-      <div className="flex justify-between items-end mt-4 pt-1 px-0.5 gap-4">
+      <div className="flex justify-between items-end mt-3 pt-0.5 px-0.5 gap-4">
         {/* Net Fees Box */}
         <div className="shrink-0">
-          <div className="flex border-[1.5px] border-slate-900 divide-x-[1.5px] divide-slate-900 w-52 sm:w-60">
-            <div className="bg-slate-100 px-3 py-1.5 font-bold text-center text-xs uppercase tracking-wider text-slate-800 flex items-center justify-center">
+          <div className="flex border-[1.5px] border-slate-900 divide-x-[1.5px] divide-slate-900 w-56 sm:w-64">
+            <div className="bg-slate-100 px-3 py-1 font-bold text-center text-xs uppercase tracking-wider text-slate-800 flex items-center justify-center">
               Net Fees
             </div>
-            <div className="px-3 py-1.5 font-bold text-right text-sm sm:text-base text-slate-950 bg-white flex-1 whitespace-nowrap">
+            <div className="px-3 py-1 font-bold text-right text-sm sm:text-base text-slate-950 bg-white flex-1 whitespace-nowrap">
               ₹ {Number(amount).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </div>
           </div>
@@ -138,10 +148,10 @@ export function ReceiptPreview({ receipt, institution: propInstitution }) {
         {/* Signature Box */}
         <div className="text-right flex flex-col items-end shrink-0">
           <span className="text-[10px] text-slate-700 font-semibold italic mb-0.5">For, {name}</span>
-          <div className="min-h-[32px] flex items-center justify-end px-1">
+          <div className="min-h-[28px] flex items-center justify-end px-1">
             {receipt.digital_signature ? (
               receipt.digital_signature.startsWith('data:image/') ? (
-                <img src={receipt.digital_signature} alt="Signature" className="h-7 max-w-[120px] object-contain" />
+                <img src={receipt.digital_signature} alt="Signature" className="h-6 max-w-[120px] object-contain" />
               ) : (
                 <span className="text-xs text-slate-900 font-bold italic whitespace-nowrap">
                   {receipt.digital_signature}
@@ -151,13 +161,13 @@ export function ReceiptPreview({ receipt, institution: propInstitution }) {
               <span className="text-[10px] text-slate-400 italic">Signature</span>
             )}
           </div>
-          <div className="w-32 border-t border-slate-700 mt-1"></div>
+          <div className="w-32 border-t border-slate-700 mt-0.5"></div>
           <span className="text-[9px] text-slate-700 font-bold uppercase tracking-wider mt-0.5">Authorized Signatory</span>
         </div>
       </div>
 
-      {/* Note/Terms section at bottom */}
-      <div className="mt-3.5 border-t border-dashed border-slate-300 pt-2 text-[9px] text-slate-600 leading-tight px-0.5">
+      {/* Note/Terms section at bottom - NO LINE above */}
+      <div className="mt-2 text-[8.5px] sm:text-[9px] text-slate-600 leading-tight px-0.5">
         <div className="flex justify-between items-center">
           <p className="font-medium">Note : (1) Fees once paid are non-refundable. Please keep this receipt safe. (2) Receipts are subject to realization of payments.</p>
         </div>

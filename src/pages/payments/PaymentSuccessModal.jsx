@@ -27,7 +27,7 @@ export function PaymentSuccessModal({ receipt, onClose, onNewPayment }) {
       open={Boolean(receipt)}
       onClose={onClose}
       title="Payment Recorded Successfully"
-      size="md"
+      size="xl"
       footer={
         <>
           <Button variant="secondary" onClick={onClose}>Close</Button>

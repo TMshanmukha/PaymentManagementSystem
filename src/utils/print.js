@@ -35,8 +35,8 @@ export function triggerPrint() {
     style.innerHTML = `
       @media print {
         @page {
-          size: portrait !important;
-          margin: 10mm 12mm !important;
+          size: A4 portrait !important;
+          margin: 6mm 8mm !important;
         }
         *, *:before, *:after {
           -webkit-print-color-adjust: exact !important;
@@ -75,20 +75,20 @@ export function triggerPrint() {
           box-shadow: none !important;
         }
         
-        /* Receipt Card: Single crisp border, clean spacing without overlaps */
+        /* Receipt Card: Full width, compact top-half page length, single crisp border */
         #print-portal.portal-receipt .receipt-card {
           max-width: 100% !important;
           width: 100% !important;
           height: auto !important;
           max-height: none !important;
           margin: 0 auto !important;
-          padding: 16px 20px !important;
+          padding: 12px 16px !important;
           border: 1.5px solid #000000 !important;
           border-radius: 0px !important;
           box-shadow: none !important;
           background: #ffffff !important;
           font-family: Georgia, 'Times New Roman', serif !important;
-          font-size: 9pt !important;
+          font-size: 8.5pt !important;
           box-sizing: border-box !important;
           display: block !important;
           page-break-inside: avoid !important;
