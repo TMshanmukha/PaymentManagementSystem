@@ -21,7 +21,7 @@ export function triggerPrint() {
   const clone = printArea.cloneNode(true);
   portal.appendChild(clone);
 
-  const isReceipt = printArea.querySelector('.receipt-body-content') !== null;
+  const isReceipt = printArea.querySelector('.receipt-card') !== null || printArea.querySelector('.receipt-body-content') !== null;
   portal.className = isReceipt ? 'portal-receipt' : 'portal-report';
 
   const existing = document.getElementById('print-layout-style');
@@ -31,12 +31,12 @@ export function triggerPrint() {
   style.id = 'print-layout-style';
 
   if (isReceipt) {
-    // 100% Width and Top 50% Length (Height) Layout on Portrait Page (Bottom half blank)
+    // 100% Width Layout on Portrait Page (Single clean border, natural auto-height)
     style.innerHTML = `
       @media print {
         @page {
           size: portrait !important;
-          margin: 6mm 8mm !important;
+          margin: 10mm 12mm !important;
         }
         *, *:before, *:after {
           -webkit-print-color-adjust: exact !important;
@@ -47,11 +47,9 @@ export function triggerPrint() {
           margin: 0 !important;
           padding: 0 !important;
           width: 100% !important;
-          height: 100% !important;
+          height: auto !important;
           display: block !important;
-          overflow: hidden !important;
-          page-break-inside: avoid !important;
-          break-inside: avoid !important;
+          overflow: visible !important;
         }
         #root {
           display: none !important;
@@ -59,38 +57,42 @@ export function triggerPrint() {
         #print-portal {
           display: block !important;
           width: 100% !important;
-          height: 100% !important;
+          height: auto !important;
           margin: 0 !important;
           padding: 0 !important;
-          overflow: hidden !important;
+          overflow: visible !important;
         }
         
-        /* Receipt Specific Styles: Full 100% width, top 50% page length */
-        #print-portal.portal-receipt > div {
+        /* Remove wrapper borders to prevent double borders */
+        #print-portal.portal-receipt > div,
+        #print-portal.portal-receipt .print-area {
           max-width: 100% !important;
           width: 100% !important;
-          height: 48vh !important;
-          max-height: 49vh !important;
-          margin: 0 0 auto 0 !important;
-          padding: 5mm 8mm !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          border: none !important;
+          background: transparent !important;
+          box-shadow: none !important;
+        }
+        
+        /* Receipt Card: Single crisp border, clean spacing without overlaps */
+        #print-portal.portal-receipt .receipt-card {
+          max-width: 100% !important;
+          width: 100% !important;
+          height: auto !important;
+          max-height: none !important;
+          margin: 0 auto !important;
+          padding: 16px 20px !important;
           border: 1.5px solid #000000 !important;
           border-radius: 0px !important;
           box-shadow: none !important;
           background: #ffffff !important;
           font-family: Georgia, 'Times New Roman', serif !important;
-          font-size: 9.5pt !important;
+          font-size: 9pt !important;
           box-sizing: border-box !important;
-          display: flex !important;
-          flex-direction: column !important;
-          justify-content: space-between !important;
+          display: block !important;
           page-break-inside: avoid !important;
           break-inside: avoid !important;
-        }
-        #print-portal.portal-receipt > div > div.receipt-body-content {
-          height: 100% !important;
-          display: flex !important;
-          flex-direction: column !important;
-          justify-content: space-between !important;
         }
         #print-portal.portal-receipt .no-print {
           display: none !important;
