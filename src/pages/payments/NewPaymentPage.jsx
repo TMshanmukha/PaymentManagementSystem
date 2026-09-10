@@ -133,7 +133,18 @@ export default function NewPaymentPage() {
               <Select label="Payment Method" error={errors.paymentMethod?.message}
                 options={[{ value: 'CASH', label: 'Cash' }, { value: 'UPI', label: 'UPI' }]}
                 {...register('paymentMethod')} />
-              <Input label="Payment Date" type="date" error={errors.paymentDate?.message} {...register('paymentDate')} />
+              <div>
+                <Input
+                  label="Payment Date"
+                  type="date"
+                  disabled={user.role !== ROLES.ADMIN}
+                  error={errors.paymentDate?.message}
+                  {...register('paymentDate')}
+                />
+                {user.role !== ROLES.ADMIN && (
+                  <p className="text-[11px] text-slate-400 mt-1">Payment date is locked to today for accountants.</p>
+                )}
+              </div>
               <Input label="Remarks (optional)" {...register('remarks')} />
             </div>
 
