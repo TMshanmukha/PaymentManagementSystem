@@ -1,0 +1,13 @@
+# EduLedger — School & Tuition Management System
+
+> EduLedger is a modern educational institution fee tracking, receipt generation, and payment management platform.
+
+## Features
+- Payment Collection: Record Cash and UPI fee payments with instant digital receipt generation.
+- Student Ledger: Track tuition dues, payment histories, and student enrolment records.
+- Reporting & Day Closings: Generate daily, monthly, and academic-year financial statements.
+- Role-Based Access Control: Tailored workflows for Administrators and School/Tuition Accountants.
+
+## Links
+- [Home](https://feesmanagement.vercel.app/)
+- [Login](https://feesmanagement.vercel.app/login)

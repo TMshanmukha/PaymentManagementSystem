@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext.jsx';
 import { ToastProvider } from './context/ToastContext.jsx';
@@ -6,23 +7,25 @@ import { AcademicYearProvider } from './context/AcademicYearContext.jsx';
 import { ProtectedRoute } from './routes/ProtectedRoute.jsx';
 import { RoleRoute } from './routes/RoleRoute.jsx';
 import { DashboardLayout } from './layouts/DashboardLayout.jsx';
+import { LoadingState } from './components/LoadingState.jsx';
 import { ROLES } from './config/constants.js';
 
 import LoginPage from './pages/auth/LoginPage.jsx';
-import DashboardPage from './pages/dashboard/DashboardPage.jsx';
-import StudentsListPage from './pages/students/StudentsListPage.jsx';
-import StudentDetailPage from './pages/students/StudentDetailPage.jsx';
-import PaymentsListPage from './pages/payments/PaymentsListPage.jsx';
-import NewPaymentPage from './pages/payments/NewPaymentPage.jsx';
-import PaymentDetailPage from './pages/payments/PaymentDetailPage.jsx';
-import ExpensesPage from './pages/expenses/ExpensesPage.jsx';
-import DuePage from './pages/due/DuePage.jsx';
-import ReportsPage from './pages/reports/ReportsPage.jsx';
-import DayClosingPage from './pages/dayclosing/DayClosingPage.jsx';
-import UsersPage from './pages/users/UsersPage.jsx';
-import AuditLogsPage from './pages/auditlogs/AuditLogsPage.jsx';
-import SettingsPage from './pages/settings/SettingsPage.jsx';
-import AcademicYearsPage from './pages/academicYears/AcademicYearsPage.jsx';
+
+const DashboardPage = lazy(() => import('./pages/dashboard/DashboardPage.jsx'));
+const StudentsListPage = lazy(() => import('./pages/students/StudentsListPage.jsx'));
+const StudentDetailPage = lazy(() => import('./pages/students/StudentDetailPage.jsx'));
+const PaymentsListPage = lazy(() => import('./pages/payments/PaymentsListPage.jsx'));
+const NewPaymentPage = lazy(() => import('./pages/payments/NewPaymentPage.jsx'));
+const PaymentDetailPage = lazy(() => import('./pages/payments/PaymentDetailPage.jsx'));
+const ExpensesPage = lazy(() => import('./pages/expenses/ExpensesPage.jsx'));
+const DuePage = lazy(() => import('./pages/due/DuePage.jsx'));
+const ReportsPage = lazy(() => import('./pages/reports/ReportsPage.jsx'));
+const DayClosingPage = lazy(() => import('./pages/dayclosing/DayClosingPage.jsx'));
+const UsersPage = lazy(() => import('./pages/users/UsersPage.jsx'));
+const AuditLogsPage = lazy(() => import('./pages/auditlogs/AuditLogsPage.jsx'));
+const SettingsPage = lazy(() => import('./pages/settings/SettingsPage.jsx'));
+const AcademicYearsPage = lazy(() => import('./pages/academicYears/AcademicYearsPage.jsx'));
 
 /**
  * One shared set of page routes reused for all three role sections
@@ -54,37 +57,39 @@ export default function App() {
         <AuthProvider>
           <AcademicYearProvider>
             <ToastProvider>
-              <Routes>
-                <Route path="/login" element={<LoginPage />} />
+              <Suspense fallback={<LoadingState fullScreen />}>
+                <Routes>
+                  <Route path="/login" element={<LoginPage />} />
 
-                <Route element={<ProtectedRoute />}>
-                  {/* Admin-only subtree */}
-                  <Route path="/admin" element={<RoleRoute allow={[ROLES.ADMIN]} />}>
-                    {roleSection('', 'Admin', (
-                      <>
-                        <Route path="reports" element={<ReportsPage />} />
-                        <Route path="users" element={<UsersPage />} />
-                        <Route path="audit-logs" element={<AuditLogsPage />} />
-                        <Route path="settings" element={<SettingsPage />} />
-                        <Route path="academic-years" element={<AcademicYearsPage />} />
-                      </>
-                    ))}
+                  <Route element={<ProtectedRoute />}>
+                    {/* Admin-only subtree */}
+                    <Route path="/admin" element={<RoleRoute allow={[ROLES.ADMIN]} />}>
+                      {roleSection('', 'Admin', (
+                        <>
+                          <Route path="reports" element={<ReportsPage />} />
+                          <Route path="users" element={<UsersPage />} />
+                          <Route path="audit-logs" element={<AuditLogsPage />} />
+                          <Route path="settings" element={<SettingsPage />} />
+                          <Route path="academic-years" element={<AcademicYearsPage />} />
+                        </>
+                      ))}
+                    </Route>
+
+                    {/* School accountant subtree */}
+                    <Route path="/school" element={<RoleRoute allow={[ROLES.SCHOOL_ACCOUNTANT]} />}>
+                      {roleSection('', 'School Accountant')}
+                    </Route>
+
+                    {/* Tuition accountant subtree */}
+                    <Route path="/tuition" element={<RoleRoute allow={[ROLES.TUITION_ACCOUNTANT]} />}>
+                      {roleSection('', 'Tuition Accountant')}
+                    </Route>
                   </Route>
 
-                  {/* School accountant subtree */}
-                  <Route path="/school" element={<RoleRoute allow={[ROLES.SCHOOL_ACCOUNTANT]} />}>
-                    {roleSection('', 'School Accountant')}
-                  </Route>
-
-                  {/* Tuition accountant subtree */}
-                  <Route path="/tuition" element={<RoleRoute allow={[ROLES.TUITION_ACCOUNTANT]} />}>
-                    {roleSection('', 'Tuition Accountant')}
-                  </Route>
-                </Route>
-
-                <Route path="/" element={<Navigate to="/login" replace />} />
-                <Route path="*" element={<Navigate to="/login" replace />} />
-              </Routes>
+                  <Route path="/" element={<Navigate to="/login" replace />} />
+                  <Route path="*" element={<Navigate to="/login" replace />} />
+                </Routes>
+              </Suspense>
             </ToastProvider>
           </AcademicYearProvider>
         </AuthProvider>
