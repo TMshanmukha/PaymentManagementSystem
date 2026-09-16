@@ -47,9 +47,9 @@ export default function ExpensesPage() {
 
   const handleExport = () => {
     const headers = [
-      { key: 'expense_date', label: 'Expense Date' },
+      { key: 'expense_date', label: 'Expense Date', render: (r) => formatDate(r.expense_date) },
       { key: 'category_name', label: 'Category' },
-      { key: 'amount', label: 'Amount' },
+      { key: 'amount', label: 'Amount', render: (r) => formatCurrency(r.amount) },
       { key: 'expense_type', label: 'Expense Type' },
       { key: 'payment_method', label: 'Payment Method' },
       { key: 'description', label: 'Description' },

@@ -32,9 +32,9 @@ export default function PaymentsListPage() {
       { key: 'student_name', label: 'Student Name' },
       { key: 'parent_name', label: 'Parent Name' },
       { key: 'student_type', label: 'Student Type' },
-      { key: 'amount', label: 'Amount' },
+      { key: 'amount', label: 'Amount', render: (r) => formatCurrency(r.amount) },
       { key: 'payment_method', label: 'Payment Method' },
-      { key: 'payment_date', label: 'Payment Date' },
+      { key: 'payment_date', label: 'Payment Date', render: (r) => formatDate(r.payment_date) },
       { key: 'received_by_name', label: 'Received By' },
       { key: 'status', label: 'Status' }
     ];

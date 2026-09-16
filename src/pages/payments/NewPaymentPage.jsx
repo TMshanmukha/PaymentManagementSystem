@@ -33,15 +33,21 @@ export default function NewPaymentPage() {
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [serverError, setServerError] = useState('');
   const [receipt, setReceipt] = useState(null);
-  const [clientRequestId] = useState(() => `req-${Date.now()}-${Math.random().toString(36).slice(2)}`);
 
-  const preselectedStudentId = location.state?.studentId ? String(location.state.studentId) : '';
+  const preselectedStudentId = location.state?.studentId ? Number(location.state.studentId) : '';
 
   const {
-    register, handleSubmit, watch, setValue, control, formState: { errors, isSubmitting },
+    register, handleSubmit, watch, setValue, reset, control, formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(paymentSchema),
-    defaultValues: { studentId: preselectedStudentId, paymentDate: todayISO(), paymentMethod: 'CASH', digitalSignature: user.fullName || '' },
+    defaultValues: {
+      studentId: preselectedStudentId || '',
+      paymentDate: todayISO(),
+      paymentMethod: 'CASH',
+      amount: '',
+      remarks: '',
+      digitalSignature: user.fullName || '',
+    },
   });
 
   const studentId = watch('studentId');
@@ -56,13 +62,43 @@ export default function NewPaymentPage() {
 
   useEffect(() => {
     studentApi.list({ status: 'ACTIVE', pageSize: 10000, studentType: scope || undefined })
-      .then(({ data }) => setStudents(data.data.items))
+      .then(({ data }) => {
+        const items = data.data.items || [];
+        setStudents(items);
+      })
+      .catch(() => {})
       .finally(() => setLoadingStudents(false));
-  }, []); // eslint-disable-line
+  }, [scope]);
 
   useEffect(() => {
-    const s = students.find((s) => s.student_id === Number(studentId));
-    setSelectedStudent(s || null);
+    if (location.state?.studentId) {
+      const id = Number(location.state.studentId);
+      setValue('studentId', id);
+      studentApi.getOne(id).then(({ data }) => {
+        if (data?.data) {
+          setSelectedStudent(data.data);
+          setStudents((prev) => {
+            if (prev.some((s) => s.student_id === id)) return prev;
+            return [data.data, ...prev];
+          });
+        }
+      }).catch(() => {});
+    }
+  }, [location.state, setValue]);
+
+  useEffect(() => {
+    if (!studentId) {
+      setSelectedStudent(null);
+      return;
+    }
+    const s = students.find((item) => Number(item.student_id) === Number(studentId));
+    if (s) {
+      setSelectedStudent(s);
+    } else {
+      studentApi.getOne(studentId).then(({ data }) => {
+        if (data?.data) setSelectedStudent(data.data);
+      }).catch(() => {});
+    }
   }, [studentId, students]);
 
   const options = useMemo(() => students.map((s) => ({
@@ -80,13 +116,41 @@ export default function NewPaymentPage() {
       return;
     }
     try {
+      const clientRequestId = `req-${Date.now()}-${Math.random().toString(36).slice(2)}`;
       const { data } = await paymentApi.create({ ...values, clientRequestId });
       toast.success('Payment recorded successfully.');
       setReceipt(data.data);
+      reset({
+        studentId: '',
+        amount: '',
+        paymentMethod: 'CASH',
+        paymentDate: todayISO(),
+        remarks: '',
+        digitalSignature: user.fullName || '',
+      });
+      setSelectedStudent(null);
     } catch (err) {
       setServerError(getErrorMessage(err, 'Could not record payment.'));
     }
   }
+
+  const handleModalClose = () => {
+    setReceipt(null);
+    navigate(`${base}/payments`);
+  };
+
+  const handleRecordAnother = () => {
+    setReceipt(null);
+    reset({
+      studentId: '',
+      amount: '',
+      paymentMethod: 'CASH',
+      paymentDate: todayISO(),
+      remarks: '',
+      digitalSignature: user.fullName || '',
+    });
+    setSelectedStudent(null);
+  };
 
   return (
     <div>
@@ -185,8 +249,8 @@ export default function NewPaymentPage() {
 
       <PaymentSuccessModal
         receipt={receipt}
-        onClose={() => { setReceipt(null); navigate(`${base}/payments`); }}
-        onNewPayment={() => window.location.reload()}
+        onClose={handleModalClose}
+        onNewPayment={handleRecordAnother}
       />
     </div>
   );

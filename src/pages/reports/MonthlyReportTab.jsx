@@ -31,10 +31,10 @@ export function MonthlyReportTab({ studentType }) {
 
   const handleExportExpenses = () => {
     const headers = [
-      { key: 'expense_date', label: 'Date' },
+      { key: 'expense_date', label: 'Date', render: (r) => formatDate(r.expense_date) },
       { key: 'category_name', label: 'Category' },
       { key: 'expense_type', label: 'Type' },
-      { key: 'amount', label: 'Amount' },
+      { key: 'amount', label: 'Amount', render: (r) => formatCurrency(r.amount) },
       { key: 'description', label: 'Description' },
       { key: 'created_by_name', label: 'Recorded By' }
     ];

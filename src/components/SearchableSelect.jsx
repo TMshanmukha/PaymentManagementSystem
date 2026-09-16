@@ -9,7 +9,7 @@ export function SearchableSelect({ label, options, value, onChange, placeholder 
   const [query, setQuery] = useState('');
   const containerRef = useRef(null);
 
-  const selected = options.find((o) => o.value === value);
+  const selected = options.find((o) => value != null && value !== '' && String(o.value) === String(value));
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -33,7 +33,7 @@ export function SearchableSelect({ label, options, value, onChange, placeholder 
         onClick={() => setOpen((o) => !o)}
         className={`input flex items-center justify-between text-left ${error ? 'border-red-400' : ''}`}
       >
-        <span className={selected ? 'text-slate-900' : 'text-slate-400'}>
+        <span className={selected ? 'text-slate-900 font-medium' : 'text-slate-400'}>
           {selected ? selected.label : placeholder}
         </span>
         <ChevronDown className="w-4 h-4 text-slate-400 shrink-0" />
@@ -60,17 +60,20 @@ export function SearchableSelect({ label, options, value, onChange, placeholder 
           <div className="overflow-y-auto">
             {loading && <p className="text-sm text-slate-400 px-3 py-3">Loading...</p>}
             {!loading && filtered.length === 0 && <p className="text-sm text-slate-400 px-3 py-3">No matches found.</p>}
-            {!loading && filtered.map((opt) => (
-              <button
-                key={opt.value}
-                type="button"
-                onClick={() => { onChange(opt.value); setOpen(false); setQuery(''); }}
-                className={`w-full text-left px-3 py-2 text-sm hover:bg-slate-50 flex flex-col ${opt.value === value ? 'bg-brand-50' : ''}`}
-              >
-                <span className="text-slate-900 font-medium">{opt.label}</span>
-                {opt.meta && <span className="text-xs text-slate-400">{opt.meta}</span>}
-              </button>
-            ))}
+            {!loading && filtered.map((opt) => {
+              const isSelected = value != null && value !== '' && String(opt.value) === String(value);
+              return (
+                <button
+                  key={opt.value}
+                  type="button"
+                  onClick={() => { onChange(opt.value); setOpen(false); setQuery(''); }}
+                  className={`w-full text-left px-3 py-2 text-sm hover:bg-slate-50 flex flex-col ${isSelected ? 'bg-brand-50' : ''}`}
+                >
+                  <span className="text-slate-900 font-medium">{opt.label}</span>
+                  {opt.meta && <span className="text-xs text-slate-400">{opt.meta}</span>}
+                </button>
+              );
+            })}
           </div>
         </div>
       )}

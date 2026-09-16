@@ -26,20 +26,20 @@ export function DateRangeReportTab({ studentType }) {
 
   const handleExportBreakdown = () => {
     const headers = [
-      { key: 'payment_date', label: 'Date' },
-      { key: 'cash_total', label: 'Cash Collection' },
-      { key: 'upi_total', label: 'UPI Collection' },
-      { key: 'overall_total', label: 'Total Collection' }
+      { key: 'payment_date', label: 'Date', render: (r) => formatDate(r.payment_date) },
+      { key: 'cash_total', label: 'Cash Collection', render: (r) => formatCurrency(r.cash_total) },
+      { key: 'upi_total', label: 'UPI Collection', render: (r) => formatCurrency(r.upi_total) },
+      { key: 'overall_total', label: 'Total Collection', render: (r) => formatCurrency(r.overall_total) }
     ];
     exportToExcel(data.dailyBreakdown || [], `daterange_report_breakdown_${fromDate}_to_${toDate}`, headers);
   };
 
   const handleExportExpenses = () => {
     const headers = [
-      { key: 'expense_date', label: 'Date' },
+      { key: 'expense_date', label: 'Date', render: (r) => formatDate(r.expense_date) },
       { key: 'category_name', label: 'Category' },
       { key: 'expense_type', label: 'Type' },
-      { key: 'amount', label: 'Amount' },
+      { key: 'amount', label: 'Amount', render: (r) => formatCurrency(r.amount) },
       { key: 'description', label: 'Description' },
       { key: 'created_by_name', label: 'Recorded By' }
     ];

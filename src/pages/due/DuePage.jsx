@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Search, Printer } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Search, Printer, Wallet, Eye } from 'lucide-react';
 import { reportApi } from '../../services/report.service.js';
 import { triggerPrint } from '../../utils/print.js';
 import { Card } from '../../components/Card.jsx';
@@ -16,6 +17,8 @@ import { getErrorMessage } from '../../config/api.js';
 
 export default function DuePage() {
   const { user } = useAuth();
+  const navigate = useNavigate();
+  const base = user.role === ROLES.ADMIN ? '/admin' : user.role === ROLES.SCHOOL_ACCOUNTANT ? '/school' : '/tuition';
   const isAdmin = user.role === ROLES.ADMIN;
 
   const [rows, setRows] = useState([]);
@@ -59,6 +62,14 @@ export default function DuePage() {
     { key: 'paid_amount', header: 'Paid', render: (r) => formatCurrency(r.paid_amount) },
     { key: 'due_amount', header: 'Due', render: (r) => <span className={`font-semibold ${r.due_amount > 0 ? 'text-orange-600' : 'text-emerald-600'}`}>{formatCurrency(r.due_amount)}</span> },
     { key: 'last_payment_date', header: 'Last Payment', render: (r) => formatDate(r.last_payment_date) },
+    {
+      key: 'actions', header: 'Actions', render: (r) => (
+        <div className="flex items-center gap-1 no-print">
+          <button onClick={() => navigate(`${base}/students/${r.student_id}`)} className="btn-ghost !px-2" title="View Profile"><Eye className="w-4 h-4" /></button>
+          <button onClick={() => navigate(`${base}/payments/new`, { state: { studentId: r.student_id } })} className="btn-ghost !px-2 text-brand-600 hover:text-brand-700" title="Record Payment"><Wallet className="w-4 h-4" /></button>
+        </div>
+      )
+    },
   ];
 
   return (

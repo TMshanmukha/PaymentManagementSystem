@@ -28,9 +28,9 @@ export function DailyReportTab({ studentType }) {
       { key: 'receipt_number', label: 'Receipt No' },
       { key: 'student_name', label: 'Student Name' },
       { key: 'student_code', label: 'Student Code' },
-      { key: 'amount', label: 'Amount' },
+      { key: 'amount', label: 'Amount', render: (r) => formatCurrency(r.amount) },
       { key: 'payment_method', label: 'Payment Method' },
-      { key: 'payment_time', label: 'Payment Time' },
+      { key: 'payment_time', label: 'Payment Time', render: (r) => formatDateTime(r.payment_time) },
       { key: 'entered_by', label: 'Entered By' },
       { key: 'status', label: 'Status' }
     ];
