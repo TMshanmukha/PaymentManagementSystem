@@ -1,6 +1,12 @@
 import axios from 'axios';
 
-const rawUrl = import.meta.env.VITE_API_URL || 'https://paymentmangement-backend-uwhd.onrender.com/api';
+let rawUrl = import.meta.env.VITE_API_URL || 'https://paymentmangement-backend-uwhd.onrender.com/api';
+
+// Handle legacy or misconfigured URL in Vercel project environment variables
+if (rawUrl.includes('paymentmangement-backend.onrender.com') && !rawUrl.includes('paymentmangement-backend-uwhd')) {
+  rawUrl = rawUrl.replace('paymentmangement-backend.onrender.com', 'paymentmangement-backend-uwhd.onrender.com');
+}
+
 const API_URL = rawUrl.replace(/\/+$/, '').endsWith('/api')
   ? rawUrl.replace(/\/+$/, '')
   : `${rawUrl.replace(/\/+$/, '')}/api`;
