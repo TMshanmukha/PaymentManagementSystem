@@ -1,12 +1,31 @@
-import { useState } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Sidebar } from './Sidebar.jsx';
 import { Navbar } from './Navbar.jsx';
 import { useAuth } from '../hooks/useAuth.js';
+import { LoadingState } from '../components/LoadingState.jsx';
 
 export function DashboardLayout({ title }) {
   const { user } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  useEffect(() => {
+    // Preload dashboard route chunks in the background so switching menu tabs is instantaneous
+    const timer = setTimeout(() => {
+      import('../pages/dashboard/DashboardPage.jsx');
+      import('../pages/students/StudentsListPage.jsx');
+      import('../pages/payments/PaymentsListPage.jsx');
+      import('../pages/due/DuePage.jsx');
+      import('../pages/expenses/ExpensesPage.jsx');
+      import('../pages/dayclosing/DayClosingPage.jsx');
+      import('../pages/reports/ReportsPage.jsx');
+      import('../pages/users/UsersPage.jsx');
+      import('../pages/auditlogs/AuditLogsPage.jsx');
+      import('../pages/academicYears/AcademicYearsPage.jsx');
+      import('../pages/settings/SettingsPage.jsx');
+    }, 150);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <div className="h-screen flex bg-slate-50">
@@ -31,7 +50,9 @@ export function DashboardLayout({ title }) {
         </div>
         <Navbar title={title} onMenuClick={() => setMobileOpen(true)} />
         <main className="flex-1 overflow-y-auto p-4 sm:p-6">
-          <Outlet />
+          <Suspense fallback={<LoadingState label="Loading page..." />}>
+            <Outlet />
+          </Suspense>
         </main>
       </div>
     </div>

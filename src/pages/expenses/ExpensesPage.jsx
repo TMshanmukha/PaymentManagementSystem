@@ -101,13 +101,13 @@ export default function ExpensesPage() {
   }
  
   const columns = [
-    { key: 'expense_date', header: 'Date', render: (r) => formatDate(r.expense_date) },
-    { key: 'category_name', header: 'Category' },
-    { key: 'amount', header: 'Amount', render: (r) => formatCurrency(r.amount) },
-    ...(isAdmin ? [{ key: 'expense_type', header: 'Type', render: (r) => <Badge color={r.expense_type === 'SCHOOL' ? 'blue' : 'orange'}>{r.expense_type}</Badge> }] : []),
-    { key: 'payment_method', header: 'Method', render: (r) => <Badge color={r.payment_method === 'CASH' ? 'gray' : 'blue'}>{r.payment_method}</Badge> },
-    { key: 'description', header: 'Description', render: (r) => r.description || '—' },
-    { key: 'created_by_name', header: 'Created By' },
+    { key: 'expense_date', header: 'Date', render: (r) => formatDate(r.expense_date), nowrap: true },
+    { key: 'category_name', header: 'Category', wrap: true },
+    { key: 'amount', header: 'Amount', render: (r) => formatCurrency(r.amount), nowrap: true },
+    ...(isAdmin ? [{ key: 'expense_type', header: 'Type', render: (r) => <Badge color={r.expense_type === 'SCHOOL' ? 'blue' : 'orange'}>{r.expense_type}</Badge>, nowrap: true }] : []),
+    { key: 'payment_method', header: 'Method', render: (r) => <Badge color={r.payment_method === 'CASH' ? 'gray' : 'blue'}>{r.payment_method}</Badge>, nowrap: true },
+    { key: 'description', header: 'Description', render: (r) => r.description || '—', wrap: true },
+    { key: 'created_by_name', header: 'Created By', wrap: true },
   ];
  
   return (

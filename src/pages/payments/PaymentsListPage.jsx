@@ -91,21 +91,21 @@ export default function PaymentsListPage() {
   }
 
   const columns = [
-    { key: 'receipt_number', header: 'Receipt' },
-    { key: 'student_name', header: 'Student' },
-    { key: 'parent_name', header: 'Parent' },
-    ...(isAdmin ? [{ key: 'student_type', header: 'Type', render: (r) => <Badge color={r.student_type === 'SCHOOL' ? 'blue' : 'orange'}>{r.student_type}</Badge> }] : []),
-    { key: 'amount', header: 'Amount', render: (r) => formatCurrency(r.amount) },
-    { key: 'payment_method', header: 'Method', render: (r) => <Badge color={r.payment_method === 'CASH' ? 'gray' : 'blue'}>{r.payment_method}</Badge> },
-    { key: 'payment_date', header: 'Date', render: (r) => formatDate(r.payment_date) },
-    { key: 'received_by_name', header: 'Accountant' },
-    { key: 'status', header: 'Status', render: (r) => <Badge status={r.status} /> },
+    { key: 'receipt_number', header: 'Receipt', nowrap: true },
+    { key: 'student_name', header: 'Student', wrap: true },
+    { key: 'parent_name', header: 'Parent', wrap: true },
+    ...(isAdmin ? [{ key: 'student_type', header: 'Type', render: (r) => <Badge color={r.student_type === 'SCHOOL' ? 'blue' : 'orange'}>{r.student_type}</Badge>, nowrap: true }] : []),
+    { key: 'amount', header: 'Amount', render: (r) => formatCurrency(r.amount), nowrap: true },
+    { key: 'payment_method', header: 'Method', render: (r) => <Badge color={r.payment_method === 'CASH' ? 'gray' : 'blue'}>{r.payment_method}</Badge>, nowrap: true },
+    { key: 'payment_date', header: 'Date', render: (r) => formatDate(r.payment_date), nowrap: true },
+    { key: 'received_by_name', header: 'Accountant', wrap: true },
+    { key: 'status', header: 'Status', render: (r) => <Badge status={r.status} />, nowrap: true },
     {
-      key: 'actions', header: 'Actions', render: (r) => (
+      key: 'actions', header: 'Actions', nowrap: true, render: (r) => (
         <div className="flex items-center gap-1">
-          <button onClick={() => navigate(`${base}/payments/${r.id}`)} className="btn-ghost !px-2"><Eye className="w-4 h-4" /></button>
+          <button onClick={() => navigate(`${base}/payments/${r.id}`)} className="btn-ghost !px-1.5"><Eye className="w-4 h-4" /></button>
           {isAdmin && r.status === 'COMPLETED' && (
-            <button onClick={() => setCancelTarget(r)} className="btn-ghost !px-2 text-red-500"><XCircle className="w-4 h-4" /></button>
+            <button onClick={() => setCancelTarget(r)} className="btn-ghost !px-1.5 text-red-500"><XCircle className="w-4 h-4" /></button>
           )}
         </div>
       )

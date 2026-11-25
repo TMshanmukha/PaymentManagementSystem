@@ -25,6 +25,27 @@ export function getAccessToken() {
   return accessToken;
 }
 
+// Lightweight in-memory cache for GET requests
+const apiCache = new Map();
+const CACHE_TTL_MS = 60 * 1000; // 60 seconds cache TTL
+
+export function clearApiCache(filter = null) {
+  if (!filter) {
+    apiCache.clear();
+  } else if (typeof filter === 'string') {
+    for (const key of apiCache.keys()) {
+      if (key.includes(filter)) apiCache.delete(key);
+    }
+  }
+}
+
+function getCacheKey(config) {
+  const url = config.url || '';
+  const params = config.params ? JSON.stringify(config.params) : '';
+  const yearId = localStorage.getItem('selected_academic_year_id') || 'default';
+  return `${yearId}:${url}:${params}`;
+}
+
 api.interceptors.request.use((config) => {
   if (accessToken) {
     config.headers.Authorization = `Bearer ${accessToken}`;
@@ -33,6 +54,25 @@ api.interceptors.request.use((config) => {
   if (yearId) {
     config.headers['X-Academic-Year-Id'] = yearId;
   }
+
+  // Intercept GET requests with cached response if available
+  const method = config.method?.toLowerCase();
+  const isAuthRoute = config.url?.includes('/auth/');
+  if (method === 'get' && !config.skipCache && !isAuthRoute) {
+    const key = getCacheKey(config);
+    const cached = apiCache.get(key);
+    if (cached && (Date.now() - cached.timestamp < CACHE_TTL_MS)) {
+      config.adapter = () => Promise.resolve({
+        data: JSON.parse(JSON.stringify(cached.data)),
+        status: 200,
+        statusText: 'OK',
+        headers: { ...(cached.headers || {}), 'x-from-cache': 'true' },
+        config,
+        request: {},
+      });
+    }
+  }
+
   return config;
 });
 
@@ -55,7 +95,33 @@ export function registerAuthFailureHandler(fn) {
 }
 
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    const method = response.config?.method?.toLowerCase();
+    const isAuthRoute = response.config?.url?.includes('/auth/');
+
+    // Cache successful GET responses
+    if (
+      method === 'get' &&
+      !response.config?.skipCache &&
+      !isAuthRoute &&
+      !response.headers?.['x-from-cache'] &&
+      response.status === 200
+    ) {
+      const key = getCacheKey(response.config);
+      apiCache.set(key, {
+        data: response.data,
+        headers: response.headers,
+        timestamp: Date.now(),
+      });
+    }
+
+    // Invalidate cache immediately on data mutations so fresh state is pulled
+    if (['post', 'put', 'patch', 'delete'].includes(method)) {
+      clearApiCache();
+    }
+
+    return response;
+  },
   async (error) => {
     const originalRequest = error.config;
     const status = error.response?.status;

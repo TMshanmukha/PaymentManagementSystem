@@ -63,15 +63,15 @@ export function DailyReportTab({ studentType }) {
   useEffect(() => { load(); }, [date, studentType]); // eslint-disable-line
 
   const columns = [
-    { key: 'receipt_number', header: 'Receipt' },
-    { key: 'student_name', header: 'Student' },
-    { key: 'parent_name', header: 'Parent' },
-    { key: 'student_type', header: 'Type', render: (r) => <Badge color={r.student_type === 'SCHOOL' ? 'blue' : 'orange'}>{r.student_type}</Badge> },
-    { key: 'amount', header: 'Amount', render: (r) => formatCurrency(r.amount) },
-    { key: 'payment_method', header: 'Method', render: (r) => <Badge color={r.payment_method === 'CASH' ? 'gray' : 'blue'}>{r.payment_method}</Badge> },
-    { key: 'payment_time', header: 'Time', render: (r) => formatDateTime(r.payment_time) },
-    { key: 'entered_by', header: 'Entered By' },
-    { key: 'status', header: 'Status', render: (r) => <Badge status={r.status} /> },
+    { key: 'receipt_number', header: 'Receipt', nowrap: true },
+    { key: 'student_name', header: 'Student', wrap: true },
+    { key: 'parent_name', header: 'Parent', wrap: true },
+    { key: 'student_type', header: 'Type', render: (r) => <Badge color={r.student_type === 'SCHOOL' ? 'blue' : 'orange'}>{r.student_type}</Badge>, nowrap: true },
+    { key: 'amount', header: 'Amount', render: (r) => formatCurrency(r.amount), nowrap: true },
+    { key: 'payment_method', header: 'Method', render: (r) => <Badge color={r.payment_method === 'CASH' ? 'gray' : 'blue'}>{r.payment_method}</Badge>, nowrap: true },
+    { key: 'payment_time', header: 'Time', render: (r) => formatDateTime(r.payment_time), nowrap: true },
+    { key: 'entered_by', header: 'Entered By', wrap: true },
+    { key: 'status', header: 'Status', render: (r) => <Badge status={r.status} />, nowrap: true },
   ];
 
   return (

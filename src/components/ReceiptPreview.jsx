@@ -32,7 +32,7 @@ export function ReceiptPreview({ receipt, institution: propInstitution }) {
 
   const {
     receipt_number, payment_date, payment_time, created_at, student_name, student_code,
-    class: className, section, amount, payment_method, remarks,
+    class: className, section, amount, payment_method,
   } = receipt;
 
   const amountInWords = numberToWords(amount);
@@ -122,11 +122,11 @@ export function ReceiptPreview({ receipt, institution: propInstitution }) {
           </span>
         </div>
 
-        {/* Payment Method / Towards */}
+        {/* Payment Method */}
         <div className="flex items-baseline gap-2 w-full">
           <span className="shrink-0 text-slate-700 text-xs font-medium">Payment Mode / Towards :</span>
           <span className="border-b border-dotted border-slate-400 flex-1 font-bold pl-2 pb-0.5 text-slate-950 text-xs sm:text-sm uppercase">
-            {payment_method} {remarks ? `— ${remarks}` : ''}
+            {payment_method}
           </span>
         </div>
       </div>

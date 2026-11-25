@@ -42,11 +42,47 @@ export default function AuditLogsPage() {
   useEffect(() => { load(); }, [page, action, fromDate, toDate]); // eslint-disable-line
 
   const columns = [
-    { key: 'created_at', header: 'Time', render: (r) => formatDateTime(r.created_at) },
-    { key: 'user_name', header: 'User', render: (r) => r.user_name || 'System' },
-    { key: 'action', header: 'Action', render: (r) => r.action.replaceAll('_', ' ') },
-    { key: 'entity', header: 'Entity', render: (r) => `${r.entity}${r.entity_id ? ' #' + r.entity_id : ''}` },
-    { key: 'description', header: 'Description' },
+    {
+      key: 'created_at',
+      header: 'Time',
+      nowrap: true,
+      width: '180px',
+      className: 'font-mono text-xs text-slate-600',
+      render: (r) => formatDateTime(r.created_at),
+    },
+    {
+      key: 'user_name',
+      header: 'User',
+      nowrap: true,
+      width: '220px',
+      className: 'font-medium text-slate-900',
+      render: (r) => r.user_name || 'System',
+    },
+    {
+      key: 'action',
+      header: 'Action',
+      nowrap: true,
+      width: '170px',
+      render: (r) => (
+        <span className="inline-block font-semibold text-xs tracking-wider uppercase px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200/80">
+          {r.action.replaceAll('_', ' ')}
+        </span>
+      ),
+    },
+    {
+      key: 'entity',
+      header: 'Entity',
+      nowrap: true,
+      width: '130px',
+      className: 'font-mono text-xs text-slate-500',
+      render: (r) => `${r.entity}${r.entity_id ? ' #' + r.entity_id : ''}`,
+    },
+    {
+      key: 'description',
+      header: 'Description',
+      wrap: true,
+      className: 'text-slate-700',
+    },
   ];
 
   return (

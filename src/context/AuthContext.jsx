@@ -1,6 +1,6 @@
 import { createContext, useCallback, useEffect, useState } from 'react';
 import { authApi } from '../services/auth.service.js';
-import { api, setAccessToken, registerAuthFailureHandler } from '../config/api.js';
+import { api, setAccessToken, registerAuthFailureHandler, clearApiCache } from '../config/api.js';
 
 export const AuthContext = createContext(null);
 
@@ -11,6 +11,7 @@ export function AuthProvider({ children }) {
   const clearSession = useCallback(() => {
     setAccessToken(null);
     setUser(null);
+    clearApiCache();
   }, []);
 
   useEffect(() => {
@@ -38,6 +39,7 @@ export function AuthProvider({ children }) {
 
   const login = useCallback(async (credentials) => {
     const { data } = await authApi.login(credentials);
+    clearApiCache();
     setAccessToken(data.data.accessToken);
     setUser(data.data.user);
     return data.data.user;

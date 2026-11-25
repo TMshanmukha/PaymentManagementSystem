@@ -25,16 +25,26 @@ export default function SettingsPage() {
   const [saving, setSaving] = useState('');
 
   async function load() {
-    const [s, ay] = await Promise.all([settingsApi.getAll(), academicYearApi.list()]);
+    const [s, ay] = await Promise.all([
+      settingsApi.getAll({ skipCache: true }),
+      academicYearApi.list(),
+    ]);
     setSettings(s.data.data);
     setAcademicYears(ay.data.data);
   }
   useEffect(() => { load(); }, []);
 
   async function saveField(key) {
+    if (key === 'admin_reset_email') {
+      const emailVal = (settings[key] || '').trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
+        toast.error('Please enter a valid email address.');
+        return;
+      }
+    }
     setSaving(key);
     try {
-      await settingsApi.update(key, settings[key]);
+      await settingsApi.update(key, (settings[key] || '').trim());
       await refreshSettings();
       toast.success('Settings updated.');
     } catch (err) {
@@ -82,24 +92,49 @@ export default function SettingsPage() {
         </Card>
 
         <Card>
-          <p className="font-semibold text-navy-900 mb-4">Payment Rules</p>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-slate-800">Allow Overpayment</p>
-              <p className="text-xs text-slate-400">If enabled, accountants can record payments exceeding the current due.</p>
-            </div>
-            <button
-              onClick={toggleOverpayment}
-              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 ${
-                settings.allow_overpayment === 'true' ? 'bg-brand-600' : 'bg-slate-200'
-              }`}
-            >
-              <span
-                className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out ${
-                  settings.allow_overpayment === 'true' ? 'translate-x-5' : 'translate-x-0'
+          <p className="font-semibold text-navy-900 mb-4">Payment Rules & Security</p>
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-slate-800">Allow Overpayment</p>
+                <p className="text-xs text-slate-400">If enabled, accountants can record payments exceeding the current due.</p>
+              </div>
+              <button
+                onClick={toggleOverpayment}
+                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 ${
+                  settings.allow_overpayment === 'true' ? 'bg-brand-600' : 'bg-slate-200'
                 }`}
-              />
-            </button>
+              >
+                <span
+                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out ${
+                    settings.allow_overpayment === 'true' ? 'translate-x-5' : 'translate-x-0'
+                  }`}
+                />
+              </button>
+            </div>
+
+            <div className="pt-4 border-t border-slate-100">
+              <div className="flex items-end gap-2">
+                <Input
+                  label="Admin Password Reset Email"
+                  type="email"
+                  placeholder="e.g. admin@school.com"
+                  className="flex-1"
+                  value={settings.admin_reset_email || ''}
+                  onChange={(e) => setSettings((s) => ({ ...s, admin_reset_email: e.target.value }))}
+                />
+                <Button
+                  variant="secondary"
+                  loading={saving === 'admin_reset_email'}
+                  onClick={() => saveField('admin_reset_email')}
+                >
+                  Save
+                </Button>
+              </div>
+              <p className="text-xs text-slate-400 mt-1.5">
+                Password reset links requested from the login page will be sent to this email address.
+              </p>
+            </div>
           </div>
         </Card>
 

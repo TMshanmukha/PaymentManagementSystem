@@ -11,6 +11,7 @@ import { LoadingState } from './components/LoadingState.jsx';
 import { ROLES } from './config/constants.js';
 
 import LoginPage from './pages/auth/LoginPage.jsx';
+const ResetPasswordPage = lazy(() => import('./pages/auth/ResetPasswordPage.jsx'));
 
 const DashboardPage = lazy(() => import('./pages/dashboard/DashboardPage.jsx'));
 const StudentsListPage = lazy(() => import('./pages/students/StudentsListPage.jsx'));
@@ -57,39 +58,45 @@ export default function App() {
         <AuthProvider>
           <AcademicYearProvider>
             <ToastProvider>
-              <Suspense fallback={<LoadingState fullScreen />}>
-                <Routes>
-                  <Route path="/login" element={<LoginPage />} />
+              <Routes>
+                <Route path="/login" element={<LoginPage />} />
+                <Route
+                  path="/reset-password"
+                  element={
+                    <Suspense fallback={<LoadingState fullScreen />}>
+                      <ResetPasswordPage />
+                    </Suspense>
+                  }
+                />
 
-                  <Route element={<ProtectedRoute />}>
-                    {/* Admin-only subtree */}
-                    <Route path="/admin" element={<RoleRoute allow={[ROLES.ADMIN]} />}>
-                      {roleSection('', 'Admin', (
-                        <>
-                          <Route path="reports" element={<ReportsPage />} />
-                          <Route path="users" element={<UsersPage />} />
-                          <Route path="audit-logs" element={<AuditLogsPage />} />
-                          <Route path="settings" element={<SettingsPage />} />
-                          <Route path="academic-years" element={<AcademicYearsPage />} />
-                        </>
-                      ))}
-                    </Route>
-
-                    {/* School accountant subtree */}
-                    <Route path="/school" element={<RoleRoute allow={[ROLES.SCHOOL_ACCOUNTANT]} />}>
-                      {roleSection('', 'School Accountant')}
-                    </Route>
-
-                    {/* Tuition accountant subtree */}
-                    <Route path="/tuition" element={<RoleRoute allow={[ROLES.TUITION_ACCOUNTANT]} />}>
-                      {roleSection('', 'Tuition Accountant')}
-                    </Route>
+                <Route element={<ProtectedRoute />}>
+                  {/* Admin-only subtree */}
+                  <Route path="/admin" element={<RoleRoute allow={[ROLES.ADMIN]} />}>
+                    {roleSection('', 'Admin', (
+                      <>
+                        <Route path="reports" element={<ReportsPage />} />
+                        <Route path="users" element={<UsersPage />} />
+                        <Route path="audit-logs" element={<AuditLogsPage />} />
+                        <Route path="settings" element={<SettingsPage />} />
+                        <Route path="academic-years" element={<AcademicYearsPage />} />
+                      </>
+                    ))}
                   </Route>
 
-                  <Route path="/" element={<Navigate to="/login" replace />} />
-                  <Route path="*" element={<Navigate to="/login" replace />} />
-                </Routes>
-              </Suspense>
+                  {/* School accountant subtree */}
+                  <Route path="/school" element={<RoleRoute allow={[ROLES.SCHOOL_ACCOUNTANT]} />}>
+                    {roleSection('', 'School Accountant')}
+                  </Route>
+
+                  {/* Tuition accountant subtree */}
+                  <Route path="/tuition" element={<RoleRoute allow={[ROLES.TUITION_ACCOUNTANT]} />}>
+                    {roleSection('', 'Tuition Accountant')}
+                  </Route>
+                </Route>
+
+                <Route path="/" element={<Navigate to="/login" replace />} />
+                <Route path="*" element={<Navigate to="/login" replace />} />
+              </Routes>
             </ToastProvider>
           </AcademicYearProvider>
         </AuthProvider>

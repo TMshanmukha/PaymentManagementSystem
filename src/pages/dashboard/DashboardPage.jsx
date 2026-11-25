@@ -62,27 +62,79 @@ export default function DashboardPage() {
         }
       />
 
-      {/* Row 1 (Accountants Only) */}
+      {/* Row 1 & Row 2 (Accountants Only - Strictly Today's Collections with outer boundary card) */}
       {!isAdmin && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mb-4">
-          <StatCard label="Today's Collection" value={formatCurrency(data.todayCollection)} icon={IndianRupee} tone="success"
-            sub={`${data.todayTransactionCount} transactions`} />
-          <StatCard label="Total Outstanding Due" value={formatCurrency(data.totalOutstandingDue)} icon={AlertCircle} tone="danger" />
-        </div>
-      )}
+        <Card className={`border-t-4 ${user.role === ROLES.SCHOOL_ACCOUNTANT ? 'border-indigo-600' : 'border-amber-500'} bg-gradient-to-br from-indigo-50/10 via-white to-white shadow-md p-6 mb-6`}>
+          <div className="flex items-center justify-between mb-4 border-b border-indigo-50 pb-3">
+            <div className="flex items-center gap-2">
+              {user.role === ROLES.SCHOOL_ACCOUNTANT ? (
+                <School className="w-5.5 h-5.5 text-indigo-600" />
+              ) : (
+                <BookOpen className="w-5.5 h-5.5 text-amber-500" />
+              )}
+              <h3 className="font-bold text-slate-800 text-lg">
+                {user.role === ROLES.SCHOOL_ACCOUNTANT ? "School Today's Collection Overview" : "Tuition Today's Collection Overview"}
+              </h3>
+            </div>
+            <Badge color={user.role === ROLES.SCHOOL_ACCOUNTANT ? "blue" : "orange"}>
+              {user.role === ROLES.SCHOOL_ACCOUNTANT ? "School" : "Tuition"}
+            </Badge>
+          </div>
 
-      {/* Row 2 (Accountants Only) */}
-      {!isAdmin && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-          {user.role === ROLES.SCHOOL_ACCOUNTANT && (
-            <StatCard label="School Collection" value={formatCurrency(data.schoolCollection)} icon={School} />
-          )}
-          {user.role === ROLES.TUITION_ACCOUNTANT && (
-            <StatCard label="Tuition Collection" value={formatCurrency(data.tuitionCollection)} icon={BookOpen} />
-          )}
-          <StatCard label="Cash Collection" value={formatCurrency(data.cashCollection)} icon={Banknote} />
-          <StatCard label="UPI Collection" value={formatCurrency(data.upiCollection)} icon={Smartphone} />
-        </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="bg-indigo-50/30 p-4 rounded-xl border border-indigo-100/60 flex flex-col justify-between">
+              <div>
+                <p className="text-xs text-slate-500 font-medium">Today's Collection</p>
+                <p className="text-2xl font-bold text-indigo-700 mt-1">{formatCurrency(data.todayCollection)}</p>
+              </div>
+              <p className="text-xs text-slate-400 mt-2">{data.todayTransactionCount} transactions today</p>
+            </div>
+
+            {user.role === ROLES.SCHOOL_ACCOUNTANT && (
+              <div className="bg-slate-50 p-4 rounded-xl border border-slate-200/60 flex flex-col justify-between">
+                <div>
+                  <p className="text-xs text-slate-500 font-medium">Today's School Collection</p>
+                  <p className="text-2xl font-bold text-slate-800 mt-1">{formatCurrency(data.schoolCollection)}</p>
+                </div>
+                <div className="flex items-center gap-1.5 text-xs text-slate-400 mt-2">
+                  <School className="w-3.5 h-3.5 text-indigo-500" /> School Segment
+                </div>
+              </div>
+            )}
+
+            {user.role === ROLES.TUITION_ACCOUNTANT && (
+              <div className="bg-slate-50 p-4 rounded-xl border border-slate-200/60 flex flex-col justify-between">
+                <div>
+                  <p className="text-xs text-slate-500 font-medium">Today's Tuition Collection</p>
+                  <p className="text-2xl font-bold text-slate-800 mt-1">{formatCurrency(data.tuitionCollection)}</p>
+                </div>
+                <div className="flex items-center gap-1.5 text-xs text-slate-400 mt-2">
+                  <BookOpen className="w-3.5 h-3.5 text-amber-500" /> Tuition Segment
+                </div>
+              </div>
+            )}
+
+            <div className="bg-slate-50 p-4 rounded-xl border border-slate-200/60 flex flex-col justify-between">
+              <div>
+                <p className="text-xs text-slate-500 font-medium">Today's Cash Collection</p>
+                <p className="text-2xl font-bold text-slate-700 mt-1">{formatCurrency(data.cashCollection)}</p>
+              </div>
+              <div className="flex items-center gap-1.5 text-xs text-slate-400 mt-2">
+                <Banknote className="w-3.5 h-3.5 text-emerald-500" /> Cash Payments
+              </div>
+            </div>
+
+            <div className="bg-slate-50 p-4 rounded-xl border border-slate-200/60 flex flex-col justify-between">
+              <div>
+                <p className="text-xs text-slate-500 font-medium">Today's UPI Collection</p>
+                <p className="text-2xl font-bold text-slate-700 mt-1">{formatCurrency(data.upiCollection)}</p>
+              </div>
+              <div className="flex items-center gap-1.5 text-xs text-slate-400 mt-2">
+                <Smartphone className="w-3.5 h-3.5 text-blue-500" /> Online UPI
+              </div>
+            </div>
+          </div>
+        </Card>
       )}
 
       {/* Segment Breakdown for Admin */}
@@ -206,43 +258,46 @@ export default function DashboardPage() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Chart */}
-        <Card className="lg:col-span-2">
-          <p className="font-semibold text-navy-900 mb-4">Monthly Collection Trend</p>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={data.monthlyChart}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-                <XAxis dataKey="month" tick={{ fontSize: 12 }} stroke="#94a3b8" />
-                <YAxis tick={{ fontSize: 12 }} stroke="#94a3b8" />
-                <Tooltip formatter={(v) => formatCurrency(v)} />
-                <Legend />
-                {isAdmin && <Line type="monotone" dataKey="school" stroke="#6366f1" strokeWidth={2} dot={false} />}
-                {isAdmin && <Line type="monotone" dataKey="tuition" stroke="#f59e0b" strokeWidth={2} dot={false} />}
-                <Line type="monotone" dataKey="total" stroke="#10b981" strokeWidth={2} dot={false} />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </Card>
-
-        {/* Student summary */}
-        <Card className="flex flex-col justify-between">
-          <div>
-            <p className="font-semibold text-navy-900 mb-4">Combined Due Summary</p>
-            <div className="space-y-3">
-              <SummaryRow label="Total Students" value={data.studentSummary.totalStudents} />
-              <SummaryRow label="Students with Due" value={data.studentSummary.studentsWithDue} tone="warning" />
-              <SummaryRow label="Fully Paid Students" value={data.studentSummary.studentsFullyPaid} tone="success" />
+      {/* Monthly Chart and Summary - Visible only to Admin */}
+      {isAdmin && (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Chart */}
+          <Card className="lg:col-span-2">
+            <p className="font-semibold text-navy-900 mb-4">Monthly Collection Trend</p>
+            <div className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={data.monthlyChart}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                  <XAxis dataKey="month" tick={{ fontSize: 12 }} stroke="#94a3b8" />
+                  <YAxis tick={{ fontSize: 12 }} stroke="#94a3b8" />
+                  <Tooltip formatter={(v) => formatCurrency(v)} />
+                  <Legend />
+                  <Line type="monotone" dataKey="school" stroke="#6366f1" strokeWidth={2} dot={false} />
+                  <Line type="monotone" dataKey="tuition" stroke="#f59e0b" strokeWidth={2} dot={false} />
+                  <Line type="monotone" dataKey="total" stroke="#10b981" strokeWidth={2} dot={false} />
+                </LineChart>
+              </ResponsiveContainer>
             </div>
-          </div>
-          <Button variant="secondary" className="w-full mt-6" onClick={() => navigate(`${base}/due`)}>
-            View Due Students
-          </Button>
-        </Card>
-      </div>
+          </Card>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+          {/* Student summary */}
+          <Card className="flex flex-col justify-between">
+            <div>
+              <p className="font-semibold text-navy-900 mb-4">Combined Due Summary</p>
+              <div className="space-y-3">
+                <SummaryRow label="Total Students" value={data.studentSummary?.totalStudents || 0} />
+                <SummaryRow label="Students with Due" value={data.studentSummary?.studentsWithDue || 0} tone="warning" />
+                <SummaryRow label="Fully Paid Students" value={data.studentSummary?.studentsFullyPaid || 0} tone="success" />
+              </div>
+            </div>
+            <Button variant="secondary" className="w-full mt-6" onClick={() => navigate(`${base}/due`)}>
+              View Due Students
+            </Button>
+          </Card>
+        </div>
+      )}
+
+      <div className={`grid grid-cols-1 ${isAdmin ? 'lg:grid-cols-2' : ''} gap-6 mt-6`}>
         {/* Recent payments */}
         <Card>
           <div className="flex items-center justify-between mb-4">

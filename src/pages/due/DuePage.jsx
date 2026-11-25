@@ -54,19 +54,19 @@ export default function DuePage() {
   }, [search]); // eslint-disable-line
 
   const columns = [
-    { key: 'student_code', header: 'ID' },
-    { key: 'student_name', header: 'Student' },
-    { key: 'parent_name', header: 'Parent' },
-    ...(isAdmin ? [{ key: 'student_type', header: 'Type', render: (r) => <Badge color={r.student_type === 'SCHOOL' ? 'blue' : 'orange'}>{r.student_type}</Badge> }] : []),
-    { key: 'total_fee', header: 'Total Fee', render: (r) => formatCurrency(r.total_fee) },
-    { key: 'paid_amount', header: 'Paid', render: (r) => formatCurrency(r.paid_amount) },
-    { key: 'due_amount', header: 'Due', render: (r) => <span className={`font-semibold ${r.due_amount > 0 ? 'text-orange-600' : 'text-emerald-600'}`}>{formatCurrency(r.due_amount)}</span> },
-    { key: 'last_payment_date', header: 'Last Payment', render: (r) => formatDate(r.last_payment_date) },
+    { key: 'student_code', header: 'ID', nowrap: true },
+    { key: 'student_name', header: 'Student', wrap: true },
+    { key: 'parent_name', header: 'Parent', wrap: true },
+    ...(isAdmin ? [{ key: 'student_type', header: 'Type', render: (r) => <Badge color={r.student_type === 'SCHOOL' ? 'blue' : 'orange'}>{r.student_type}</Badge>, nowrap: true }] : []),
+    { key: 'total_fee', header: 'Total Fee', render: (r) => formatCurrency(r.total_fee), nowrap: true },
+    { key: 'paid_amount', header: 'Paid', render: (r) => formatCurrency(r.paid_amount), nowrap: true },
+    { key: 'due_amount', header: 'Due', render: (r) => <span className={`font-semibold ${r.due_amount > 0 ? 'text-orange-600' : 'text-emerald-600'}`}>{formatCurrency(r.due_amount)}</span>, nowrap: true },
+    { key: 'last_payment_date', header: 'Last Paid', render: (r) => formatDate(r.last_payment_date), nowrap: true },
     {
-      key: 'actions', header: 'Actions', render: (r) => (
+      key: 'actions', header: 'Actions', nowrap: true, render: (r) => (
         <div className="flex items-center gap-1 no-print">
-          <button onClick={() => navigate(`${base}/students/${r.student_id}`)} className="btn-ghost !px-2" title="View Profile"><Eye className="w-4 h-4" /></button>
-          <button onClick={() => navigate(`${base}/payments/new`, { state: { studentId: r.student_id } })} className="btn-ghost !px-2 text-brand-600 hover:text-brand-700" title="Record Payment"><Wallet className="w-4 h-4" /></button>
+          <button onClick={() => navigate(`${base}/students/${r.student_id}`)} className="btn-ghost !px-1.5" title="View Profile"><Eye className="w-4 h-4" /></button>
+          <button onClick={() => navigate(`${base}/payments/new`, { state: { studentId: r.student_id } })} className="btn-ghost !px-1.5 text-brand-600 hover:text-brand-700" title="Record Payment"><Wallet className="w-4 h-4" /></button>
         </div>
       )
     },

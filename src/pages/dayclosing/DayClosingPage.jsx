@@ -89,15 +89,15 @@ export default function DayClosingPage() {
   }
 
   const columns = [
-    { key: 'closing_date', header: 'Date', render: (r) => formatDate(r.closing_date) },
-    ...(isAdmin ? [{ key: 'accountant_name', header: 'Accountant' }] : []),
-    { key: 'transaction_count', header: 'Txns' },
-    { key: 'cash_total', header: 'Cash', render: (r) => formatCurrency(r.cash_total) },
-    { key: 'upi_total', header: 'UPI', render: (r) => formatCurrency(r.upi_total) },
-    { key: 'overall_total', header: 'Total', render: (r) => formatCurrency(r.overall_total) },
-    { key: 'status', header: 'Status', render: (r) => <Badge status={r.status} /> },
+    { key: 'closing_date', header: 'Date', render: (r) => formatDate(r.closing_date), nowrap: true },
+    ...(isAdmin ? [{ key: 'accountant_name', header: 'Accountant', wrap: true }] : []),
+    { key: 'transaction_count', header: 'Txns', nowrap: true },
+    { key: 'cash_total', header: 'Cash', render: (r) => formatCurrency(r.cash_total), nowrap: true },
+    { key: 'upi_total', header: 'UPI', render: (r) => formatCurrency(r.upi_total), nowrap: true },
+    { key: 'overall_total', header: 'Total', render: (r) => formatCurrency(r.overall_total), nowrap: true },
+    { key: 'status', header: 'Status', render: (r) => <Badge status={r.status} />, nowrap: true },
     ...(isAdmin ? [{
-      key: 'actions', header: 'Actions', render: (r) => (
+      key: 'actions', header: 'Actions', nowrap: true, render: (r) => (
         <div className="flex gap-1">
           {r.status === 'SUBMITTED' && (
             <button onClick={() => setApproveTarget(r)} className="btn-ghost !px-2 text-emerald-600"><CheckCircle2 className="w-4 h-4" /></button>

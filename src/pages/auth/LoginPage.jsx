@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate, useLocation, Navigate } from 'react-router-dom';
-import { Eye, EyeOff, GraduationCap } from 'lucide-react';
+import { Eye, EyeOff, GraduationCap, CheckCircle2 } from 'lucide-react';
 import { loginSchema } from '../../schemas/auth.schema.js';
 import { useAuth } from '../../hooks/useAuth.js';
 import { useSettings } from '../../context/SettingsContext.jsx';
@@ -10,18 +10,31 @@ import { Button } from '../../components/Button.jsx';
 import { Input } from '../../components/Input.jsx';
 import { getErrorMessage } from '../../config/api.js';
 import { ROLE_HOME } from '../../config/constants.js';
+import { authApi } from '../../services/auth.service.js';
 
 export default function LoginPage() {
   const { user, login } = useAuth();
-  const { institutionName, appName, appSubtitle } = useSettings();
+  const { institutionName, appSubtitle } = useSettings();
   const navigate = useNavigate();
   const location = useLocation();
   const [showPassword, setShowPassword] = useState(false);
   const [serverError, setServerError] = useState('');
   const [accountInactive, setAccountInactive] = useState(false);
 
+  // Forgot password notification state
+  const [isSendingLink, setIsSendingLink] = useState(false);
+  const [greenMessage, setGreenMessage] = useState('');
+  const [resetError, setResetError] = useState('');
+  const greenTimerRef = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      if (greenTimerRef.current) clearTimeout(greenTimerRef.current);
+    };
+  }, []);
+
   const {
-    register, handleSubmit, formState: { errors, isSubmitting },
+    register, handleSubmit, getValues, formState: { errors, isSubmitting },
   } = useForm({ resolver: zodResolver(loginSchema) });
 
   if (user) {
@@ -37,24 +50,46 @@ export default function LoginPage() {
       navigate(ROLE_HOME[loggedInUser.role], { replace: true });
     } catch (err) {
       const code = err?.response?.data?.errorCode;
-      if (code === 'ACCOUNT_INACTIVE') setAccountInactive(true);
-      else setServerError(getErrorMessage(err, 'Invalid username or password'));
+      if (code === 'ACCOUNT_INACTIVE') {
+        setAccountInactive(true);
+      } else {
+        setServerError(getErrorMessage(err, 'Invalid username or password.'));
+      }
+    }
+  }
+
+  async function handleInitiateReset() {
+    setResetError('');
+    setIsSendingLink(true);
+    const enteredUsername = getValues('username') || 'VEDAVYAS';
+    try {
+      await authApi.forgotPassword({ username: enteredUsername });
+      setGreenMessage('Password reset link has been sent to your registered email');
+      if (greenTimerRef.current) clearTimeout(greenTimerRef.current);
+      greenTimerRef.current = setTimeout(() => {
+        setGreenMessage('');
+      }, 6000);
+    } catch (err) {
+      setResetError(getErrorMessage(err, 'Could not send reset link. Check admin username.'));
+    } finally {
+      setIsSendingLink(false);
     }
   }
 
   return (
-    <main className="min-h-screen flex bg-navy-950">
-      {/* Left brand panel */}
-      <div className="hidden lg:flex lg:w-1/2 flex-col justify-between p-12 bg-gradient-to-br from-navy-900 to-navy-950 text-white relative overflow-hidden">
-        <div className="absolute -top-24 -right-24 w-96 h-96 bg-brand-600/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-72 h-72 bg-brand-500/10 rounded-full blur-3xl" />
-        <div className="relative flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-brand-600 flex items-center justify-center shrink-0">
-            <GraduationCap className="w-6 h-6" />
-          </div>
-          <div>
-            <p className="font-bold text-lg leading-tight">{institutionName}</p>
-            <p className="text-xs text-slate-400 leading-tight">{appSubtitle}</p>
+    <div className="min-h-screen flex flex-col lg:flex-row">
+      {/* Left branding panel */}
+      <div className="hidden lg:flex lg:w-1/2 bg-navy-900 text-white p-12 flex-col justify-between relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-brand-600/20 via-transparent to-transparent pointer-events-none" />
+        <div className="relative">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-brand-600 flex items-center justify-center font-bold text-white shadow-lg">
+              <GraduationCap className="w-6 h-6" />
+            </div>
+            <div>
+              <p className="font-bold text-lg leading-tight">{institutionName}</p>
+              <p className="text-xs text-slate-400">{appSubtitle}</p>
+            </div>
           </div>
         </div>
         <div className="relative max-w-md">
@@ -81,7 +116,7 @@ export default function LoginPage() {
 
           <div className="card p-7">
             <h1 className="text-xl font-bold text-navy-900 mb-1">Welcome back</h1>
-            <p className="text-sm text-slate-500 mb-6">Sign in to manage fee collections</p>
+            <p className="text-sm text-slate-500 mb-5">Sign in to manage fee collections</p>
 
             {accountInactive && (
               <div className="mb-4 rounded-lg bg-orange-50 border border-orange-100 px-3 py-2.5 text-sm text-orange-700">
@@ -94,10 +129,25 @@ export default function LoginPage() {
               </div>
             )}
 
+            {/* Small green text notification when reset link is sent */}
+            {greenMessage && (
+              <div className="mb-4 rounded-lg bg-emerald-50 border border-emerald-200 px-3 py-2.5 text-xs font-medium text-emerald-800 flex items-start gap-2 shadow-sm">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                <span>{greenMessage}</span>
+              </div>
+            )}
+
+            {resetError && (
+              <div className="mb-4 rounded-lg bg-red-50 border border-red-100 px-3 py-2 text-xs text-red-700">
+                {resetError}
+              </div>
+            )}
+
+            {/* Normal Clean Login Form */}
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
               <Input
                 label="Username or Email"
-                placeholder="e.g. admin"
+                placeholder="e.g. VEDAVYAS"
                 autoComplete="username"
                 error={errors.username?.message}
                 {...register('username')}
@@ -125,18 +175,28 @@ export default function LoginPage() {
                 {errors.password && <p className="text-xs text-red-600 mt-1">{errors.password.message}</p>}
               </div>
 
-              <label className="flex items-center gap-2 text-sm text-slate-600">
-                <input type="checkbox" className="rounded border-slate-300" {...register('rememberMe')} />
-                Remember me
-              </label>
+              <div className="flex items-center justify-between text-sm pt-0.5">
+                <label className="flex items-center gap-2 text-slate-600 cursor-pointer">
+                  <input type="checkbox" className="rounded border-slate-300" {...register('rememberMe')} />
+                  Remember me
+                </label>
+                <button
+                  type="button"
+                  onClick={handleInitiateReset}
+                  disabled={isSendingLink}
+                  className="text-xs font-semibold text-brand-600 hover:text-brand-700 hover:underline transition-colors"
+                >
+                  {isSendingLink ? 'Sending link...' : 'Reset Password?'}
+                </button>
+              </div>
 
-              <Button type="submit" className="w-full" loading={isSubmitting}>
+              <Button type="submit" className="w-full mt-2" loading={isSubmitting}>
                 {isSubmitting ? 'Signing in...' : 'Login'}
               </Button>
             </form>
           </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

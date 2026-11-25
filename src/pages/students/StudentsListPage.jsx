@@ -186,22 +186,22 @@ export default function StudentsListPage() {
   }, [search]); // eslint-disable-line
 
   const columns = [
-    { key: 'student_code', header: 'ID' },
-    { key: 'student_name', header: 'Student' },
-    { key: 'parent_name', header: 'Parent' },
-    { key: 'parent_phone', header: 'Phone' },
-    { key: 'class', header: 'Class', render: (r) => r.class || '—' },
-    ...(isAdmin ? [{ key: 'student_type', header: 'Type', render: (r) => <Badge color={r.student_type === 'SCHOOL' ? 'blue' : 'orange'}>{r.student_type}</Badge> }] : []),
-    { key: 'admission_type', header: 'Admission Category', render: (r) => <Badge color={r.admission_type === 'REGULAR' ? 'emerald' : 'purple'}>{r.admission_type === 'REGULAR' ? 'Regular' : 'Scholarship'}</Badge> },
-    { key: 'total_fee', header: 'Total Fee', render: (r) => formatCurrency(r.total_fee) },
-    { key: 'paid_amount', header: 'Paid', render: (r) => formatCurrency(r.paid_amount) },
-    { key: 'due_amount', header: 'Due', render: (r) => <span className={r.due_amount > 0 ? 'text-orange-600 font-medium' : 'text-emerald-600'}>{formatCurrency(r.due_amount)}</span> },
-    { key: 'status', header: 'Status', render: (r) => <Badge status={r.status} /> },
+    { key: 'student_code', header: 'ID', nowrap: true, className: 'text-[11px] font-mono' },
+    { key: 'student_name', header: 'Student', wrap: true },
+    { key: 'parent_name', header: 'Parent', wrap: true },
+    { key: 'parent_phone', header: 'Phone', nowrap: true, className: 'text-[11px] font-mono' },
+    { key: 'class', header: 'Class', render: (r) => r.class || '—', nowrap: true },
+    ...(isAdmin ? [{ key: 'student_type', header: 'Type', render: (r) => <Badge color={r.student_type === 'SCHOOL' ? 'blue' : 'orange'}>{r.student_type}</Badge>, nowrap: true }] : []),
+    { key: 'admission_type', header: 'Category', render: (r) => <Badge color={r.admission_type === 'REGULAR' ? 'emerald' : 'purple'}>{r.admission_type === 'REGULAR' ? 'Regular' : 'Scholarship'}</Badge>, nowrap: true },
+    { key: 'total_fee', header: 'Total', render: (r) => formatCurrency(r.total_fee), nowrap: true },
+    { key: 'paid_amount', header: 'Paid', render: (r) => formatCurrency(r.paid_amount), nowrap: true },
+    { key: 'due_amount', header: 'Due', render: (r) => <span className={r.due_amount > 0 ? 'text-orange-600 font-medium' : 'text-emerald-600'}>{formatCurrency(r.due_amount)}</span>, nowrap: true },
+    { key: 'status', header: 'Status', render: (r) => <Badge status={r.status} />, nowrap: true },
     {
-      key: 'actions', header: 'Actions', render: (r) => (
-        <div className="flex items-center gap-1">
-          <button onClick={() => navigate(`${base}/students/${r.student_id}`)} className="btn-ghost !px-2" title="View Profile"><Eye className="w-4 h-4" /></button>
-          <button onClick={() => navigate(`${base}/payments/new`, { state: { studentId: r.student_id } })} className="btn-ghost !px-2 text-brand-600 hover:text-brand-700" title="Record Payment"><Wallet className="w-4 h-4" /></button>
+      key: 'actions', header: 'Actions', nowrap: true, render: (r) => (
+        <div className="flex items-center gap-0.5">
+          <button onClick={() => navigate(`${base}/students/${r.student_id}`)} className="p-1 hover:bg-slate-100 rounded text-slate-500 hover:text-slate-700 transition-colors" title="View Profile"><Eye className="w-3.5 h-3.5" /></button>
+          <button onClick={() => navigate(`${base}/payments/new`, { state: { studentId: r.student_id } })} className="p-1 hover:bg-brand-50 rounded text-brand-600 hover:text-brand-700 transition-colors" title="Record Payment"><Wallet className="w-3.5 h-3.5" /></button>
         </div>
       )
     },
@@ -363,18 +363,22 @@ export default function StudentsListPage() {
                   <span className="text-slate-500 font-medium">Total Students</span>
                   <span className="font-semibold text-slate-800">{totalStudentCount}</span>
                 </div>
-                <div className="flex justify-between text-xs mb-1">
-                  <span className="text-slate-500 font-medium">Total Fees</span>
-                  <span className="font-semibold text-slate-800">{formatCurrency(totalFees)}</span>
-                </div>
-                <div className="flex justify-between text-xs mb-1">
-                  <span className="text-slate-500 font-medium">Total Paid</span>
-                  <span className="font-semibold text-emerald-600">{formatCurrency(totalPaid)}</span>
-                </div>
-                <div className="flex justify-between text-xs">
-                  <span className="text-slate-500 font-medium">Remaining Due</span>
-                  <span className="font-semibold text-orange-600">{formatCurrency(totalDue)}</span>
-                </div>
+                {isAdmin && (
+                  <>
+                    <div className="flex justify-between text-xs mb-1">
+                      <span className="text-slate-500 font-medium">Total Fees</span>
+                      <span className="font-semibold text-slate-800">{formatCurrency(totalFees)}</span>
+                    </div>
+                    <div className="flex justify-between text-xs mb-1">
+                      <span className="text-slate-500 font-medium">Total Paid</span>
+                      <span className="font-semibold text-emerald-600">{formatCurrency(totalPaid)}</span>
+                    </div>
+                    <div className="flex justify-between text-xs">
+                      <span className="text-slate-500 font-medium">Remaining Due</span>
+                      <span className="font-semibold text-orange-600">{formatCurrency(totalDue)}</span>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
 
@@ -400,18 +404,24 @@ export default function StudentsListPage() {
                   </div>
                   
                   <div className="border-t border-slate-100 pt-3 mt-3">
-                    <div className="flex justify-between text-xs mb-1">
-                      <span className="text-slate-500 font-medium">Total Fees</span>
-                      <span className="font-semibold text-slate-800">{formatCurrency(c.total_fee)}</span>
-                    </div>
-                    <div className="flex justify-between text-xs mb-1">
-                      <span className="text-slate-500 font-medium">Paid</span>
-                      <span className="font-semibold text-emerald-600">{formatCurrency(c.paid_amount)}</span>
-                    </div>
-                    <div className="flex justify-between text-xs">
-                      <span className="text-slate-500 font-medium">Due</span>
-                      <span className="font-semibold text-orange-600">{formatCurrency(c.due_amount)}</span>
-                    </div>
+                    {isAdmin ? (
+                      <>
+                        <div className="flex justify-between text-xs mb-1">
+                          <span className="text-slate-500 font-medium">Total Fees</span>
+                          <span className="font-semibold text-slate-800">{formatCurrency(c.total_fee)}</span>
+                        </div>
+                        <div className="flex justify-between text-xs mb-1">
+                          <span className="text-slate-500 font-medium">Paid</span>
+                          <span className="font-semibold text-emerald-600">{formatCurrency(c.paid_amount)}</span>
+                        </div>
+                        <div className="flex justify-between text-xs">
+                          <span className="text-slate-500 font-medium">Due</span>
+                          <span className="font-semibold text-orange-600">{formatCurrency(c.due_amount)}</span>
+                        </div>
+                      </>
+                    ) : (
+                      <p className="text-xs text-slate-400 font-medium py-1">Click to view students</p>
+                    )}
                   </div>
                 </div>
               );
@@ -462,7 +472,7 @@ export default function StudentsListPage() {
             </div>
           </div>
 
-          <DataTable columns={columns} rows={rows} loading={loading} error={error} onRetry={load} rowKey="student_id" emptyMessage="No students found." />
+          <DataTable columns={columns} rows={rows} loading={loading} error={error} onRetry={load} rowKey="student_id" emptyMessage="No students found." dense={true} />
           <Pagination page={page} pageSize={pageSize} total={total} onPageChange={setPage} />
         </Card>
       )}
