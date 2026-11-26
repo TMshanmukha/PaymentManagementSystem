@@ -2,7 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate, useLocation, Navigate } from 'react-router-dom';
-import { Eye, EyeOff, GraduationCap, CheckCircle2 } from 'lucide-react';
+import { Eye, EyeOff, CheckCircle2 } from 'lucide-react';
+import { VedavyasLogo } from '../../components/VedavyasLogo.jsx';
 import { loginSchema } from '../../schemas/auth.schema.js';
 import { useAuth } from '../../hooks/useAuth.js';
 import { useSettings } from '../../context/SettingsContext.jsx';
@@ -83,9 +84,7 @@ export default function LoginPage() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-brand-600/20 via-transparent to-transparent pointer-events-none" />
         <div className="relative">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-brand-600 flex items-center justify-center font-bold text-white shadow-lg">
-              <GraduationCap className="w-6 h-6" />
-            </div>
+            <VedavyasLogo className="w-12 h-12 shrink-0 drop-shadow-lg" />
             <div>
               <p className="font-bold text-lg leading-tight">{institutionName}</p>
               <p className="text-xs text-slate-400">{appSubtitle}</p>
@@ -107,10 +106,8 @@ export default function LoginPage() {
       {/* Right login form */}
       <div className="flex-1 flex items-center justify-center p-6 bg-slate-50">
         <div className="w-full max-w-sm">
-          <div className="lg:hidden flex items-center gap-2 mb-8 justify-center text-center">
-            <div className="w-9 h-9 rounded-lg bg-brand-600 flex items-center justify-center shrink-0">
-              <GraduationCap className="w-5 h-5 text-white" />
-            </div>
+          <div className="lg:hidden flex items-center gap-2.5 mb-8 justify-center text-center">
+            <VedavyasLogo className="w-11 h-11 shrink-0" />
             <p className="font-bold text-lg text-navy-900">{institutionName}</p>
           </div>
 

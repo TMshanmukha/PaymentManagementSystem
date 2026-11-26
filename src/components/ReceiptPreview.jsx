@@ -1,5 +1,6 @@
 import { formatCurrency, formatDate, formatTime } from '../utils/format.js';
 import { useSettings } from '../context/SettingsContext.jsx';
+import { VedavyasLogo } from './VedavyasLogo.jsx';
 
 // Function to convert number to words (Indian Rupees format)
 function numberToWords(amount) {
@@ -45,20 +46,25 @@ export function ReceiptPreview({ receipt, institution: propInstitution }) {
       style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
     >
       {/* Header Section */}
-      <div className="border-b-[1.5px] border-slate-900 pb-2 mb-2 relative">
-        {/* Top Right Original Copy Tag */}
-        <div className="absolute right-0 top-0">
-          <span className="text-[9px] uppercase tracking-widest font-bold border border-slate-900 px-2 py-0.5 text-slate-900">
-            Original
-          </span>
+      <div className="border-b-[1.5px] border-slate-900 pb-2 mb-2 relative flex items-center justify-between gap-2">
+        {/* Top Left School Crest Logo */}
+        <div className="shrink-0">
+          <VedavyasLogo className="w-12 h-12 sm:w-14 sm:h-14" />
         </div>
 
         {/* Center Institution Info */}
-        <div className="text-center px-12">
+        <div className="text-center flex-1 px-2">
           <h2 className="text-xs sm:text-sm font-bold tracking-[0.25em] uppercase text-slate-700 mb-0.5">R E C E I P T</h2>
           <h1 className="text-base sm:text-lg font-bold uppercase text-slate-950 leading-snug">{name}</h1>
           {address && <p className="text-[10px] sm:text-[11px] leading-tight text-slate-600 mt-0.5">{address}</p>}
           {phone && <p className="text-[10px] sm:text-[11px] text-slate-600 leading-tight">Ph: {phone}</p>}
+        </div>
+
+        {/* Top Right Original Copy Tag */}
+        <div className="shrink-0 self-start">
+          <span className="text-[9px] uppercase tracking-widest font-bold border border-slate-900 px-2 py-0.5 text-slate-900">
+            Original
+          </span>
         </div>
       </div>
 

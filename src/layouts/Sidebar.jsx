@@ -1,10 +1,11 @@
 import { NavLink } from 'react-router-dom';
 import {
   LayoutDashboard, Users, Receipt, FileText, AlertCircle, Wallet,
-  BarChart3, ClipboardCheck, UserCog, ScrollText, Settings, GraduationCap, X, Calendar,
+  BarChart3, ClipboardCheck, UserCog, ScrollText, Settings, X, Calendar,
 } from 'lucide-react';
 import { useSettings } from '../context/SettingsContext.jsx';
 import { ROLES } from '../config/constants.js';
+import { VedavyasLogo } from '../components/VedavyasLogo.jsx';
 
 function itemsForRole(role) {
   const base = role === ROLES.ADMIN ? '/admin' : role === ROLES.SCHOOL_ACCOUNTANT ? '/school' : '/tuition';
@@ -46,9 +47,7 @@ export function Sidebar({ role, mobileOpen, onCloseMobile }) {
     <div className="flex flex-col h-full">
       <div className="flex items-center justify-between px-5 py-5 border-b border-navy-800/60">
         <div className="flex items-center gap-2.5 min-w-0">
-          <div className="w-9 h-9 rounded-lg bg-brand-600 flex items-center justify-center shrink-0">
-            <GraduationCap className="w-5 h-5 text-white" />
-          </div>
+          <VedavyasLogo className="w-10 h-10 shrink-0 drop-shadow-sm" />
           <div className="min-w-0 flex-1">
             <p className="font-bold text-white leading-tight text-xs sm:text-sm">{institutionName}</p>
             <p className="text-[11px] text-slate-400 leading-tight truncate mt-0.5">{appSubtitle}</p>
