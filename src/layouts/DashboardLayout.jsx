@@ -33,10 +33,10 @@ export function DashboardLayout({ title }) {
       <Sidebar role={user?.role} mobileOpen={mobileOpen} onCloseMobile={() => setMobileOpen(false)} />
       <div className="flex-1 flex flex-col min-w-0">
         {/* VEDAVYAS Header Banner */}
-        <div className="bg-gradient-to-r from-stone-950 via-[#190f0c] to-stone-950 border-b border-[#f05a3e]/20 py-3 flex items-center justify-center gap-3.5 sm:gap-4 shrink-0 shadow-md relative overflow-hidden no-print">
+        <div className="bg-gradient-to-r from-stone-950 via-[#190f0c] to-stone-950 border-b border-[#f05a3e]/20 py-2.5 flex items-center justify-center gap-3 sm:gap-4 shrink-0 shadow-md relative overflow-hidden no-print">
           {/* Subtle glow layer */}
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(240,90,62,0.12)_0%,transparent_75%)] pointer-events-none" />
-          <VedavyasLogo className="w-11 h-11 sm:w-13 sm:h-13 shrink-0 drop-shadow-md relative" />
+          <VedavyasLogo className="w-10 h-10 sm:w-12 sm:h-12 shrink-0 drop-shadow-md relative" />
           <div className="w-[200px] sm:w-[260px] select-none flex flex-col items-center relative">
             <h2 className="text-white text-2xl sm:text-3xl font-black flex justify-between w-full font-sans drop-shadow-md leading-none">
               {"VEDAVYAS".split('').map((char, idx) => (

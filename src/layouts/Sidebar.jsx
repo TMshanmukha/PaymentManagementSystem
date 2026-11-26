@@ -45,7 +45,7 @@ export function Sidebar({ role, mobileOpen, onCloseMobile }) {
 
   const content = (
     <div className="flex flex-col h-full">
-      <div className="flex items-center justify-between px-4 py-5 border-b border-navy-800/60">
+      <div className="flex items-center justify-between px-4 py-3.5 border-b border-navy-800/60">
         <div className="flex items-center gap-2 min-w-0">
           <VedavyasLogo className="w-9 h-9 shrink-0 drop-shadow-sm" />
           <div className="min-w-0 flex-1">
@@ -58,7 +58,7 @@ export function Sidebar({ role, mobileOpen, onCloseMobile }) {
         </button>
       </div>
 
-      <nav className="flex-1 px-3 py-2 space-y-1 overflow-y-auto">
+      <nav className={`flex-1 px-3 py-2.5 overflow-y-auto flex flex-col ${items.length >= 8 ? 'justify-between gap-1' : 'gap-2'}`}>
         {items.map(({ to, label, icon: Icon }) => (
           <NavLink
             key={to}
@@ -75,6 +75,12 @@ export function Sidebar({ role, mobileOpen, onCloseMobile }) {
           </NavLink>
         ))}
       </nav>
+
+      <div className="px-4 py-2.5 border-t border-navy-800/60 text-center shrink-0">
+        <p className="text-[11px] text-slate-400 font-medium truncate">
+          {institutionName} • Guntakal
+        </p>
+      </div>
     </div>
   );
 
