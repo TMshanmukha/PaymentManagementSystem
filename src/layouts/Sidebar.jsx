@@ -45,11 +45,11 @@ export function Sidebar({ role, mobileOpen, onCloseMobile }) {
 
   const content = (
     <div className="flex flex-col h-full">
-      <div className="flex items-center justify-between px-5 py-5 border-b border-navy-800/60">
-        <div className="flex items-center gap-2.5 min-w-0">
-          <VedavyasLogo className="w-10 h-10 shrink-0 drop-shadow-sm" />
+      <div className="flex items-center justify-between px-4 py-5 border-b border-navy-800/60">
+        <div className="flex items-center gap-2 min-w-0">
+          <VedavyasLogo className="w-9 h-9 shrink-0 drop-shadow-sm" />
           <div className="min-w-0 flex-1">
-            <p className="font-bold text-white leading-tight text-xs sm:text-sm">{institutionName}</p>
+            <p className="font-bold text-white leading-tight text-[13px] whitespace-nowrap truncate">{institutionName}</p>
             <p className="text-[11px] text-slate-400 leading-tight truncate mt-0.5">{appSubtitle}</p>
           </div>
         </div>
